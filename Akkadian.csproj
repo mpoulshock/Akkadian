@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A78D2D14-FDB5-48A4-BC3A-5609DFF317F8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Akkadian</RootNamespace>
+    <AssemblyName>Akkadian</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Hval.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Thing.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Fundamental types\Test - Hval.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Comparison - dates.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Comparison - numeric.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Logic.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Math.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Set - higher-order.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Set - optimal subsets.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Switch.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Absolute time.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Elapsed time - per interval.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Elapsed time.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Summed intervals.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Tbool - temporal.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Temporal sequences.cs" />
+    <Compile Include="Kernel\2 - Core library\Utility\DateTime extension methods.cs" />
+    <Compile Include="Kernel\2 - Core library\Utility\Misc.cs" />
+    <Compile Include="Kernel\2 - Core library\Utility\Unknown.cs" />
+    <Compile Include="Kernel\2 - Core library\Utility\Util.cs" />
+    <Compile Include="Kernel\2 - Core library\Utility\Zip.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tbool.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tdate.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tline.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tnum.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tset.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tstr.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tvar.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - absolute time.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - continuous.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - per interval.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - running.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - sliding.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - total.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - summed intervals.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - temporal dates.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - comparison - boolean.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - comparison - numeric.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - comparison - string.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - logic -basic.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - math - basic.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - rounding fcns.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - set - basic.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - string - basic.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - switch.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - time - dates.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Fundamental types\Test - fundamental types.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - misc.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - performance.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - utility.cs" />
+    <Compile Include="Kernel\4 - Factbase\FactBase.cs" />
+    <Compile Include="Kernel\4 - Factbase\Facts.cs" />
+    <Compile Include="Kernel\4 - Factbase\Inputs.cs" />
+    <Compile Include="Kernel\4 - Factbase\Set-assert.cs" />
+    <Compile Include="Kernel\4 - Factbase\ThingBase.cs" />
+    <Compile Include="Kernel\4 - Factbase\Unknown facts.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - facts - symmetrical.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - facts - unknowns.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - short-circuit evaluation.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - ThingBase.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - unknown.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - set - higher order.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Evaluator\Eval.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Expr.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Data\Rulebase.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Eval.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Evaluator\Switch.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Evaluator\Filter.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Evaluator\Operators.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Kernel\" />
+    <Folder Include="Kernel\1 - Fundamental types\" />
+    <Folder Include="Kernel\2 - Core library\" />
+    <Folder Include="Kernel\3 - Interpreter\" />
+    <Folder Include="Kernel\4 - Factbase\" />
+    <Folder Include="Kernel\5 - Unit tests\" />
+    <Folder Include="Kernel\5 - Unit tests\Fundamental types\" />
+    <Folder Include="Kernel\5 - Unit tests\Interpreter\" />
+    <Folder Include="Kernel\5 - Unit tests\Core library\" />
+    <Folder Include="Kernel\2 - Core library\Basic\" />
+    <Folder Include="Kernel\2 - Core library\Temporal\" />
+    <Folder Include="Kernel\2 - Core library\Utility\" />
+    <Folder Include="Kernel\5 - Unit tests\Core library\Basic\" />
+    <Folder Include="Kernel\5 - Unit tests\Core library\Temporal\" />
+    <Folder Include="Kernel\5 - Unit tests\Core library\Utility\" />
+    <Folder Include="Kernel\5 - Unit tests\Factbase\" />
+    <Folder Include="Kernel\3 - Interpreter\Parser\" />
+    <Folder Include="Kernel\3 - Interpreter\Evaluator\" />
+    <Folder Include="Kernel\3 - Interpreter\Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Kernel\4 - Factbase\Assumptions.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,75 @@
+// Copyright (c) 2013 Hammura.bi LLC
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using System;
+using System.Collections.Generic;
+
+namespace Akkadian
+{
+	public partial class Interpreter
+	{
+		/// <summary>
+		/// List of all functions, accessible by index
+		/// </summary>
+		//		public static List<Expr> Rules = new List<Expr>();
+
+		public static List<Expr> LoadedRules()
+		{
+			List<Expr> result = new List<Expr>();
+
+			// Function 0: f0(x) = (x * 2) + 1
+			Expr sub1 = expr(n("op","*"),n("var","0"),n("dec","2"));
+			Expr exp0 = expr(n("op","+"),n("expr",sub1),n("dec","1"));
+			result.Add(exp0);
+
+			// Function 1: f1(x) = x + 42
+			Expr exp1 = expr(n("op","+"),n("var","0"),n("dec","42"));
+			result.Add(exp1);
+
+			// Function 2: f2(x) = 1017 - f0(x)
+			Expr exp2 = expr(n("op","-"),n("dec","1017"),n("fcn","0"));
+			result.Add(exp2);
+
+			// Function 3: f3(x,y) = y / x
+			Expr exp3 = expr(n("op","/"),n("var","1"),n("var","0"));
+			result.Add(exp3);
+
+			// Function 4: f4(x,y) = y(x,17)
+			Expr exp4 = expr(n("var","1"),n("var","0"),n("dec","17"));
+			result.Add(exp4);
+
+			// Function 5 (recursive): f5(x) = if x = 0 -> 0, else f5(x-1) + 3
+			Expr sub5_1 = expr(n("op","=="),n("var","0"),n("dec","0"));      // x == 0
+			Expr sub5_2 = expr(n("op","-"),n("var","0"),n("dec","1"));       // x-1
+			Expr sub5_3 = expr(n("rec","5"),n("expr",sub5_2));               // f5(x-1)
+			Expr sub5_4 = expr(n("op","+"),n("expr",sub5_3),n("dec","3"));   // f5(x-1) + 3
+			Expr exp5 = expr(n("op","if"),n("expr",sub5_1),n("dec","0"),n("expr",sub5_4));
+			result.Add(exp5);
+
+			// Function 6: f6(x) = if x = 0 -> 1, else x
+			Expr sub6_1 = expr(n("op","=="),n("var","0"),n("dec","0"));      // x == 0
+			Expr exp6 = expr(n("op","if"),n("expr",sub6_1),n("dec","1"),n("var","0"));
+			result.Add(exp6);
+
+			return result;
+		}
+	}
+}
+
