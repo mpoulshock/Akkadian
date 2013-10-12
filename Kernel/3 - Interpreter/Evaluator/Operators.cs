@@ -47,89 +47,94 @@ namespace Akkadian
 		Null
 	}
 
+	public enum Op
+	{
+		// Short-circuting operators
+		And = 1,
+		Or = 2,
+		Mult = 3,
+
+		// Binary operators
+		Plus = 10,
+		Minus = 11,
+		Div = 12,
+		Eq, 
+		Neq,
+		GrTh, 
+		GrEq,
+		LsTh, 
+		LsEq,
+		Mod,
+		Nlog, 
+		Pow,
+		RndUp, 
+		RndDn, 
+		RndNrUp, 
+		RndNrDn,
+		Concat,
+		Subset, 
+		Contains, 
+		Union, 
+		Intersect, 
+		RelComp,
+		AddDays, 
+		AddMos, 
+		AddYrs, 
+		DayDiff, 
+		WeekDiff,
+		YearDiff,
+
+		// Unary operators
+		Not,
+		USD,
+		Abs,
+		Sqrt,
+		Log,
+		Sin,
+		Cos,
+		Tan,
+		Asin,
+		Acos,
+		Atan,
+		Count,
+		Empty,
+		Rev,
+		ToThing,
+		Day,
+		Month,
+		Quarter,
+		Year,
+
+		// Other
+		Switch,
+		Max,
+		Min
+	}
+
 	public partial class Interpreter
 	{
+		private static Op[] shortCircuits = {Op.And, Op.Or, Op.Mult}; 
 
+		private static Op[] binaryOps = {Op.Plus, Op.Minus, Op.Div,
+			Op.Eq, Op.Neq, Op.GrTh, Op.GrEq, Op.LsTh, Op.LsEq,
+			Op.Pow, Op.Log, Op.RndUp, Op.RndDn, Op.RndNrUp, Op.RndNrDn, Op.Concat,
+			Op.Subset, Op.Contains, Op.Union, Op.Intersect, Op.RelComp,
+			Op.AddDays, Op.AddMos, Op.AddYrs, Op.DayDiff, Op.WeekDiff, Op.YearDiff}; 
 
-		public enum Op
-		{
-			// Short-circuting operators
-			And = 1,
-			Or = 2,
-			Mult = 3,
-
-			// Binary operators
-			Plus = 10,
-			Minus = 11,
-			Div = 12,
-			Eq, 
-			Neq,
-			Gr, 
-			GrEq,
-			LsTh, 
-			LsEq,
-			Nlog, 
-			Pow,
-			RndUp, 
-			RndDn, 
-			RndNrUp, 
-			RndNrDn,
-			Concat,
-			Subset, 
-			Contains, 
-			Union, 
-			Intersect, 
-			RelComp,
-			AddDays, 
-			AddMos, 
-			AddYrs, 
-			DayDiff, 
-			WeekDiff,
-			YearDiff,
-
-			// Unary operators
-			Not,
-			USD,
-			Abs,
-			Sqrt,
-			Log,
-			Sin,
-			Cos,
-			Tan,
-			Asin,
-			Acos,
-			Atan,
-			Count,
-			Empty,
-			Rev,
-			ToThing,
-			Day,
-			Month,
-			Quarter,
-			Year
-		}
-
-		private static string[] shortCircuits = {"T&","T|","T*"}; 
-
-		private static string[] binaryOps = {"T+","T-","T/",
-			"T=","T<>","T>","T>=","T<","T<=",
-			"Pow","Log2","RndUp","RndDn","RndNrUp","RndNrDn","Concat",
-			"Subset","Contains","Union","Intersect","RelComp",
-			"AddDays","AddMos","AddYrs","DayDiff","WeekDiff","YearDiff"}; 
-
-		private static string[] unaryOps = {"T!","USD","Abs","Sqrt","Log","Sin","Cos","Tan","Asin","Acos","Atan",
-			"Count","Empty","Rev","ToThing",
-			"TdateDay","TdateMonth","TdateQtr","TdateYear"}; 
+		private static Op[] unaryOps = {Op.Not, Op.USD, Op.Abs, Op.Sqrt, Op.Log, 
+			Op.Sin, Op.Cos, Op.Tan, Op.Asin, Op.Acos, Op.Atan,
+			Op.Count, Op.Empty, Op.Rev, Op.ToThing,
+			Op.Day, Op.Month, Op.Quarter, Op.Year}; 
 
 
 		/// <summary>
 		/// Evaluates expressions in which a short-circuit may be required.
 		/// </summary>
-		private static Node EvalShortCircuitFcns(Expr exp, Expr args, string op)
+		private static Node EvalShortCircuitFcns(Expr exp, Expr args, Op op)
 		{
 			Node n1 = eval(expr(exp.nodes [1]), args);
 
-			if (op == "T&") 	// And
+			if (op == Op.And) 	// And
 			{
 				// See if first argument is eternally false
 				if (((Tbool)n1.obj).IsFalse) return nTbool(false);
@@ -139,7 +144,7 @@ namespace Akkadian
 				return nTbool((Tbool)n1.obj && (Tbool)n2.obj); 
 			}
 
-			if (op == "T|") 	// Or
+			if (op == Op.Or) 	// Or
 			{
 				// See if first argument is eternally true
 				if (((Tbool)n1.obj).IsTrue) return nTbool(true);
@@ -149,7 +154,7 @@ namespace Akkadian
 				return nTbool((Tbool)n1.obj || (Tbool)n2.obj); 
 			}
 
-			if (op == "T*") 	// Multiplication
+			if (op == Op.Mult) 	// Multiplication
 			{
 				// See if first argument is zero
 				Tnum tn1 = ((Tnum)n1.obj);
@@ -169,19 +174,18 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with two arguments.
 		/// </summary>
-		private static Node BinaryFcnEval(Expr exp, Expr args, string op)
+		private static Node BinaryFcnEval(Expr exp, Expr args, Op op)
 		{
 			Node n1 = eval(expr(exp.nodes [1]), args);
 			Typ tp = n1.objType;
 			object ob1 = n1.obj;
 			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 
-			if (op == "T!") { return nTbool(!(Tbool)ob1); }
-			if (op == "T+") { return nTnum((Tnum)ob1 + (Tnum)ob2); }
-			if (op == "T-") { return nTnum((Tnum)ob1 - (Tnum)ob2); }
-			if (op == "T/") { return nTnum((Tnum)ob1 / (Tnum)ob2); }
+			if (op == Op.Plus) { return nTnum((Tnum)ob1 + (Tnum)ob2); }
+			if (op == Op.Minus) { return nTnum((Tnum)ob1 - (Tnum)ob2); }
+			if (op == Op.Div) { return nTnum((Tnum)ob1 / (Tnum)ob2); }
 
-			if (op == "T=") 
+			if (op == Op.Eq) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 == (Tnum)ob2); 
 				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 == (Tstr)ob2);
@@ -190,7 +194,7 @@ namespace Akkadian
 				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 == (Tbool)ob2);
 			}
 
-			if (op == "T<>") 
+			if (op == Op.Neq) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 != (Tnum)ob2); 
 				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 != (Tstr)ob2);
@@ -199,51 +203,51 @@ namespace Akkadian
 				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 != (Tbool)ob2);
 			}
 
-			if (op == "T>") 
+			if (op == Op.GrTh) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 > (Tnum)ob2); 
 				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 > (Tdate)ob2);
 			}
-			if (op == "T>=") 
+			if (op == Op.GrEq) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 >= (Tnum)ob2); 
 				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 >= (Tdate)ob2);
 			}
-			if (op == "T<") 
+			if (op == Op.LsTh) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 < (Tnum)ob2); 
 				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 < (Tdate)ob2);
 			}
-			if (op == "T<=") 
+			if (op == Op.LsEq) 
 			{ 
 				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 <= (Tnum)ob2); 
 				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 <= (Tdate)ob2);
 			}
 
 			// Set operators
-			if (op == "Subset") 	{ return nTbool(((Tset)ob1).IsSubsetOf((Tset)ob2)); }
-			if (op == "Contains") 	{ return n(Typ.Tbool, ((Tset)ob1).Contains((Thing)ob2)); }
-			if (op == "Union") 		{ return nTset((Tset)ob1 | (Tset)ob2); }
-			if (op == "Intersect") 	{ return nTset((Tset)ob1 & (Tset)ob2); }
-			if (op == "RelComp") 	{ return nTset((Tset)ob1 - (Tset)ob2); }
+			if (op == Op.Subset) 	{ return nTbool(((Tset)ob1).IsSubsetOf((Tset)ob2)); }
+			if (op == Op.Contains) 	{ return n(Typ.Tbool, ((Tset)ob1).Contains((Thing)ob2)); }
+			if (op == Op.Union) 	{ return nTset((Tset)ob1 | (Tset)ob2); }
+			if (op == Op.Intersect) { return nTset((Tset)ob1 & (Tset)ob2); }
+			if (op == Op.RelComp) 	{ return nTset((Tset)ob1 - (Tset)ob2); }
 
 			// Date
-			if (op == "AddDays") 	{ return nTdate(((Tdate)ob1).AddDays((Tnum)ob2)); }
-			if (op == "AddMos") 	{ return nTdate(((Tdate)ob1).AddMonths((Tnum)ob2)); }
-			if (op == "AddYrs") 	{ return nTdate(((Tdate)ob1).AddYears((Tnum)ob2)); }
-			if (op == "DayDiff") 	{ return nTnum(H.DayDiff((Tdate)ob1, (Tdate)ob2)); }
-			if (op == "WeekDiff") 	{ return nTnum(H.WeekDiff((Tdate)ob1, (Tdate)ob2)); }
-			if (op == "YearDiff") 	{ return nTnum(H.YearDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == Op.AddDays) 	{ return nTdate(((Tdate)ob1).AddDays((Tnum)ob2)); }
+			if (op == Op.AddMos) 	{ return nTdate(((Tdate)ob1).AddMonths((Tnum)ob2)); }
+			if (op == Op.AddYrs) 	{ return nTdate(((Tdate)ob1).AddYears((Tnum)ob2)); }
+			if (op == Op.DayDiff) 	{ return nTnum(H.DayDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == Op.WeekDiff) 	{ return nTnum(H.WeekDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == Op.YearDiff) 	{ return nTnum(H.YearDiff((Tdate)ob1, (Tdate)ob2)); }
 
 			// Math and rounding
-			if (op == "RndUp") 		{ return nTnum(((Tnum)ob1).RoundUp((Tnum)ob2)); }
-			if (op == "RndDn") 		{ return nTnum(((Tnum)ob1).RoundDown((Tnum)ob2)); }
-			if (op == "RndNrUp") 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2)); }
-			if (op == "RndNrDn") 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2, true)); }
-			if (op == "Concat") 	{ return nTstr((Tstr)ob1 + (Tstr)ob2); }
-			if (op == "Mod") 		{ return nTnum((Tnum)ob1 % (Tnum)ob2); }
-			if (op == "Pow") 		{ return nTnum(Tnum.Pow((Tnum)ob1, (Tnum)ob2)); }
-			if (op == "Log2") 		{ return nTnum(Tnum.Log((Tnum)ob1, (Tnum)ob2)); }
+			if (op == Op.RndUp) 	{ return nTnum(((Tnum)ob1).RoundUp((Tnum)ob2)); }
+			if (op == Op.RndDn) 	{ return nTnum(((Tnum)ob1).RoundDown((Tnum)ob2)); }
+			if (op == Op.RndNrUp) 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2)); }
+			if (op == Op.RndNrDn) 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2, true)); }
+			if (op == Op.Concat) 	{ return nTstr((Tstr)ob1 + (Tstr)ob2); }
+			if (op == Op.Mod) 		{ return nTnum((Tnum)ob1 % (Tnum)ob2); }
+			if (op == Op.Pow) 		{ return nTnum(Tnum.Pow((Tnum)ob1, (Tnum)ob2)); }
+			if (op == Op.Log) 		{ return nTnum(Tnum.Log((Tnum)ob1, (Tnum)ob2)); }
 
 			return n(Typ.Null,null);
 		}
@@ -251,32 +255,32 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with one argument.
 		/// </summary>
-		private static Node UnaryFcnEval(Expr exp, Expr args, string op)
+		private static Node UnaryFcnEval(Expr exp, Expr args, Op op)
 		{
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
-			if (op == "T!")    			{ return nTbool(!(Tbool)ob1); }
-			if (op == "USD")   			{ return nTstr(((Tnum)ob1).ToUSD); }
+			if (op == Op.Not)    	{ return nTbool(!(Tbool)ob1); }
+			if (op == Op.USD)   	{ return nTstr(((Tnum)ob1).ToUSD); }
 
-			if (op == "Count")   		{ return nTnum(((Tset)ob1).Count); }
-			if (op == "Empty")   		{ return nTbool(((Tset)ob1).IsEmpty); }
-			if (op == "Rev")   			{ return nTset(((Tset)ob1).Reverse); }
-			if (op == "ToThing")   		{ return n(Typ.Thing, ((Tset)ob1).ToThing); }
+			if (op == Op.Count)   	{ return nTnum(((Tset)ob1).Count); }
+			if (op == Op.Empty)   	{ return nTbool(((Tset)ob1).IsEmpty); }
+			if (op == Op.Rev)   	{ return nTset(((Tset)ob1).Reverse); }
+			if (op == Op.ToThing)   { return n(Typ.Thing, ((Tset)ob1).ToThing); }
 
-			if (op == "TdateDay")   	{ return nTnum(((Tdate)ob1).Day); }
-			if (op == "TdateMonth")		{ return nTnum(((Tdate)ob1).Month); }
-			if (op == "TdateQtr")   	{ return nTnum(((Tdate)ob1).Quarter); }
-			if (op == "TdateYear")   	{ return nTnum(((Tdate)ob1).Year); }
+			if (op == Op.Day)   	{ return nTnum(((Tdate)ob1).Day); }
+			if (op == Op.Month)		{ return nTnum(((Tdate)ob1).Month); }
+			if (op == Op.Quarter)   { return nTnum(((Tdate)ob1).Quarter); }
+			if (op == Op.Year)   	{ return nTnum(((Tdate)ob1).Year); }
 
-			if (op == "Abs")   			{ return nTnum(Tnum.Abs((Tnum)ob1)); }
-			if (op == "Sqrt")  			{ return nTnum(Tnum.Sqrt((Tnum)ob1)); }
-			if (op == "Log")   			{ return nTnum(Tnum.Log((Tnum)ob1)); }
-			if (op == "Sin")   			{ return nTnum(Tnum.Sin((Tnum)ob1)); }
-			if (op == "Cos")   			{ return nTnum(Tnum.Cos((Tnum)ob1)); }
-			if (op == "Tan")   			{ return nTnum(Tnum.Tan((Tnum)ob1)); }
-			if (op == "Asin")  			{ return nTnum(Tnum.ArcSin((Tnum)ob1)); }
-			if (op == "Acos") 			{ return nTnum(Tnum.ArcCos((Tnum)ob1)); }
-			if (op == "Atan")  			{ return nTnum(Tnum.ArcTan((Tnum)ob1)); }
+			if (op == Op.Abs)   	{ return nTnum(Tnum.Abs((Tnum)ob1)); }
+			if (op == Op.Sqrt)  	{ return nTnum(Tnum.Sqrt((Tnum)ob1)); }
+			if (op == Op.Nlog)   	{ return nTnum(Tnum.Log((Tnum)ob1)); }
+			if (op == Op.Sin)   	{ return nTnum(Tnum.Sin((Tnum)ob1)); }
+			if (op == Op.Cos)   	{ return nTnum(Tnum.Cos((Tnum)ob1)); }
+			if (op == Op.Tan)   	{ return nTnum(Tnum.Tan((Tnum)ob1)); }
+			if (op == Op.Asin)  	{ return nTnum(Tnum.ArcSin((Tnum)ob1)); }
+			if (op == Op.Acos) 		{ return nTnum(Tnum.ArcCos((Tnum)ob1)); }
+			if (op == Op.Atan)  	{ return nTnum(Tnum.ArcTan((Tnum)ob1)); }
 
 			return n(Typ.Null,null);
 		}
@@ -284,7 +288,7 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with three or more arguments.
 		/// </summary>
-		private static Node MultiTnumFcnEval(Expr exp, Expr args, string op)
+		private static Node MultiTnumFcnEval(Expr exp, Expr args, Op op)
 		{
 			Tnum[] list = new Tnum[exp.nodes.Count-1];
 			for (int i=1; i<exp.nodes.Count; i++)
@@ -292,10 +296,22 @@ namespace Akkadian
 				list[i-1] = (Tnum)eval(expr(exp.nodes[i]), args).obj;
 			}
 
-			if (op == "Tmax") { return nTnum(Tnum.Max(list)); }
-			if (op == "Tmin") { return nTnum(Tnum.Min(list)); }
+			if (op == Op.Max) { return nTnum(Tnum.Max(list)); }
+			if (op == Op.Min) { return nTnum(Tnum.Min(list)); }
 
 			return n(Typ.Null,null);
 		}
+
+//		private static Node EvalExists(Expr exp, Expr args, string op)
+//		{
+//			Node argFcnNode = n(Typ.Null,null);
+//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
+//			Tset result = ApplyFcnToTset<Tset>(theSet, argFcnNode, y => CoreFilter(y));
+//
+//			//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
+//			//			Func<Thing,Tbool> theFunc = (Func<Thing,Tbool>)eval(expr(exp.nodes [2]), args).obj;
+//
+//			return n("Tset", result);  
+//		}
 	}
 }

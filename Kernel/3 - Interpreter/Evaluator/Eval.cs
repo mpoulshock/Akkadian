@@ -43,7 +43,7 @@ namespace Akkadian
 			}
 			else if (typ == Typ.Op)
 			{
-				string opType = Convert.ToString(ob);
+				Op opType = (Op)ob;
 
 				if (shortCircuits.Contains(opType))
 				{
@@ -57,22 +57,11 @@ namespace Akkadian
 				{
 					result = UnaryFcnEval(exp, args, opType);
 				}
-				else if (opType == "if") 
-				{
-					if (Convert.ToBoolean(eval(expr(exp.nodes[1]), args).obj))
-					{
-						result = eval(expr(exp.nodes[2]), args);
-					}
-					else
-					{
-						result = eval(expr(exp.nodes[3]), args);
-					}
-				}
-				else if (opType == "Tmax" || opType == "Tmin")
+				else if (opType == Op.Max || opType == Op.Min)
 				{
 					result = MultiTnumFcnEval(exp, args, opType);
 				}
-				else if (opType == "Switch")
+				else if (opType == Op.Switch)
 				{
 					exp.nodes.RemoveAt(0);
 					result = n(Typ.Tnum,Switch2<Tnum>(exp, args));
@@ -101,13 +90,12 @@ namespace Akkadian
 			{
 				// Get the info from the user / factbase
 				string s = Console.ReadLine();
-				//				result = n("Tnum",new Tnum(Convert.ToDecimal(s)));
-				result = n(Typ.Tbool,new Tbool(Convert.ToBoolean(s)));
+//				result = nTnum(Convert.ToDecimal(s)));
+				result = nTbool(Convert.ToBoolean(s));
 			}
 
 			return result;
 		}
-
 
 		public static Node eval(Node node, Expr args)
 		{
@@ -119,18 +107,6 @@ namespace Akkadian
 			return eval(exp, expr(n(Typ.Null,null)));
 		}
 		
-		//		private static Node EvalExists(Expr exp, Expr args, string op)
-		//		{
-		//			Node argFcnNode = n(Typ.Null,null);
-		//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-		//			Tset result = ApplyFcnToTset<Tset>(theSet, argFcnNode, y => CoreFilter(y));
-		//
-		//			//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-		//			//			Func<Thing,Tbool> theFunc = (Func<Thing,Tbool>)eval(expr(exp.nodes [2]), args).obj;
-		//
-		//			return n("Tset", result);  
-		//		}
-
 		/// <summary>
 		/// Evaluates an expression referencing a higher order function.
 		/// </summary>
@@ -171,27 +147,27 @@ namespace Akkadian
 		}
 
 
-		public static Node nTbool(Tbool t)
+		protected static Node nTbool(Tbool t)
 		{
 			return new Node(Typ.Tbool,t);
 		}
 
-		public static Node nTnum(Tnum t)
+		protected static Node nTnum(Tnum t)
 		{
 			return new Node(Typ.Tnum,t);
 		}
 
-		public static Node nTstr(Tstr t)
+		protected static Node nTstr(Tstr t)
 		{
 			return new Node(Typ.Tstr,t);
 		}
 
-		public static Node nTset(Tset t)
+		protected static Node nTset(Tset t)
 		{
 			return new Node(Typ.Tset,t);
 		}
 
-		public static Node nTdate(Tdate t)
+		protected static Node nTdate(Tdate t)
 		{
 			return new Node(Typ.Tdate,t);
 		}
@@ -199,7 +175,7 @@ namespace Akkadian
 		/// <summary>
 		/// Simple way to instantiate a new Node.
 		/// </summary>
-		public static Node n(Typ typ, object o)
+		protected static Node n(Typ typ, object o)
 		{
 			return new Node(typ,o);
 		}
@@ -207,11 +183,9 @@ namespace Akkadian
 		/// <summary>
 		/// Simple way to instantiate a new expression.
 		/// </summary>
-		public static Expr expr(params Node[] nodes)
+		protected static Expr expr(params Node[] nodes)
 		{
 			return new Expr(new List<Node>(nodes));
 		}
-
 	}
 }
-

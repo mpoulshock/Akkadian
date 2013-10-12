@@ -30,7 +30,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Abs_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"Abs"),nTnum(41));
+			Expr exp = expr(n(Typ.Op,Op.Abs),nTnum(41));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -38,7 +38,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Abs_2 ()
 		{
-			Expr exp = expr(n(Typ.Op,"Abs"),nTnum(-41));
+			Expr exp = expr(n(Typ.Op,Op.Abs),nTnum(-41));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -47,7 +47,7 @@ namespace Akkadian.UnitTests
 		public void Addition ()
 		{
 			// 41 + 9
-			Expr exp = expr(n(Typ.Op,"T+"),nTnum(41),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Plus),nTnum(41),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(50, r.Out);                
 		}
@@ -56,7 +56,7 @@ namespace Akkadian.UnitTests
 		public void Addition_variables_1 ()
 		{
 			// x + 42, where x = 91
-			Expr exp = expr(n(Typ.Op,"T+"),n(Typ.Var,"0"),nTnum(42));
+			Expr exp = expr(n(Typ.Op,Op.Plus),n(Typ.Var,"0"),nTnum(42));
 			Expr args = expr(nTnum(91),nTnum(92),nTnum(93));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(133, r.Out);                
@@ -66,7 +66,7 @@ namespace Akkadian.UnitTests
 		public void Addition_variables_2 ()
 		{
 			// x + 42, where x = 91
-			Expr exp = expr(n(Typ.Op,"T+"),nTnum(42),n(Typ.Var,"0"));
+			Expr exp = expr(n(Typ.Op,Op.Plus),nTnum(42),n(Typ.Var,"0"));
 			Expr args = expr(nTnum(91),nTnum(92),nTnum(93));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(133, r.Out);                
@@ -75,7 +75,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void And_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T&"),nTbool(true),nTbool(false));
+			Expr exp = expr(n(Typ.Op,Op.And),nTbool(true),nTbool(false));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -83,7 +83,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void And_2 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T&"),nTbool(false),nTbool(true));
+			Expr exp = expr(n(Typ.Op,Op.And),nTbool(false),nTbool(true));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -101,7 +101,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Concat ()
 		{
-			Expr exp = expr(n(Typ.Op,"Concat"), nTstr("Hello, "), nTstr("World"));
+			Expr exp = expr(n(Typ.Op,Op.Concat), nTstr("Hello, "), nTstr("World"));
 			Tstr r = (Tstr)eval(exp).obj;
 			Assert.AreEqual("Hello, World", r.Out);               
 		}
@@ -110,7 +110,7 @@ namespace Akkadian.UnitTests
 		public void Division ()
 		{
 			// 42 / 7
-			Expr exp = expr(n(Typ.Op,"T/"),nTnum(42),nTnum(7));
+			Expr exp = expr(n(Typ.Op,Op.Div),nTnum(42),nTnum(7));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(6, r.Out);                
 		}
@@ -118,7 +118,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTnum(7),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTnum(7),nTnum(9));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -126,7 +126,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_2 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTnum(9),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTnum(9),nTnum(9));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -134,7 +134,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_3 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTstr("ab"),nTstr("ba"));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTstr("ab"),nTstr("ba"));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -142,7 +142,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_4 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTstr("ab"),nTstr("ab"));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTstr("ab"),nTstr("ab"));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -150,7 +150,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_5 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTbool(true),nTbool(true));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTbool(true),nTbool(true));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -158,7 +158,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_6 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T="),nTbool(true),nTbool(false));
+			Expr exp = expr(n(Typ.Op,Op.Eq),nTbool(true),nTbool(false));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -214,7 +214,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void GreaterThan_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T>"),nTnum(7),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.GrTh),nTnum(7),nTnum(9));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -222,7 +222,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void GreaterThan_2 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T>"),nTnum(9),nTnum(7));
+			Expr exp = expr(n(Typ.Op,Op.GrTh),nTnum(9),nTnum(7));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -230,7 +230,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Inequality_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"T<>"),nTstr("ab"),nTstr("ba"));
+			Expr exp = expr(n(Typ.Op,Op.Neq),nTstr("ab"),nTstr("ba"));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -238,7 +238,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Inequality_2()
 		{
-			Expr exp = expr(n(Typ.Op,"T<>"),nTstr("ab"),nTstr("ab"));
+			Expr exp = expr(n(Typ.Op,Op.Neq),nTstr("ab"),nTstr("ab"));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -246,7 +246,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Max_1 ()
 		{
-			Expr exp = expr(n(Typ.Op,"Tmax"),nTnum(7));
+			Expr exp = expr(n(Typ.Op,Op.Max),nTnum(7));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(7, r.Out);                
 		}
@@ -254,7 +254,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Max_2 ()
 		{
-			Expr exp = expr(n(Typ.Op,"Tmax"),nTnum(7),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Max),nTnum(7),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(9, r.Out);                
 		}
@@ -262,7 +262,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Min ()
 		{
-			Expr exp = expr(n(Typ.Op,"Tmin"),nTnum(7),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Min),nTnum(7),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(7, r.Out);                
 		}
@@ -271,7 +271,7 @@ namespace Akkadian.UnitTests
 		public void Multiplication_1 ()
 		{
 			// 41 * 9
-			Expr exp = expr(n(Typ.Op,"T*"),nTnum(41),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Mult),nTnum(41),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(369, r.Out);                
 		}
@@ -280,7 +280,7 @@ namespace Akkadian.UnitTests
 		public void Multiplication_2 ()
 		{
 			// Unstated * 9
-			Expr exp = expr(n(Typ.Op,"T*"),n(Typ.Tnum,new Tnum(Hstate.Unstated)),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Mult),n(Typ.Tnum,new Tnum(Hstate.Unstated)),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual("Unstated", r.Out);                
 		}
@@ -289,7 +289,7 @@ namespace Akkadian.UnitTests
 		public void Multiplication_3 ()
 		{
 			// 0 * 9
-			Expr exp = expr(n(Typ.Op,"T*"),nTnum(0),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Mult),nTnum(0),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(0, r.Out);                
 		}
@@ -298,8 +298,8 @@ namespace Akkadian.UnitTests
 		public void NestedExpression ()
 		{
 			// (a * 2) + 1, where a = 44
-			Expr sub = expr(n(Typ.Op,"T*"),n(Typ.Var,"0"),nTnum(2));
-			Expr exp = expr(n(Typ.Op,"T+"),n(Typ.Expr,sub),nTnum(1));
+			Expr sub = expr(n(Typ.Op,Op.Mult),n(Typ.Var,"0"),nTnum(2));
+			Expr exp = expr(n(Typ.Op,Op.Plus),n(Typ.Expr,sub),nTnum(1));
 			Expr args = expr(nTnum(44));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(89, r.Out);                
@@ -308,7 +308,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Not ()
 		{
-			Expr exp = expr(n(Typ.Op,"T!"),nTbool(true));
+			Expr exp = expr(n(Typ.Op,Op.Not),nTbool(true));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -316,7 +316,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Or ()
 		{
-			Expr exp = expr(n(Typ.Op,"T|"),nTbool(true),nTbool(false));
+			Expr exp = expr(n(Typ.Op,Op.Or),nTbool(true),nTbool(false));
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
@@ -378,7 +378,7 @@ namespace Akkadian.UnitTests
 		{
 			Thing A = new Thing ("A");
 			Thing B = new Thing ("B");
-			Expr exp = expr(n(Typ.Op,"Rev"), n(Typ.Tset,new Tset(A,B)));
+			Expr exp = expr(n(Typ.Op,Op.Rev), n(Typ.Tset,new Tset(A,B)));
 			Tset r = (Tset)eval(exp).obj;
 			Assert.AreEqual("B, A", r.Out);               
 		}
@@ -387,7 +387,7 @@ namespace Akkadian.UnitTests
 		public void Subtraction_1 ()
 		{
 			// 41 - 9
-			Expr exp = expr(n(Typ.Op,"T-"),nTnum(41),nTnum(9));
+			Expr exp = expr(n(Typ.Op,Op.Minus),nTnum(41),nTnum(9));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(32, r.Out);                
 		}
@@ -396,7 +396,7 @@ namespace Akkadian.UnitTests
 		public void Subtraction_2 ()
 		{
 			// 41 - Unstated
-			Expr exp = expr(n(Typ.Op,"T-"),nTnum(41),nTnum(new Tnum(Hstate.Unstated)));
+			Expr exp = expr(n(Typ.Op,Op.Minus),nTnum(41),nTnum(new Tnum(Hstate.Unstated)));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual("Unstated", r.Out);                
 		}
@@ -405,7 +405,7 @@ namespace Akkadian.UnitTests
 		public void Switch_1 ()
 		{
 			// if cond=true -> 42, 41
-			Expr exp = expr(n(Typ.Op,"Switch"),nTbool(true),nTnum(42),nTnum(41));
+			Expr exp = expr(n(Typ.Op,Op.Switch),nTbool(true),nTnum(42),nTnum(41));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(42, r.Out);                
 		}
@@ -414,7 +414,7 @@ namespace Akkadian.UnitTests
 		public void Switch_2 ()
 		{
 			// if cond=true -> 42, 41
-			Expr exp = expr(n(Typ.Op,"Switch"),nTbool(false),nTnum(42),nTnum(41));
+			Expr exp = expr(n(Typ.Op,Op.Switch),nTbool(false),nTnum(42),nTnum(41));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -425,7 +425,7 @@ namespace Akkadian.UnitTests
 			Tbool cond = new Tbool(true);
 			cond.AddState(new DateTime(2015,1,1), false);
 
-			Expr exp = expr(n(Typ.Op,"Switch"),nTbool(cond),nTnum(42),nTnum(41));
+			Expr exp = expr(n(Typ.Op,Op.Switch),nTbool(cond),nTnum(42),nTnum(41));
 			Tnum r = (Tnum)eval(exp).obj;
 			Assert.AreEqual("{Dawn: 42; 1/1/2015: 41}", r.Out);                
 		}
@@ -451,7 +451,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void ToUSD ()
 		{
-			Expr exp = expr(n(Typ.Op,"USD"), nTnum(42.224));
+			Expr exp = expr(n(Typ.Op,Op.USD), nTnum(42.224));
 			Tstr r = (Tstr)eval(exp).obj;
 			Assert.AreEqual("$42.22", r.Out);               
 		}
@@ -461,7 +461,7 @@ namespace Akkadian.UnitTests
 		{
 			Thing A = new Thing ("A");
 			Thing B = new Thing ("B");
-			Expr exp = expr(n(Typ.Op,"Union"), nTset(A), nTset(B));
+			Expr exp = expr(n(Typ.Op,Op.Union), nTset(A), nTset(B));
 			Tset r = (Tset)eval(exp).obj;
 			Assert.AreEqual("A, B", r.Out);               
 		}

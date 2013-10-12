@@ -49,7 +49,6 @@ namespace Akkadian
 	public class Node
 	{
 		public object obj;
-//		public string objType;
 		public Typ objType;
 
 		public Node(Typ typ, object o)
