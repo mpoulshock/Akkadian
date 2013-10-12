@@ -42,7 +42,9 @@ namespace Akkadian
 		Fcn,
 		Op,
 		Rec,
-		Var
+		Var,
+		Ask,
+		Null
 	}
 
 	public partial class Interpreter
@@ -130,21 +132,21 @@ namespace Akkadian
 			if (op == "T&") 	// And
 			{
 				// See if first argument is eternally false
-				if (((Tbool)n1.obj).IsFalse) return n("Tbool",new Tbool(false));
+				if (((Tbool)n1.obj).IsFalse) return nTbool(false);
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return n("Tbool", (Tbool)n1.obj && (Tbool)n2.obj); 
+				return nTbool((Tbool)n1.obj && (Tbool)n2.obj); 
 			}
 
 			if (op == "T|") 	// Or
 			{
 				// See if first argument is eternally true
-				if (((Tbool)n1.obj).IsTrue) return n("Tbool",new Tbool(true));
+				if (((Tbool)n1.obj).IsTrue) return nTbool(true);
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return n("Tbool", (Tbool)n1.obj || (Tbool)n2.obj); 
+				return nTbool((Tbool)n1.obj || (Tbool)n2.obj); 
 			}
 
 			if (op == "T*") 	// Multiplication
@@ -153,15 +155,15 @@ namespace Akkadian
 				Tnum tn1 = ((Tnum)n1.obj);
 //				if (tn1.IsEternal && (int)tn1.FirstValue.Val == 0) 
 //				{
-//					return n ("Tnum", new Tnum (0));
+//					return nTnum(0);
 //				}
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return n("Tnum", (Tnum)n1.obj * (Tnum)n2.obj); 
+				return nTnum((Tnum)n1.obj * (Tnum)n2.obj); 
 			}
 
-			return n(null,null);
+			return n(Typ.Null,null);
 		}
 
 		/// <summary>
@@ -170,78 +172,80 @@ namespace Akkadian
 		private static Node BinaryFcnEval(Expr exp, Expr args, string op)
 		{
 			Node n1 = eval(expr(exp.nodes [1]), args);
-			Node n2 = eval(expr(exp.nodes [2]), args);
+			Typ tp = n1.objType;
+			object ob1 = n1.obj;
+			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 
-			if (op == "T!") { return n("Tbool", !(Tbool)n1.obj); }
-			if (op == "T+") { return n("Tnum", (Tnum)n1.obj + (Tnum)n2.obj); }
-			if (op == "T-") { return n("Tnum", (Tnum)n1.obj - (Tnum)n2.obj); }
-			if (op == "T/") { return n("Tnum", (Tnum)n1.obj / (Tnum)n2.obj); }
+			if (op == "T!") { return nTbool(!(Tbool)ob1); }
+			if (op == "T+") { return nTnum((Tnum)ob1 + (Tnum)ob2); }
+			if (op == "T-") { return nTnum((Tnum)ob1 - (Tnum)ob2); }
+			if (op == "T/") { return nTnum((Tnum)ob1 / (Tnum)ob2); }
 
 			if (op == "T=") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj == (Tnum)n2.obj); 
-				if (n1.objType == "Tstr")  return n("Tbool", (Tstr)n1.obj == (Tstr)n2.obj);
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj == (Tdate)n2.obj);
-				if (n1.objType == "Tset")  return n("Tbool", (Tset)n1.obj == (Tset)n2.obj);
-				if (n1.objType == "Tbool") return n("Tbool", (Tbool)n1.obj == (Tbool)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 == (Tnum)ob2); 
+				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 == (Tstr)ob2);
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 == (Tdate)ob2);
+				if (tp == Typ.Tset)  return nTbool((Tset)ob1 == (Tset)ob2);
+				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 == (Tbool)ob2);
 			}
 
 			if (op == "T<>") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj != (Tnum)n2.obj); 
-				if (n1.objType == "Tstr")  return n("Tbool", (Tstr)n1.obj != (Tstr)n2.obj);
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj != (Tdate)n2.obj);
-				if (n1.objType == "Tset")  return n("Tbool", (Tset)n1.obj != (Tset)n2.obj);
-				if (n1.objType == "Tbool") return n("Tbool", (Tbool)n1.obj != (Tbool)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 != (Tnum)ob2); 
+				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 != (Tstr)ob2);
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 != (Tdate)ob2);
+				if (tp == Typ.Tset)  return nTbool((Tset)ob1 != (Tset)ob2);
+				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 != (Tbool)ob2);
 			}
 
 			if (op == "T>") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj > (Tnum)n2.obj); 
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj > (Tdate)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 > (Tnum)ob2); 
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 > (Tdate)ob2);
 			}
 			if (op == "T>=") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj >= (Tnum)n2.obj); 
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj >= (Tdate)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 >= (Tnum)ob2); 
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 >= (Tdate)ob2);
 			}
 			if (op == "T<") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj < (Tnum)n2.obj); 
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj < (Tdate)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 < (Tnum)ob2); 
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 < (Tdate)ob2);
 			}
 			if (op == "T<=") 
 			{ 
-				if (n1.objType == "Tnum")  return n("Tbool", (Tnum)n1.obj <= (Tnum)n2.obj); 
-				if (n1.objType == "Tdate") return n("Tbool", (Tdate)n1.obj <= (Tdate)n2.obj);
+				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 <= (Tnum)ob2); 
+				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 <= (Tdate)ob2);
 			}
 
 			// Set operators
-			if (op == "Subset") { return n("Tbool", ((Tset)n1.obj).IsSubsetOf((Tset)n2.obj)); }
-			if (op == "Contains") { return n("Tbool", ((Tset)n1.obj).Contains((Thing)n2.obj)); }
-			if (op == "Union") { return n("Tbool", (Tset)n1.obj | (Tset)n2.obj); }
-			if (op == "Intersect") { return n("Tbool", (Tset)n1.obj & (Tset)n2.obj); }
-			if (op == "RelComp") { return n("Tbool", (Tset)n1.obj - (Tset)n2.obj); }
+			if (op == "Subset") 	{ return nTbool(((Tset)ob1).IsSubsetOf((Tset)ob2)); }
+			if (op == "Contains") 	{ return n(Typ.Tbool, ((Tset)ob1).Contains((Thing)ob2)); }
+			if (op == "Union") 		{ return nTset((Tset)ob1 | (Tset)ob2); }
+			if (op == "Intersect") 	{ return nTset((Tset)ob1 & (Tset)ob2); }
+			if (op == "RelComp") 	{ return nTset((Tset)ob1 - (Tset)ob2); }
 
 			// Date
-			if (op == "AddDays") { return n("Tdate", ((Tdate)n1.obj).AddDays((Tnum)n2.obj)); }
-			if (op == "AddMos") { return n("Tdate", ((Tdate)n1.obj).AddMonths((Tnum)n2.obj)); }
-			if (op == "AddYrs") { return n("Tdate", ((Tdate)n1.obj).AddYears((Tnum)n2.obj)); }
-			if (op == "DayDiff") { return n("Tnum", H.DayDiff((Tdate)n1.obj, (Tdate)n2.obj)); }
-			if (op == "WeekDiff") { return n("Tnum", H.WeekDiff((Tdate)n1.obj, (Tdate)n2.obj)); }
-			if (op == "YearDiff") { return n("Tnum", H.YearDiff((Tdate)n1.obj, (Tdate)n2.obj)); }
+			if (op == "AddDays") 	{ return nTdate(((Tdate)ob1).AddDays((Tnum)ob2)); }
+			if (op == "AddMos") 	{ return nTdate(((Tdate)ob1).AddMonths((Tnum)ob2)); }
+			if (op == "AddYrs") 	{ return nTdate(((Tdate)ob1).AddYears((Tnum)ob2)); }
+			if (op == "DayDiff") 	{ return nTnum(H.DayDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == "WeekDiff") 	{ return nTnum(H.WeekDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == "YearDiff") 	{ return nTnum(H.YearDiff((Tdate)ob1, (Tdate)ob2)); }
 
 			// Math and rounding
-			if (op == "RndUp") { return n("Tnum", ((Tnum)n1.obj).RoundUp((Tnum)n2.obj)); }
-			if (op == "RndDn") { return n("Tnum", ((Tnum)n1.obj).RoundDown((Tnum)n2.obj)); }
-			if (op == "RndNrUp") { return n("Tnum", ((Tnum)n1.obj).RoundToNearest((Tnum)n2.obj)); }
-			if (op == "RndNrDn") { return n("Tnum", ((Tnum)n1.obj).RoundToNearest((Tnum)n2.obj, true)); }
-			if (op == "Concat") { return n("Tstr", (Tstr)n1.obj + (Tstr)n2.obj); }
-			if (op == "Mod") { return n("Tnum", (Tnum)n1.obj % (Tnum)n2.obj); }
-			if (op == "Pow") { return n("Tnum", Tnum.Pow((Tnum)n1.obj, (Tnum)n2.obj)); }
-			if (op == "Log2") { return n("Tnum", Tnum.Log((Tnum)n1.obj, (Tnum)n2.obj)); }
+			if (op == "RndUp") 		{ return nTnum(((Tnum)ob1).RoundUp((Tnum)ob2)); }
+			if (op == "RndDn") 		{ return nTnum(((Tnum)ob1).RoundDown((Tnum)ob2)); }
+			if (op == "RndNrUp") 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2)); }
+			if (op == "RndNrDn") 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2, true)); }
+			if (op == "Concat") 	{ return nTstr((Tstr)ob1 + (Tstr)ob2); }
+			if (op == "Mod") 		{ return nTnum((Tnum)ob1 % (Tnum)ob2); }
+			if (op == "Pow") 		{ return nTnum(Tnum.Pow((Tnum)ob1, (Tnum)ob2)); }
+			if (op == "Log2") 		{ return nTnum(Tnum.Log((Tnum)ob1, (Tnum)ob2)); }
 
-			return n(null,null);
+			return n(Typ.Null,null);
 		}
 
 		/// <summary>
@@ -251,30 +255,30 @@ namespace Akkadian
 		{
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
-			if (op == "T!")    { return n("Tbool", !(Tbool)ob1); }
-			if (op == "USD")   { return n("Tstr",  ((Tnum)ob1).ToUSD); }
+			if (op == "T!")    			{ return nTbool(!(Tbool)ob1); }
+			if (op == "USD")   			{ return nTstr(((Tnum)ob1).ToUSD); }
 
-			if (op == "Count")   { return n("Tnum",  ((Tset)ob1).Count); }
-			if (op == "Empty")   { return n("Tbool",  ((Tset)ob1).IsEmpty); }
-			if (op == "Rev")   { return n("Tstr",  ((Tset)ob1).Reverse); }
-			if (op == "ToThing")   { return n("Thing",  ((Tset)ob1).ToThing); }
+			if (op == "Count")   		{ return nTnum(((Tset)ob1).Count); }
+			if (op == "Empty")   		{ return nTbool(((Tset)ob1).IsEmpty); }
+			if (op == "Rev")   			{ return nTset(((Tset)ob1).Reverse); }
+			if (op == "ToThing")   		{ return n(Typ.Thing, ((Tset)ob1).ToThing); }
 
-			if (op == "TdateDay")   { return n("Tnum", ((Tdate)ob1).Day); }
-			if (op == "TdateMonth")   { return n("Tnum", ((Tdate)ob1).Month); }
-			if (op == "TdateQtr")   { return n("Tnum", ((Tdate)ob1).Quarter); }
-			if (op == "TdateYear")   { return n("Tnum", ((Tdate)ob1).Year); }
+			if (op == "TdateDay")   	{ return nTnum(((Tdate)ob1).Day); }
+			if (op == "TdateMonth")		{ return nTnum(((Tdate)ob1).Month); }
+			if (op == "TdateQtr")   	{ return nTnum(((Tdate)ob1).Quarter); }
+			if (op == "TdateYear")   	{ return nTnum(((Tdate)ob1).Year); }
 
-			if (op == "Abs")   { return n("Tnum", Tnum.Abs((Tnum)ob1)); }
-			if (op == "Sqrt")  { return n("Tnum", Tnum.Sqrt((Tnum)ob1)); }
-			if (op == "Log")   { return n("Tnum", Tnum.Log((Tnum)ob1)); }
-			if (op == "Sin")   { return n("Tnum", Tnum.Sin((Tnum)ob1)); }
-			if (op == "Cos")   { return n("Tnum", Tnum.Cos((Tnum)ob1)); }
-			if (op == "Tan")   { return n("Tnum", Tnum.Tan((Tnum)ob1)); }
-			if (op == "Asin")  { return n("Tnum", Tnum.ArcSin((Tnum)ob1)); }
-			if (op == "Acos")  { return n("Tnum", Tnum.ArcCos((Tnum)ob1)); }
-			if (op == "Atan")  { return n("Tnum", Tnum.ArcTan((Tnum)ob1)); }
+			if (op == "Abs")   			{ return nTnum(Tnum.Abs((Tnum)ob1)); }
+			if (op == "Sqrt")  			{ return nTnum(Tnum.Sqrt((Tnum)ob1)); }
+			if (op == "Log")   			{ return nTnum(Tnum.Log((Tnum)ob1)); }
+			if (op == "Sin")   			{ return nTnum(Tnum.Sin((Tnum)ob1)); }
+			if (op == "Cos")   			{ return nTnum(Tnum.Cos((Tnum)ob1)); }
+			if (op == "Tan")   			{ return nTnum(Tnum.Tan((Tnum)ob1)); }
+			if (op == "Asin")  			{ return nTnum(Tnum.ArcSin((Tnum)ob1)); }
+			if (op == "Acos") 			{ return nTnum(Tnum.ArcCos((Tnum)ob1)); }
+			if (op == "Atan")  			{ return nTnum(Tnum.ArcTan((Tnum)ob1)); }
 
-			return n(null,null);
+			return n(Typ.Null,null);
 		}
 
 		/// <summary>
@@ -288,10 +292,10 @@ namespace Akkadian
 				list[i-1] = (Tnum)eval(expr(exp.nodes[i]), args).obj;
 			}
 
-			if (op == "Tmax") { return n("Tbool", Tnum.Max(list)); }
-			if (op == "Tmin") { return n("Tbool", Tnum.Min(list)); }
+			if (op == "Tmax") { return nTnum(Tnum.Max(list)); }
+			if (op == "Tmin") { return nTnum(Tnum.Min(list)); }
 
-			return n(null,null);
+			return n(Typ.Null,null);
 		}
 	}
 }

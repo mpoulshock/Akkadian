@@ -32,16 +32,16 @@ namespace Akkadian
 		public static Node eval(Expr exp, Expr args)
 		{
 			Node result = exp.nodes[0];
-			string typ = exp.nodes[0].objType;
+			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
 			//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
-			if (typ == "var")
+			if (typ == Typ.Var)
 			{
 				result = EvaluateVariableReferences(exp, args);
 			}
-			else if (typ == "op")
+			else if (typ == Typ.Op)
 			{
 				string opType = Convert.ToString(ob);
 
@@ -75,57 +75,61 @@ namespace Akkadian
 				else if (opType == "Switch")
 				{
 					exp.nodes.RemoveAt(0);
-					result = n("Tnum",Switch2<Tnum>(exp, args));
+					result = n(Typ.Tnum,Switch2<Tnum>(exp, args));
 				}
 //				else if (opType == "Exists")
 //				{
 //					result = EvalExists(exp, args, opType);
 //				}
 			}
-			else if (typ == "expr")
+			else if (typ == Typ.Expr)
 			{
 				result = eval((Expr)ob, args);
 			}
-			else if (typ == "fcn")
+			else if (typ == Typ.Fcn)
 			{
 				// Calls the rule (function) at the given index number
 				result = eval((Expr)LoadedRules()[Convert.ToInt32(ob)], args);
 			}
-			else if (typ == "rec")
+			else if (typ == Typ.Rec)
 			{
 				// Get the function reference from exp
-				Expr newExp = expr(n("fcn", exp.nodes[0].obj));
+				Expr newExp = expr(n(Typ.Fcn, exp.nodes[0].obj));
 				result = MixAndMatch(exp, args, newExp);
 			}
-			else if (typ == "ask")
+			else if (typ == Typ.Ask)
 			{
 				// Get the info from the user / factbase
 				string s = Console.ReadLine();
 				//				result = n("Tnum",new Tnum(Convert.ToDecimal(s)));
-				result = n("Tbool",new Tbool(Convert.ToBoolean(s)));
+				result = n(Typ.Tbool,new Tbool(Convert.ToBoolean(s)));
 			}
 
 			return result;
 		}
 
-//		private static Node EvalExists(Expr exp, Expr args, string op)
-//		{
-//			Node argFcnNode = n(null,null);
-//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-//			Tset result = ApplyFcnToTset<Tset>(theSet, argFcnNode, y => CoreFilter(y));
-//
-//			//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-//			//			Func<Thing,Tbool> theFunc = (Func<Thing,Tbool>)eval(expr(exp.nodes [2]), args).obj;
-//
-//			return n("Tset", result);  
-//		}
 
 		public static Node eval(Node node, Expr args)
 		{
 			return eval(expr(node), args);
 		}
 
-
+		public static Node eval(Expr exp)
+		{
+			return eval(exp, expr(n(Typ.Null,null)));
+		}
+		
+		//		private static Node EvalExists(Expr exp, Expr args, string op)
+		//		{
+		//			Node argFcnNode = n(Typ.Null,null);
+		//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
+		//			Tset result = ApplyFcnToTset<Tset>(theSet, argFcnNode, y => CoreFilter(y));
+		//
+		//			//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
+		//			//			Func<Thing,Tbool> theFunc = (Func<Thing,Tbool>)eval(expr(exp.nodes [2]), args).obj;
+		//
+		//			return n("Tset", result);  
+		//		}
 
 		/// <summary>
 		/// Evaluates an expression referencing a higher order function.
@@ -169,28 +173,33 @@ namespace Akkadian
 
 		public static Node nTbool(Tbool t)
 		{
-			return new Node("Tbool",t);
+			return new Node(Typ.Tbool,t);
 		}
 
 		public static Node nTnum(Tnum t)
 		{
-			return new Node("Tnum",t);
+			return new Node(Typ.Tnum,t);
 		}
 
 		public static Node nTstr(Tstr t)
 		{
-			return new Node("Tstr",t);
+			return new Node(Typ.Tstr,t);
 		}
 
 		public static Node nTset(Tset t)
 		{
-			return new Node("Tset",t);
+			return new Node(Typ.Tset,t);
+		}
+
+		public static Node nTdate(Tdate t)
+		{
+			return new Node(Typ.Tdate,t);
 		}
 
 		/// <summary>
 		/// Simple way to instantiate a new Node.
 		/// </summary>
-		public static Node n(string typ, object o)
+		public static Node n(Typ typ, object o)
 		{
 			return new Node(typ,o);
 		}

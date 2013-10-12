@@ -35,41 +35,41 @@ namespace Akkadian
 			List<Expr> result = new List<Expr>();
 
 			// Function 0: f0(x) = (x * 2) + 1
-			Expr sub1 = expr(n("op","T*"),n("var","0"),nTnum(2));
-			Expr exp0 = expr(n("op","T+"),n("expr",sub1),nTnum(1));
+			Expr sub1 = expr(n(Typ.Op,"T*"),n(Typ.Var,"0"),nTnum(2));
+			Expr exp0 = expr(n(Typ.Op,"T+"),n(Typ.Expr,sub1),nTnum(1));
 			result.Add(exp0);
 
 			// Function 1: f1(x) = x + 42
-			Expr exp1 = expr(n("op","T+"),n("var","0"),nTnum(42));
+			Expr exp1 = expr(n(Typ.Op,"T+"),n(Typ.Var,"0"),nTnum(42));
 			result.Add(exp1);
 
 			// Function 2: f2(x) = 1017 - f0(x)
-			Expr exp2 = expr(n("op","T-"),nTnum(1017),n("fcn","0"));
+			Expr exp2 = expr(n(Typ.Op,"T-"),nTnum(1017),n(Typ.Fcn,"0"));
 			result.Add(exp2);
 
 			// Function 3: f3(x,y) = y / x
-			Expr exp3 = expr(n("op","T/"),n("var","1"),n("var","0"));
+			Expr exp3 = expr(n(Typ.Op,"T/"),n(Typ.Var,"1"),n(Typ.Var,"0"));
 			result.Add(exp3);
 
 			// Function 4: f4(x,y) = y(x,17)
-			Expr exp4 = expr(n("var","1"),n("var","0"),nTnum(17));
+			Expr exp4 = expr(n(Typ.Var,"1"),n(Typ.Var,"0"),nTnum(17));
 			result.Add(exp4);
 
 			// Function 5: Placeholder
-			Expr exp5 = expr(n(null,null));
+			Expr exp5 = expr(n(Typ.Null,null));
 			result.Add(exp5);
 
 			// Function 6: f6(x) = if x = 0 -> 1, else x
-			Expr sub6_1 = expr(n("op","T="),n("var","0"),nTnum(0));      // x == 0
-			Expr exp6 = expr(n("op","Switch"),n("expr",sub6_1),nTnum(1),n("var","0"));
+			Expr sub6_1 = expr(n(Typ.Op,"T="),n(Typ.Var,"0"),nTnum(0));      // x == 0
+			Expr exp6 = expr(n(Typ.Op,"Switch"),n(Typ.Expr,sub6_1),nTnum(1),n(Typ.Var,"0"));
 			result.Add(exp6);
 
 			// Function 7 (recursive): f7(x) = if x = 0 -> 0, else f7(x-1) + 3
-			Expr sub7_1 = expr(n("op","T="),n("var","0"),nTnum(0));      // x == 0
-			Expr sub7_2 = expr(n("op","T-"),n("var","0"),nTnum(1));       // x-1
-			Expr sub7_3 = expr(n("rec","7"),n("expr",sub7_2));               // f7(x-1)
-			Expr sub7_4 = expr(n("op","T+"),n("expr",sub7_3),nTnum(3));   // f7(x-1) + 3
-			Expr exp7 = expr(n("op","Switch"),n("expr",sub7_1),nTnum(0),n("expr",sub7_4));
+			Expr sub7_1 = expr(n(Typ.Op,"T="),n(Typ.Var,"0"),nTnum(0));      // x == 0
+			Expr sub7_2 = expr(n(Typ.Op,"T-"),n(Typ.Var,"0"),nTnum(1));       // x-1
+			Expr sub7_3 = expr(n(Typ.Rec,"7"),n(Typ.Expr,sub7_2));               // f7(x-1)
+			Expr sub7_4 = expr(n(Typ.Op,"T+"),n(Typ.Expr,sub7_3),nTnum(3));   // f7(x-1) + 3
+			Expr exp7 = expr(n(Typ.Op,"Switch"),n(Typ.Expr,sub7_1),nTnum(0),n(Typ.Expr,sub7_4));
 			result.Add(exp7);
 
 			return result;

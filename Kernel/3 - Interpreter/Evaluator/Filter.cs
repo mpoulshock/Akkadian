@@ -40,7 +40,7 @@ namespace Akkadian
 			foreach(Thing le in Tset.DistinctEntities(theSet))
 			{
 				// Func<Thing,Tvar> argumentFcn
-				Tvar val = (Tvar)eval(argumentFcn, expr(n("Thing",le))).obj;
+				Tvar val = (Tvar)eval(argumentFcn, expr(n(Typ.Thing,le))).obj;
 				fcnValues.Add(le, val);
 				listOfTvars.Add(val);
 			} 

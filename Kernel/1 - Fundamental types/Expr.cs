@@ -49,10 +49,10 @@ namespace Akkadian
 	public class Node
 	{
 		public object obj;
-		public string objType;
-		public Type  Type;
+//		public string objType;
+		public Typ objType;
 
-		public Node(string typ, object o)
+		public Node(Typ typ, object o)
 		{
 			obj = o;
 			objType = typ;
