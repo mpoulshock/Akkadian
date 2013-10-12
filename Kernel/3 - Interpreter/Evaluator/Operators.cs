@@ -47,6 +47,9 @@ namespace Akkadian
 		Null
 	}
 
+	/// <summary>
+	/// Types of operators used in interpreter expressions
+	/// </summary>
 	public enum Op
 	{
 		// Short-circuting operators
@@ -58,75 +61,63 @@ namespace Akkadian
 		Plus = 10,
 		Minus = 11,
 		Div = 12,
-		Eq, 
-		Neq,
-		GrTh, 
-		GrEq,
-		LsTh, 
-		LsEq,
-		Mod,
-		Nlog, 
-		Pow,
-		RndUp, 
-		RndDn, 
-		RndNrUp, 
-		RndNrDn,
-		Concat,
-		Subset, 
-		Contains, 
-		Union, 
-		Intersect, 
-		RelComp,
-		AddDays, 
-		AddMos, 
-		AddYrs, 
-		DayDiff, 
-		WeekDiff,
-		YearDiff,
+		Eq = 13, 
+		Neq = 14,
+		GrTh = 15, 
+		GrEq = 16,
+		LsTh = 17, 
+		LsEq = 18,
+		Mod = 19,
+		Nlog = 20, 
+		Pow = 21,
+		RndUp = 22, 
+		RndDn = 23, 
+		RndNrUp = 24, 
+		RndNrDn = 25,
+		Concat = 26,
+		Subset = 27, 
+		Contains = 28, 
+		Union = 29, 
+		Intersect = 30, 
+		RelComp = 31,
+		AddDays = 32, 
+		AddMos = 33, 
+		AddYrs = 34, 
+		DayDiff = 35, 
+		WeekDiff = 36,
+		YearDiff = 37,
 
 		// Unary operators
-		Not,
-		USD,
-		Abs,
-		Sqrt,
-		Log,
-		Sin,
-		Cos,
-		Tan,
-		Asin,
-		Acos,
-		Atan,
-		Count,
-		Empty,
-		Rev,
-		ToThing,
-		Day,
-		Month,
-		Quarter,
-		Year,
+		Not = 100,
+		USD = 101,
+		Abs = 102,
+		Sqrt = 103,
+		Log = 104,
+		Sin = 105,
+		Cos = 106,
+		Tan = 107,
+		Asin = 108,
+		Acos = 109,
+		Atan = 110,
+		Count = 111,
+		Empty = 112,
+		Rev = 113,
+		ToThing = 114,
+		Day = 115,
+		Month = 116,
+		Quarter = 117,
+		Year = 118,
+
+		// Ternary functions
 
 		// Other
-		Switch,
-		Max,
-		Min
+		Switch = 300,
+		Max = 301,
+		Min = 302
 	}
 
 	public partial class Interpreter
 	{
-		private static Op[] shortCircuits = {Op.And, Op.Or, Op.Mult}; 
-
-		private static Op[] binaryOps = {Op.Plus, Op.Minus, Op.Div,
-			Op.Eq, Op.Neq, Op.GrTh, Op.GrEq, Op.LsTh, Op.LsEq,
-			Op.Pow, Op.Log, Op.RndUp, Op.RndDn, Op.RndNrUp, Op.RndNrDn, Op.Concat,
-			Op.Subset, Op.Contains, Op.Union, Op.Intersect, Op.RelComp,
-			Op.AddDays, Op.AddMos, Op.AddYrs, Op.DayDiff, Op.WeekDiff, Op.YearDiff}; 
-
-		private static Op[] unaryOps = {Op.Not, Op.USD, Op.Abs, Op.Sqrt, Op.Log, 
-			Op.Sin, Op.Cos, Op.Tan, Op.Asin, Op.Acos, Op.Atan,
-			Op.Count, Op.Empty, Op.Rev, Op.ToThing,
-			Op.Day, Op.Month, Op.Quarter, Op.Year}; 
-
-
 		/// <summary>
 		/// Evaluates expressions in which a short-circuit may be required.
 		/// </summary>

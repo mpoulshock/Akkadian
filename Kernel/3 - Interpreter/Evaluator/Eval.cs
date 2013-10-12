@@ -35,7 +35,7 @@ namespace Akkadian
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
-			//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
+//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
 			if (typ == Typ.Var)
 			{
@@ -44,27 +44,28 @@ namespace Akkadian
 			else if (typ == Typ.Op)
 			{
 				Op opType = (Op)ob;
+				int opID = Convert.ToInt16(opType);
 
-				if (shortCircuits.Contains(opType))
+				if (opID < 10)
 				{
 					result = EvalShortCircuitFcns(exp, args, opType);
 				}
-				else if (binaryOps.Contains(opType))
+				else if (opID < 100)
 				{
 					result = BinaryFcnEval(exp, args, opType);
 				}
-				else if (unaryOps.Contains(opType))
+				else if (opID < 200)
 				{
 					result = UnaryFcnEval(exp, args, opType);
-				}
-				else if (opType == Op.Max || opType == Op.Min)
-				{
-					result = MultiTnumFcnEval(exp, args, opType);
 				}
 				else if (opType == Op.Switch)
 				{
 					exp.nodes.RemoveAt(0);
 					result = n(Typ.Tnum,Switch2<Tnum>(exp, args));
+				}
+				else if (opType == Op.Max || opType == Op.Min)
+				{
+					result = MultiTnumFcnEval(exp, args, opType);
 				}
 //				else if (opType == "Exists")
 //				{

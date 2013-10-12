@@ -357,11 +357,11 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Recursion_4 ()
 		{
-			// f7(300) = 900
+			// f7(450) = 1350
 			Expr exp = expr(n(Typ.Fcn,"7"));
-			Expr args = expr(nTnum(250));
+			Expr args = expr(nTnum(450));
 			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(750, r.Out);                
+			Assert.AreEqual(1350, r.Out);                
 		}
 
 		[Test]
