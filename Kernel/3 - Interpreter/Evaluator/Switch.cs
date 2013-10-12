@@ -33,7 +33,7 @@ namespace Akkadian
 		/// Sample usage: Switch(Tbool1, Tvar1, Tbool2, Tvar2, ..., defaultTvar).  
 		/// Returns Tvar1 if Tbool2 is true, else Tvar2 if Tbool2 is true, etc., else defaultTvar. 
 		/// </remarks>
-		public static T Switch2<T>(Expr arguments) where T : Tvar
+		public static T Switch2<T>(Expr arguments, Expr args) where T : Tvar
 		{
 			// Default result
 			Hval h = new Hval(null, Hstate.Null);
@@ -45,7 +45,7 @@ namespace Akkadian
 			for (int arg=0; arg < len-1; arg+=2)
 			{
 				// Get value of the condition
-				Tbool newCondition = (Tbool)eval(arguments.nodes[arg],expr(n(null,null))).obj;
+				Tbool newCondition = (Tbool)eval(arguments.nodes[arg],args).obj;
 
 				// Identify the intervals when the new condition is neither false nor true
 				// Falsehood causes it to fall through to next condition. Truth causes the
@@ -64,7 +64,7 @@ namespace Akkadian
 				// If new true segments are found, accumulate the values during those intervals
 				if (newConditionIsTrueAndResultIsNull.IsEverTrue())
 				{
-					T val = (T)eval(arguments.nodes[arg+1],expr(n(null,null))).obj;
+					T val = (T)eval(arguments.nodes[arg+1],args).obj;
 					result = Util.MergeTvars<T>(result,
 					                            Util.ConditionalAssignment<T>(newConditionIsTrueAndResultIsNull, val)); 
 				}
@@ -76,7 +76,7 @@ namespace Akkadian
 
 			}
 
-			T defaultVal = (T)eval(arguments.nodes[len-1],expr(n(null,null))).obj;
+			T defaultVal = (T)eval(arguments.nodes[len-1],args).obj;
 			result = Util.MergeTvars<T>(result, defaultVal);
 
 			return result.LeanTvar<T>();

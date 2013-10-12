@@ -30,7 +30,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Abs_1 ()
 		{
-			Expr exp = expr(n("op","Abs"),n("Tnum",new Tnum(41)));
+			Expr exp = expr(n("op","Abs"),nTnum(41));
 			Expr args = expr(n(null,null)); 
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(41, r.Out);                
@@ -39,26 +39,17 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Abs_2 ()
 		{
-			Expr exp = expr(n("op","Abs"),n("Tnum",new Tnum(-41)));
+			Expr exp = expr(n("op","Abs"),nTnum(-41));
 			Expr args = expr(n(null,null)); 
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(41, r.Out);                
 		}
 
 		[Test]
-		public void Addition_straight ()
-		{
-			// 41 + 9
-			Expr exp = expr(n("op","+"),n("dec","41"),n("dec","9"));
-			Expr args = expr(n("dec","1"),n("dec","2"),n("dec","3"));
-			Assert.AreEqual(50, eval(exp,args).obj);                
-		}
-
-		[Test]
 		public void Addition ()
 		{
 			// 41 + 9
-			Expr exp = expr(n("op","T+"),n("Tnum",new Tnum(41)),n("Tnum",new Tnum(9)));
+			Expr exp = expr(n("op","T+"),nTnum(41),nTnum(9));
 			Expr args = expr(n(null,null)); 
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(50, r.Out);                
@@ -68,24 +59,35 @@ namespace Akkadian.UnitTests
 		public void Addition_variables_1 ()
 		{
 			// x + 42, where x = 91
-			Expr exp = expr(n("op","+"),n("var","0"),n("dec","42"));
-			Expr args = expr(n("dec","91"),n("dec","92"),n("dec","93"));
-			Assert.AreEqual(133, eval(exp,args).obj);                
+			Expr exp = expr(n("op","T+"),n("var","0"),nTnum(42));
+			Expr args = expr(nTnum(91),nTnum(92),nTnum(93));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(133, r.Out);                
 		}
 
 		[Test]
 		public void Addition_variables_2 ()
 		{
-			// 42 + x, where x = 91
-			Expr exp = expr(n("op","+"),n("dec","42"),n("var","0"));
-			Expr args = expr(n("dec","91"),n("dec","92"),n("dec","93"));
-			Assert.AreEqual(133, eval(exp,args).obj);                
+			// x + 42, where x = 91
+			Expr exp = expr(n("op","T+"),nTnum(42),n("var","0"));
+			Expr args = expr(nTnum(91),nTnum(92),nTnum(93));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(133, r.Out);                
 		}
 
 		[Test]
-		public void And ()
+		public void And_1 ()
 		{
-			Expr exp = expr(n("op","T&"),n("Tbool",new Tbool(true)),n("Tnum",new Tbool(false)));
+			Expr exp = expr(n("op","T&"),nTbool(true),nTbool(false));
+			Expr args = expr(n(null,null)); 
+			Tbool r = (Tbool)eval(exp,args).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void And_2 ()
+		{
+			Expr exp = expr(n("op","T&"),nTbool(false),nTbool(true));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(false, r.Out);                
@@ -96,23 +98,25 @@ namespace Akkadian.UnitTests
 		{
 			// 1017 - [(x * 2) + 1], where x = 22.3
 			Expr exp = expr(n("fcn","2"));
-			Expr args = expr(n("dec","22.3"));
-			Assert.AreEqual(971.4, eval(exp,args).obj);                
+			Expr args = expr(nTnum(22.3));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(971.4, r.Out);            
 		}
 
 		[Test]
-		public void Decimals ()
+		public void Concat ()
 		{
-			Expr exp = expr(n("dec","123"));
-			Expr args = expr(n("dec","1"));
-			Assert.AreEqual("123", eval(exp,args).obj);                
+			Expr exp = expr(n("op","Concat"), nTstr("Hello, "), nTstr("World"));
+			Expr args = expr(n(null,null)); 
+			Tstr r = (Tstr)eval(exp,args).obj;
+			Assert.AreEqual("Hello, World", r.Out);               
 		}
 
 		[Test]
 		public void Division ()
 		{
 			// 42 / 7
-			Expr exp = expr(n("op","T/"),n("Tnum",new Tnum(42)),n("Tnum",new Tnum(7)));
+			Expr exp = expr(n("op","T/"),nTnum(42),nTnum(7));
 			Expr args = expr(n(null,null)); 
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(6, r.Out);                
@@ -121,7 +125,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_1 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tnum",new Tnum(7)),n("Tnum",new Tnum(9)));
+			Expr exp = expr(n("op","T="),nTnum(7),nTnum(9));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(false, r.Out);                
@@ -130,7 +134,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_2 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tnum",new Tnum(9)),n("Tnum",new Tnum(9)));
+			Expr exp = expr(n("op","T="),nTnum(9),nTnum(9));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(true, r.Out);                
@@ -139,7 +143,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_3 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tstr",new Tstr("ab")),n("Tstr",new Tstr("ba")));
+			Expr exp = expr(n("op","T="),nTstr("ab"),nTstr("ba"));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(false, r.Out);                
@@ -148,7 +152,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_4 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tstr",new Tstr("ab")),n("Tstr",new Tstr("ab")));
+			Expr exp = expr(n("op","T="),nTstr("ab"),nTstr("ab"));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(true, r.Out);                
@@ -157,7 +161,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_5 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tbool",new Tbool(true)),n("Tbool",new Tbool(true)));
+			Expr exp = expr(n("op","T="),nTbool(true),nTbool(true));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(true, r.Out);                
@@ -166,7 +170,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Equality_6 ()
 		{
-			Expr exp = expr(n("op","T="),n("Tbool",new Tbool(true)),n("Tbool",new Tbool(false)));
+			Expr exp = expr(n("op","T="),nTbool(true),nTbool(false));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(false, r.Out);                
@@ -196,8 +200,9 @@ namespace Akkadian.UnitTests
 			// f(x,y) = y(x,17); x = 34; y = f(a,b) = b/a
 			//        = y(34,17) = 17/34 = 0.5
 			Expr exp = expr(n("fcn","4"));
-			Expr args = expr(n("dec","34"),n("fcn","3"));
-			Assert.AreEqual(0.5, eval(exp,args).obj);                
+			Expr args = expr(nTnum(34),n("fcn","3"));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(0.5, r.Out);                
 		}
 
 		[Test]
@@ -205,8 +210,9 @@ namespace Akkadian.UnitTests
 		{
 			// (a * 2) + 1, where a = 44
 			Expr exp = expr(n("fcn","0"));
-			Expr args = expr(n("dec","44"));
-			Assert.AreEqual(89, eval(exp,args).obj);                
+			Expr args = expr(nTnum(44));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(89,r.Out);                
 		}
 
 		[Test]
@@ -214,14 +220,15 @@ namespace Akkadian.UnitTests
 		{
 			// y / x, where y = 99, x = 11
 			Expr exp = expr(n("fcn","3"));
-			Expr args = expr(n("dec","11"),n("dec","99"));
-			Assert.AreEqual(9, eval(exp,args).obj);                
+			Expr args = expr(nTnum(11),nTnum(99));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(9, r.Out);                 
 		}
 
 		[Test]
 		public void GreaterThan_1 ()
 		{
-			Expr exp = expr(n("op","T>"),n("Tnum",new Tnum(7)),n("Tnum",new Tnum(9)));
+			Expr exp = expr(n("op","T>"),nTnum(7),nTnum(9));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(false, r.Out);                
@@ -230,17 +237,205 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void GreaterThan_2 ()
 		{
-			Expr exp = expr(n("op","T>"),n("Tnum",new Tnum(9)),n("Tnum",new Tnum(7)));
+			Expr exp = expr(n("op","T>"),nTnum(9),nTnum(7));
 			Expr args = expr(n(null,null)); 
 			Tbool r = (Tbool)eval(exp,args).obj;
 			Assert.AreEqual(true, r.Out);                
 		}
 
 		[Test]
+		public void Inequality_1 ()
+		{
+			Expr exp = expr(n("op","T<>"),nTstr("ab"),nTstr("ba"));
+			Expr args = expr(n(null,null)); 
+			Tbool r = (Tbool)eval(exp,args).obj;
+			Assert.AreEqual(true, r.Out);                
+		}
+
+		[Test]
+		public void Inequality_2()
+		{
+			Expr exp = expr(n("op","T<>"),nTstr("ab"),nTstr("ab"));
+			Expr args = expr(n(null,null)); 
+			Tbool r = (Tbool)eval(exp,args).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Max_1 ()
+		{
+			Expr exp = expr(n("op","Tmax"),nTnum(7));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(7, r.Out);                
+		}
+
+		[Test]
+		public void Max_2 ()
+		{
+			Expr exp = expr(n("op","Tmax"),nTnum(7),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(9, r.Out);                
+		}
+
+		[Test]
+		public void Min ()
+		{
+			Expr exp = expr(n("op","Tmin"),nTnum(7),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(7, r.Out);                
+		}
+
+		[Test]
+		public void Multiplication_1 ()
+		{
+			// 41 * 9
+			Expr exp = expr(n("op","T*"),nTnum(41),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(369, r.Out);                
+		}
+
+		[Test]
+		public void Multiplication_2 ()
+		{
+			// Unstated * 9
+			Expr exp = expr(n("op","T*"),n("Tnum",new Tnum(Hstate.Unstated)),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual("Unstated", r.Out);                
+		}
+
+		[Test]
+		public void Multiplication_3 ()
+		{
+			// 0 * 9
+			Expr exp = expr(n("op","T*"),nTnum(0),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void NestedExpression ()
+		{
+			// (a * 2) + 1, where a = 44
+			Expr sub = expr(n("op","T*"),n("var","0"),nTnum(2));
+			Expr exp = expr(n("op","T+"),n("expr",sub),nTnum(1));
+			Expr args = expr(nTnum(44));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(89, r.Out);                
+		}
+
+		[Test]
+		public void Not ()
+		{
+			Expr exp = expr(n("op","T!"),nTbool(true));
+			Expr args = expr(n(null,null)); 
+			Tbool r = (Tbool)eval(exp,args).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Or ()
+		{
+			Expr exp = expr(n("op","T|"),nTbool(true),nTbool(false));
+			Expr args = expr(n(null,null)); 
+			Tbool r = (Tbool)eval(exp,args).obj;
+			Assert.AreEqual(true, r.Out);                
+		}
+
+		[Test]
+		public void Recursion_1 ()
+		{
+			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
+			// f7(0) = 0
+			Expr exp = expr(n("fcn","7"));
+			Expr args = expr(nTnum(0));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Recursion_2 ()
+		{
+			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
+			// f7(1) = 3
+			Expr exp = expr(n("fcn","7"));
+			Expr args = expr(nTnum(1));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(3, r.Out);                
+		}
+
+		[Test]
+		public void Recursion_3 ()
+		{
+			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
+			// f7(2) = 6
+			Expr exp = expr(n("fcn","7"));
+			Expr args = expr(nTnum(2));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(6, r.Out);                
+		}
+
+		[Test]
+		public void Recursion_4 ()
+		{
+			// f7(300) = 900
+			Expr exp = expr(n("fcn","7"));
+			Expr args = expr(nTnum(250));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(750, r.Out);                
+		}
+
+		[Test]
+		public void Recursion_PreliminaryStep ()
+		{
+			// f1(56) = 98
+			Expr exp = expr(n("rec","1"),nTnum(56));
+			Expr args = expr(n(null,null));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(98, r.Out);                
+		}
+
+		[Test]
+		public void Reverse ()
+		{
+			Thing A = new Thing ("A");
+			Thing B = new Thing ("B");
+			Expr exp = expr(n("op","Rev"), n("Tset",new Tset(A,B)));
+			Expr args = expr(n(null,null)); 
+			Tset r = (Tset)eval(exp,args).obj;
+			Assert.AreEqual("B, A", r.Out);               
+		}
+
+		[Test]
+		public void Subtraction_1 ()
+		{
+			// 41 - 9
+			Expr exp = expr(n("op","T-"),nTnum(41),nTnum(9));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(32, r.Out);                
+		}
+
+		[Test]
+		public void Subtraction_2 ()
+		{
+			// 41 - Unstated
+			Expr exp = expr(n("op","T-"),nTnum(41),nTnum(new Tnum(Hstate.Unstated)));
+			Expr args = expr(n(null,null)); 
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual("Unstated", r.Out);                
+		}
+
+		[Test]
 		public void Switch_1 ()
 		{
 			// if cond=true -> 42, 41
-			Expr exp = expr(n("op","Switch"),n("Tbool",new Tbool(true)),n("Tnum",new Tnum(42)),n("Tnum",new Tnum(41)));
+			Expr exp = expr(n("op","Switch"),nTbool(true),nTnum(42),nTnum(41));
 			Expr args = expr(n(null,null));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(42, r.Out);                
@@ -250,7 +445,7 @@ namespace Akkadian.UnitTests
 		public void Switch_2 ()
 		{
 			// if cond=true -> 42, 41
-			Expr exp = expr(n("op","Switch"),n("Tbool",new Tbool(false)),n("Tnum",new Tnum(42)),n("Tnum",new Tnum(41)));
+			Expr exp = expr(n("op","Switch"),nTbool(false),nTnum(42),nTnum(41));
 			Expr args = expr(n(null,null));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(41, r.Out);                
@@ -262,210 +457,57 @@ namespace Akkadian.UnitTests
 			Tbool cond = new Tbool(true);
 			cond.AddState(new DateTime(2015,1,1), false);
 
-			Expr exp = expr(n("op","Switch"),n("Tbool",cond),n("Tnum",new Tnum(42)),n("Tnum",new Tnum(41)));
+			Expr exp = expr(n("op","Switch"),nTbool(cond),nTnum(42),nTnum(41));
 			Expr args = expr(n(null,null));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual("{Dawn: 42; 1/1/2015: 41}", r.Out);                
 		}
 
 		[Test]
-		public void IfThen_1 ()
-		{
-			// if cond=true -> 42, 41
-			Expr exp = expr(n("op","if"),n("bool",true),n("dec","42"),n("dec","41"));
-			Expr args = expr(n(null,null));
-			Assert.AreEqual("42", eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void IfThen_2 ()
-		{
-			Expr exp = expr(n("op","if"),n("bool",false),n("dec","42"),n("dec","41"));
-			Expr args = expr(n(null,null));
-			Assert.AreEqual("41", eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void IfThen_3 ()
+		public void Switch_4 ()
 		{
 			Expr exp = expr(n("fcn","6"));
-			Expr args = expr(n("dec","0"));
-			Assert.AreEqual("1", eval(exp,args).obj);                
+			Expr args = expr(nTnum(0));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(1, r.Out);                
 		}
 
 		[Test]
-		public void IfThen_4 ()
+		public void Switch_5 ()
 		{
 			Expr exp = expr(n("fcn","6"));
-			Expr args = expr(n("dec","45"));
-			Assert.AreEqual("45", eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Inequality_1 ()
-		{
-			Expr exp = expr(n("op","T<>"),n("Tstr",new Tstr("ab")),n("Tstr",new Tstr("ba")));
-			Expr args = expr(n(null,null)); 
-			Tbool r = (Tbool)eval(exp,args).obj;
-			Assert.AreEqual(true, r.Out);                
-		}
-
-		[Test]
-		public void Inequality_2()
-		{
-			Expr exp = expr(n("op","T<>"),n("Tstr",new Tstr("ab")),n("Tstr",new Tstr("ab")));
-			Expr args = expr(n(null,null)); 
-			Tbool r = (Tbool)eval(exp,args).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void Max_1 ()
-		{
-			Expr exp = expr(n("op","Tmax"),n("Tnum",new Tnum(7)));
-			Expr args = expr(n(null,null)); 
+			Expr args = expr(nTnum(45));
 			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(7, r.Out);                
+			Assert.AreEqual(45, r.Out);                
 		}
 
 		[Test]
-		public void Max_2 ()
+		public void ToUSD ()
 		{
-			Expr exp = expr(n("op","Tmax"),n("Tnum",new Tnum(7)),n("Tnum",new Tnum(9)));
+			Expr exp = expr(n("op","USD"), nTnum(42.224));
 			Expr args = expr(n(null,null)); 
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(9, r.Out);                
+			Tstr r = (Tstr)eval(exp,args).obj;
+			Assert.AreEqual("$42.22", r.Out);               
 		}
 
 		[Test]
-		public void Min ()
+		public void Union ()
 		{
-			Expr exp = expr(n("op","Tmin"),n("Tnum",new Tnum(7)),n("Tnum",new Tnum(9)));
+			Thing A = new Thing ("A");
+			Thing B = new Thing ("B");
+			Expr exp = expr(n("op","Union"), nTset(A), nTset(B));
 			Expr args = expr(n(null,null)); 
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(7, r.Out);                
-		}
-
-		[Test]
-		public void Multiplication_straight ()
-		{
-			// 41 * 9
-			Expr exp = expr(n("op","*"),n("dec","41"),n("dec","9"));
-			Expr args = expr(n("dec","1"),n("dec","2"),n("dec","3"));
-			Assert.AreEqual(369, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Multiplication ()
-		{
-			// 41 - 9
-			Expr exp = expr(n("op","T*"),n("Tnum",new Tnum(41)),n("Tnum",new Tnum(9)));
-			Expr args = expr(n(null,null)); 
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(369, r.Out);                
-		}
-
-		[Test]
-		public void NestedExpression ()
-		{
-			// (a * 2) + 1, where a = 44
-			Expr sub = expr(n("op","*"),n("var","0"),n("dec","2"));
-			Expr exp = expr(n("op","+"),n("expr",sub),n("dec","1"));
-			Expr args = expr(n("dec","44"));
-			Assert.AreEqual(89, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Not ()
-		{
-			Expr exp = expr(n("op","T!"),n("Tbool",new Tbool(true)));
-			Expr args = expr(n(null,null)); 
-			Tbool r = (Tbool)eval(exp,args).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void Or ()
-		{
-			Expr exp = expr(n("op","T|"),n("Tbool",new Tbool(true)),n("Tnum",new Tbool(false)));
-			Expr args = expr(n(null,null)); 
-			Tbool r = (Tbool)eval(exp,args).obj;
-			Assert.AreEqual(true, r.Out);                
-		}
-
-        [Test]
-		public void Recursion_1 ()
-		{
-			// f5(x) = if x = 0 -> 0, else f5(x-1) + 3
-			// f5(0) = 0
-			Expr exp = expr(n("fcn","5"));
-			Expr args = expr(n("dec","0"));
-			Assert.AreEqual("0", eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Recursion_2 ()
-		{
-			// f5(x) = if x = 0 -> 0, else f5(x-1) + 3
-			// f5(1) = 3
-			Expr exp = expr(n("fcn","5"));
-			Expr args = expr(n("dec","1"));
-			Assert.AreEqual(3, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Recursion_3 ()
-		{
-			// f5(x) = if x = 0 -> 0, else f5(x-1) + 3
-			// f5(2) = 6
-			Expr exp = expr(n("fcn","5"));
-			Expr args = expr(n("dec","2"));
-			Assert.AreEqual(6, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Recursion_4 ()
-		{
-			Expr exp = expr(n("fcn","5"));
-			Expr args = expr(n("dec","300"));
-			Assert.AreEqual(900, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Recursion_PreliminaryStep ()
-		{
-			// f1(56) = 98
-			Expr exp = expr(n("rec","1"),n("dec","56"));
-			Expr args = expr(n(null,null));
-			Assert.AreEqual(98, eval(exp,args).obj);                
-		}
-
-		[Test]
-		public void Subtraction_1 ()
-		{
-			// 41 - 9
-			Expr exp = expr(n("op","T-"),n("Tnum",new Tnum(41)),n("Tnum",new Tnum(9)));
-			Expr args = expr(n(null,null)); 
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(32, r.Out);                
-		}
-
-		[Test]
-		public void Subtraction_2 ()
-		{
-			// 41 - Unstated
-			Expr exp = expr(n("op","T-"),n("Tnum",new Tnum(41)),n("Tnum",new Tnum(Hstate.Unstated)));
-			Expr args = expr(n(null,null)); 
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual("Unstated", r.Out);                
+			Tset r = (Tset)eval(exp,args).obj;
+			Assert.AreEqual("A, B", r.Out);               
 		}
 
 		[Test]
 		public void VariableValues ()
 		{
 			Expr exp = expr(n("var","2"));
-			Expr args = expr(n("dec","91"),n("dec","92"),n("dec","93"));
-			Assert.AreEqual("93", eval(exp,args).obj);                
+			Expr args = expr(nTnum(91),nTnum(92),nTnum(93));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(93, r.Out);                
 		}
 	}
 }

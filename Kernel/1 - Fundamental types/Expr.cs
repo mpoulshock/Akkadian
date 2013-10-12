@@ -50,6 +50,7 @@ namespace Akkadian
 	{
 		public object obj;
 		public string objType;
+		public Type  Type;
 
 		public Node(string typ, object o)
 		{
