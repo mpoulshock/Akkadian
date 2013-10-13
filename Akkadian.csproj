@@ -105,6 +105,10 @@
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Switch.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Filter.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Operators.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Parser\Lexer.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Parser\Parser.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Parser.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Lexer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

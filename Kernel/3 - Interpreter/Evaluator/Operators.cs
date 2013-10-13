@@ -123,6 +123,7 @@ namespace Akkadian
 		/// </summary>
 		private static Node EvalShortCircuitFcns(Expr exp, Expr args, Op op)
 		{
+			// TODO: Forget short-circuits and instead paralellize?
 			Node n1 = eval(expr(exp.nodes [1]), args);
 
 			if (op == Op.And) 	// And
@@ -167,6 +168,7 @@ namespace Akkadian
 		/// </summary>
 		private static Node BinaryFcnEval(Expr exp, Expr args, Op op)
 		{
+			// TODO: Paralellize
 			Node n1 = eval(expr(exp.nodes [1]), args);
 			Typ tp = n1.objType;
 			object ob1 = n1.obj;
@@ -281,6 +283,7 @@ namespace Akkadian
 		/// </summary>
 		private static Node MultiTnumFcnEval(Expr exp, Expr args, Op op)
 		{
+			// TODO: Parallelize
 			Tnum[] list = new Tnum[exp.nodes.Count-1];
 			for (int i=1; i<exp.nodes.Count; i++)
 			{

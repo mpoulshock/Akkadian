@@ -1,0 +1,56 @@
+// Copyright (c) 2013 Hammura.bi LLC
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using System;
+
+namespace Akkadian
+{
+	public partial class Interpreter
+	{
+		// Letters, digits, dates
+		protected const string whitespace = "[ ]*";
+		protected const string letter = "[a-zA-Z]";
+		protected const string letters = "["+letter+"]+";
+		protected const string digit = "[0-9]";
+		protected const string integer = "[0-9]+";
+		protected const string alphadecimals = "["+letter+"|"+digit+"]+";
+
+		// Literal values
+		protected const string boolLiteral = "(true|false)";
+		protected const string decimalLiteral = integer+@"(\."+integer+")?";
+//		protected const string stringLiteral = @"/"[]+\\"";
+		protected const string dateLiteral = @"(1|2)[0-9]{3}\-[0-9]{2}\-[0-9]{2}";		// yyyy-mm-dd
+//		protected const string setLiteral = @"\[ \]";
+
+		// Time-varying literal values
+		// {Dawn: 42; 2011-01-01: 43}
+
+		// Function parts
+		protected const string akkType = "(Tbool|Tnum|Tstr|Tdate|Tset|Thing)";
+		protected const string fcnVariable = letter + "([a-zA-Z0-9_]+)?";
+		protected const string fcnName = letter + "([a-zA-Z0-9_]+)?";
+		protected const string secondaryArgs = "([, ?" + fcnVariable + " ?]+)?";
+		protected const string fcnSignature = fcnName + whitespace + @"\("+ whitespace + fcnVariable + secondaryArgs + whitespace + @"\)";
+
+		// Binary operators
+		protected const string binaryOp = @"(&|\|)";
+	}
+}
+
