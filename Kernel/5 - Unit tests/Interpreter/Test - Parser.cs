@@ -28,11 +28,95 @@ namespace Akkadian.UnitTests
 	public partial class ParserTests : Interpreter
 	{
 		[Test]
-		public void IO_1 ()
+		public void FirstParen_1 ()
 		{
-			string s = ReadFile();
-			Assert.AreEqual("", s);                
+			Assert.AreEqual("", FirstParenthetical("x + 3", "(", ")"));                
 		}
+
+		[Test]
+		public void FirstParen_2 ()
+		{
+			Assert.AreEqual("(a + 1)", FirstParenthetical("x + (a + 1) + b", "(", ")"));                
+		}
+
+		[Test]
+		public void FirstParen_3 ()
+		{
+			Assert.AreEqual("(a + 1)", FirstParenthetical("x + (a + 1) + (b - 2)", "(", ")"));                
+		}
+
+		[Test]
+		public void FirstParen_4 ()
+		{
+			Assert.AreEqual("(a + 1b - 2)", FirstParenthetical("x + (a + 1b - 2)", "(", ")"));                
+		}
+
+		[Test]
+		public void FirstParen_5 ()
+		{
+			Assert.AreEqual("(a + ( 1 -b ) - 2)", FirstParenthetical("x + (a + ( 1 -b ) - 2)", "(", ")"));                
+		}
+
+		[Test]
+		public void Parse_1 ()
+		{
+			string r = Parse("x + 3").ToString();
+			Assert.AreEqual("{Op:Plus, Var:0, Tnum:3}", r);                
+		}
+
+		[Test]
+		public void Parse_2 ()
+		{
+			string r = Parse("3.14159").ToString();
+			Assert.AreEqual("Tnum:3.14159", r);                
+		}
+
+		[Test]
+		public void Parse_3 ()
+		{
+			string r = Parse("false").ToString();
+			Assert.AreEqual("Tbool:False", r);                
+		}
+
+		[Test]
+		public void Parse_4 ()
+		{
+			string r = Parse("x").ToString();
+			Assert.AreEqual("Var:0", r);                
+		}
+
+		[Test]
+		public void Parse2_1 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,Tnum:2}}", Parse2("3 + (4 * 2)"));                
+		}
+
+		[Test]
+		public void Parse2_2 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}}", 
+			                Parse2("3 + (4 * ( 2 + 1 ))"));                
+		}
+
+		[Test]
+		public void Parse2_3 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", Parse2("4 * ( 2 + 1 )"));                
+		}
+
+		[Test]
+		public void Parse2_4 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,{Typ.Op:Op.Plus,Tnum:4,Tnum:6},{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", 
+			                Parse2("(4+6) * ( 2 + 1 )"));                
+		}
+
+//		[Test]
+//		public void IO_1 ()
+//		{
+//			string s = ReadFile();
+//			Assert.AreEqual("", s);                
+//		}
 
 	}
 }

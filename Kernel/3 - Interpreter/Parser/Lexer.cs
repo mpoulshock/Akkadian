@@ -26,6 +26,7 @@ namespace Akkadian
 	{
 		// Letters, digits, dates
 		protected const string whitespace = "[ ]*";
+		protected const string wildcard = ".*";
 		protected const string letter = "[a-zA-Z]";
 		protected const string letters = "["+letter+"]+";
 		protected const string digit = "[0-9]";

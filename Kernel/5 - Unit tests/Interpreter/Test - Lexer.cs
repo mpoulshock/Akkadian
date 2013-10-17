@@ -142,14 +142,12 @@ namespace Akkadian.UnitTests
 			Assert.IsTrue(IsExactMatch("AreRelated(A,B)",fcnSignature));
 		}
 
-
-		/// <summary>
-		/// Determines if the input string matches the regex exactly.
-		/// </summary>
-		private static bool IsExactMatch(string s, string regex)
+		[Test]
+		public void Regex_Wildcard_1 ()
 		{
-			return s == Regex.Match(s,regex).Groups[0].Value;
+			Assert.IsTrue(IsExactMatch("alsdfav898U(PO#(*P!@",wildcard));
 		}
+
 
 		// To test match results:
 		// Assert.AreEqual("(A)",Regex.Match("(A)",fcnSignature).Groups[0].Value);

@@ -188,6 +188,40 @@ namespace Akkadian
             }
         }
 
+		/// <summary>
+		/// Displays an output object.
+		/// </summary>
+		public override string ToString()
+		{
+			if (this.TimeLine.Count == 1)
+			{
+				Hval v = this.FirstValue;
+				if (v.IsKnown)
+				{
+					if (v.IsSet())   return v.ToSerializedSet();
+
+					return Convert.ToString(v.Obj);
+				}
+				else
+				{
+					return v.ToString;
+				}
+			}
+			else
+			{
+				string result = "{";
+
+				foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
+				{
+					string date = de.Key.ToString().Replace("1/1/1800", "Dawn");
+					date = date.Replace(" 12:00:00 AM", "");
+					string val = de.Value.ToString.Replace("True","true").Replace("False","false");
+					result += date + ": " + val + "; ";
+				}
+				return result.TrimEnd(' ', ';') + "}";
+			}
+		}
+
         /// <summary>
         /// Returns the value of the Tvar at the first time interval.
         /// </summary>

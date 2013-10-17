@@ -163,6 +163,12 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(false, r.Out);                
 		}
 
+		[Test]
+		public void ExprToString_1 ()
+		{
+			Assert.AreEqual("{Op:Plus, Var:0, Tnum:42}", LoadedRules()[1].ToString());                
+		}
+
 //		[Test]
 //		public void Filter_1 ()
 //		{
