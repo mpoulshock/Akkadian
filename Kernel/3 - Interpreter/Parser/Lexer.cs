@@ -36,7 +36,7 @@ namespace Akkadian
 		// Literal values
 		protected const string boolLiteral = "(true|false)";
 		protected const string decimalLiteral = integer+@"(\."+integer+")?";
-//		protected const string stringLiteral = @"/"[]+\\"";
+//		protected const string stringLiteral = @"\"[]+\"";
 		protected const string dateLiteral = @"(1|2)[0-9]{3}\-[0-9]{2}\-[0-9]{2}";		// yyyy-mm-dd
 //		protected const string setLiteral = @"\[ \]";
 

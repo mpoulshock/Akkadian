@@ -60,55 +60,74 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_1 ()
 		{
-			string r = Parse("x + 3").ToString();
-			Assert.AreEqual("{Op:Plus, Var:0, Tnum:3}", r);                
-		}
-
-		[Test]
-		public void Parse_2 ()
-		{
 			string r = Parse("3.14159").ToString();
 			Assert.AreEqual("Tnum:3.14159", r);                
 		}
 
 		[Test]
-		public void Parse_3 ()
+		public void Parse_2 ()
 		{
 			string r = Parse("false").ToString();
 			Assert.AreEqual("Tbool:False", r);                
 		}
 
 		[Test]
+		public void Parse_3 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,Tnum:2}}", Parse("3 + (4 * 2)"));                
+		}
+
+		[Test]
 		public void Parse_4 ()
 		{
-			string r = Parse("x").ToString();
-			Assert.AreEqual("Var:0", r);                
-		}
-
-		[Test]
-		public void Parse2_1 ()
-		{
-			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,Tnum:2}}", Parse2("3 + (4 * 2)"));                
-		}
-
-		[Test]
-		public void Parse2_2 ()
-		{
 			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}}", 
-			                Parse2("3 + (4 * ( 2 + 1 ))"));                
+			                Parse("3 + (4 * ( 2 + 1 ))"));                
 		}
 
 		[Test]
-		public void Parse2_3 ()
+		public void Parse_5 ()
 		{
-			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", Parse2("4 * ( 2 + 1 )"));                
+			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", Parse("4 * ( 2 + 1 )"));                
 		}
 
 		[Test]
-		public void Parse2_4 ()
+		public void Parse_6 ()
 		{
 			Assert.AreEqual("{Typ.Op:Op.Mult,{Typ.Op:Op.Plus,Tnum:4,Tnum:6},{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", 
-			                Parse2("(4+6) * ( 2 + 1 )"));                
+			                Parse("(4+6) * ( 2 + 1 )"));                
+		}
+
+		[Test]
+		public void Parse_7 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:1,{Typ.Op:Op.Div,Tnum:4,Tnum:2}}", Parse("1 + 4 / 2"));                
+		}
+
+		[Test]
+		public void Parse_8 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,Tbool:False}", Parse("true & false"));                
+		}
+
+		[Test]
+		public void Parse_9 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.Or,Tbool:False,Tbool:True}}", 
+			                Parse("true & ( false | true )"));                
+		}
+
+		[Test]
+		public void Parse_10 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.GrTh,Tnum:5,Tnum:99}}", 
+			                Parse("true & 5 > 99 "));                
+		}
+
+		[Test]
+		public void Parse_11 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.GrTh,{Typ.Op:Op.Plus,Tnum:5,Tnum:31},Tnum:99}}", 
+			                Parse("true & 5 + 31 > 99 "));                
 		}
 
 //		[Test]

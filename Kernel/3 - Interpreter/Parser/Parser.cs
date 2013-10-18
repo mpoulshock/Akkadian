@@ -27,44 +27,40 @@ namespace Akkadian
 {
 	public partial class Interpreter
 	{
-		public static string Parse2(string s, List<string> subExprs)
+		private const string delimiter = "#";
+
+		/// <summary>
+		/// Parses a function into a string of nested tokens (representing Exprs).
+		/// </summary>
+		public static string Parse(string s, List<string> subExprs)
 		{
 			// Handle parentheses
 			string fp = FirstParenthetical(s,"(",")");
 			if (fp != "")
 			{
 				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(fp,"#" + index + "#");
+				string newStrToParse = s.Replace(fp,delimiter + index + delimiter);
 
 				List<string> newSubExprs;
-				if (s.Contains("#"))
+				if (s.Contains(delimiter))
 				{
 					newSubExprs = subExprs;
-					newSubExprs.Add(Parse2(RemoveParens(fp),subExprs));
+					newSubExprs.Add(Parse(RemoveParens(fp),subExprs));
 				}
 				else
 				{
-					newSubExprs = new List<string>(){Parse2(RemoveParens(fp),subExprs)};
+					newSubExprs = new List<string>(){Parse(RemoveParens(fp),subExprs)};
 				}
 
-				return Parse2(newStrToParse, newSubExprs);
+				return Parse(newStrToParse, newSubExprs);
 			}
 
-			// Operators
-			if (IsExactMatch(s, parens(wildcard) + @"\+" + parens(wildcard)))
+			// Infix operators - order is important here (boolean, comparison, arithmetic)
+			string[] infixOps = {"&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
+			foreach (string oprtr in infixOps)
 			{
-				Match m = Regex.Match(s, parens(wildcard) + @"\+" + parens(wildcard));
-				string lhs = Parse2(m.Groups[1].Value.Trim(), subExprs);
-				string rhs = Parse2(m.Groups[2].Value.Trim(), subExprs);
-				return "{Typ.Op:Op.Plus," + lhs + "," + rhs + "}";
-			}
-
-			if (IsExactMatch(s, parens(wildcard) + @"\*" + parens(wildcard)))
-			{
-				Match m = Regex.Match(s, parens(wildcard) + @"\*" + parens(wildcard));
-				string lhs = Parse2(m.Groups[1].Value.Trim(), subExprs);
-				string rhs = Parse2(m.Groups[2].Value.Trim(), subExprs);
-				return "{Typ.Op:Op.Mult," + lhs + "," + rhs + "}";
+				string infixResult = TestForInfixOp(s, oprtr, subExprs);
+				if (s != infixResult && infixResult != "") return infixResult;
 			}
 
 			// Literal values
@@ -87,23 +83,29 @@ namespace Akkadian
 			return DecompressParse(s, subExprs);
 		}
 
-		public static string Parse2(string s)
+		public static string Parse(string s)
 		{
-			return Parse2(s, new List<string>());
+			return Parse(s, new List<string>());
 		}
 
+		/// <summary>
+		/// Removes parentheses from a string.
+		/// </summary>
 		private static string RemoveParens(string s)
 		{
 			return s.Substring(1,s.Length-2);
 		}
 
+		/// <summary>
+		/// Puts extracted sub-parses back into the main parse string.
+		/// </summary>
 		public static string DecompressParse(string s, List<string> subExprs)
 		{
 
 			string result = s;
 			for (int i=0; i<subExprs.Count; i++)
 			{
-				result = result.Replace("#" + Convert.ToString(i) + "#", subExprs[i]);
+				result = result.Replace(delimiter + Convert.ToString(i) + delimiter, subExprs[i]);
 			}
 
 			if (result == s) return result;
@@ -111,49 +113,42 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Parses a string into an expression (Expr).
+		/// Decomposes expressions with infix operators.
 		/// </summary>
-		public static object Parse(string s)
+		private static string TestForInfixOp(string s, string op, List<string> subExprs)
 		{
-			// Operators
-			if (IsExactMatch(s, parens(wildcard) + @"\+" + parens(wildcard)))
+			string w = parens(wildcard);
+
+			if (IsExactMatch(s, w + op + w))
 			{
-				Match m = Regex.Match(s, parens(wildcard) + @"\+" + parens(wildcard));
-				Node lhs = (Node)Parse(m.Groups[1].Value.Trim());
-				Node rhs = (Node)Parse(m.Groups[2].Value.Trim());
-				return expr(n(Typ.Op,Op.Plus), lhs, rhs);
+				Match m = Regex.Match(s, w + op + w);
+				string lhs = Parse(m.Groups[1].Value.Trim(), subExprs);
+				string rhs = Parse(m.Groups[2].Value.Trim(), subExprs);
+				return "{Typ.Op:Op." + StringToOp(op) + "," + lhs + "," + rhs + "}";
 			}
 
-			// Literal values
-			if (IsExactMatch(s,boolLiteral))
-			{
-				return nTbool(Convert.ToBoolean(s));
-			}
-			if (IsExactMatch(s,decimalLiteral))
-			{
-				return nTnum(Convert.ToDecimal(s));
-			}
-
-			// Has to come towards end
-			if (IsExactMatch(s,fcnVariable))
-			{
-				// TODO: Handle multiple variables...
-				return n(Typ.Var,0);
-			}
-
-			return new Expr(null);
+			return "";
 		}
 
-//		public static Expr ParseInfixOperator(string s, string pattern, string op)
-//		{
-//			if (IsExactMatch(s, parens(wildcard) + @"\+" + parens(wildcard)))
-//			{
-//				Match m = Regex.Match(s, parens(wildcard) + @"\+" + parens(wildcard));
-//				Node lhs = (Node)Parse(m.Groups[1].Value.Trim());
-//				Node rhs = (Node)Parse(m.Groups[2].Value.Trim());
-//				return expr(n(Typ.Op,Op.Plus), lhs, rhs);
-//			}
-//		}
+		/// <summary>
+		/// Converts the Akkadian symbol to the Op equivalent (as a string).
+		/// </summary>
+		private static string StringToOp(string op)
+		{
+			if (op == "&") return "And";
+			if (op == @"\|") return "Or";
+			if (op == @"\+") return "Plus";
+			if (op == "/") return "Div";
+			if (op == "-") return "Minus";
+			if (op == "==") return "Eq";
+			if (op == "<>") return "Neq";
+			if (op == ">=") return "GrEq";
+			if (op == "<=") return "LsEq";
+			if (op == ">") return "GrTh";
+			if (op == "<") return "LsTh";
+			if (op == @"\*") return "Mult";
+			return "should%not$happen";
+		}
 
 		/// <summary>
 		/// Determines if the input string matches the regex exactly.
@@ -163,6 +158,9 @@ namespace Akkadian
 			return s == Regex.Match(s,regex).Groups[0].Value;
 		}
 
+		/// <summary>
+		/// Puts parentheses around a string.
+		/// </summary>
 		protected static string parens(string s)
 		{
 			return "(" + s + ")";
@@ -173,11 +171,11 @@ namespace Akkadian
 		/// </summary>
 		public static string FirstParenthetical(string clause, string open, string close)
 		{
+			int start = clause.IndexOf(open);
+			if (start == -1) return "";
+
 			string substr = "";
 			int bracketLevel = 0;
-			int start = clause.IndexOf(open);
-
-			if (start == -1) return "";
 
 			// Iterate through clause from first "{" to find its spouse, "}"
 			for (int counter = start; counter < clause.Length; counter++)
