@@ -34,25 +34,47 @@ namespace Akkadian
 		/// </summary>
 		public static string Parse(string s, List<string> subExprs)
 		{
+			s = s.Trim();
+
 			// Handle parentheses
 			string fp = FirstParenthetical(s,"(",")");
 			if (fp != "")
 			{
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp,delimiter + index + delimiter);
+				string newStr = Parse(RemoveParens(fp),subExprs);
 
-				List<string> newSubExprs;
-				if (s.Contains(delimiter))
-				{
-					newSubExprs = subExprs;
-					newSubExprs.Add(Parse(RemoveParens(fp),subExprs));
-				}
-				else
-				{
-					newSubExprs = new List<string>(){Parse(RemoveParens(fp),subExprs)};
-				}
+				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
+			}
 
-				return Parse(newStrToParse, newSubExprs);
+			// Handle functions with no nested functions
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9, ]+\]");
+			var m1 = rx1.Match(s);
+			if (m1.Success)
+			{
+				string firstFcn = m1.Value;
+				string index = Convert.ToString(subExprs.Count);
+				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
+
+				string whatsInTheBrackets = m1.Value.Replace(m1.Groups[1].Value,"");
+				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value + "," + Parse(RemoveParens(whatsInTheBrackets),subExprs) + "}";
+
+				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
+			}
+
+			// Handle function calls with nested expressions
+			Regex rx = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[((?<BR>\[)|(?<-BR>\])|[^[]]*)+\]");
+			var m = rx.Match(s);
+			if (m.Success)
+			{
+				string firstFcn = m.Value;
+				string index = Convert.ToString(subExprs.Count);
+				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
+
+				string whatsInTheBrackets = m.Value.Replace(m.Groups[1].Value,"");
+				string newStr = "{Typ.Op:Op." + m.Groups[1].Value + "," + Parse(RemoveParens(whatsInTheBrackets),subExprs) + "}";
+
+				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
 			}
 
 			// Infix operators - order is important here (boolean, comparison, arithmetic)
@@ -86,6 +108,22 @@ namespace Akkadian
 		public static string Parse(string s)
 		{
 			return Parse(s, new List<string>());
+		}
+
+		public static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs)
+		{
+			List<string> newSubExprs;
+			if (s.Contains(delimiter))
+			{
+				newSubExprs = subExprs;
+				newSubExprs.Add(newStr);
+			}
+			else
+			{
+				newSubExprs = new List<string>(){newStr};
+			}
+
+			return Parse(newStrToParse, newSubExprs);
 		}
 
 		/// <summary>

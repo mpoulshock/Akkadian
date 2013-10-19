@@ -130,6 +130,75 @@ namespace Akkadian.UnitTests
 			                Parse("true & 5 + 31 > 99 "));                
 		}
 
+		[Test]
+		public void Parse_12 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:33,{Typ.Op:Op.Abs,Tnum:9}}", 
+			                Parse("33 * Abs[9]"));                
+		}
+
+		[Test]
+		public void Parse_13 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:33,{Typ.Op:Op.Sin,{Typ.Op:Op.Abs,Tnum:9}}}", 
+			                Parse("33 * Sin[Abs[9]]"));                
+		}
+
+		[Test]
+		public void Parse_14 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,{Typ.Op:Op.Cos,Tnum:33},{Typ.Op:Op.Sin,{Typ.Op:Op.Abs,Tnum:9}}}", 
+			                Parse("Cos[33] * Sin[Abs[9]]"));                
+		}
+
+		[Test]
+		public void Parse_14b ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,{Typ.Op:Op.Sin,{Typ.Op:Op.Abs,Tnum:9}},{Typ.Op:Op.Cos,Tnum:33}}", 
+			                Parse("Sin[Abs[9]] * Cos[33]"));                
+		}
+
+		[Test]
+		public void Parse_15 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Cos,{Typ.Op:Op.Plus,Tnum:33,Tnum:9}}", Parse("Cos[33 + 9]"));                
+		}
+
+		[Test]
+		public void Parse_16 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Cos,{Typ.Op:Op.Plus,{Typ.Op:Op.Abs,Tnum:33},{Typ.Op:Op.Abs,Tnum:9}}}", 
+			                Parse("Cos[Abs[33] + Abs[9]]"));                
+		}
+
+		[Test]
+		public void Parse_17 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Cos,{Typ.Op:Op.Plus,{Typ.Op:Op.Abs,Tnum:33},{Typ.Op:Op.Abs,Tnum:9}}}", 
+			                Parse("Cos[ (Abs[33] + Abs[9]) ]"));                
+		}
+
+		[Test]
+		public void Parse_18 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:1,{Typ.Op:Op.Div,{Typ.Op:Op.Cos,Tnum:33},Tnum:2}}", 
+			                Parse("1 * (Cos[33] / 2)"));                
+		}
+
+		[Test]
+		public void Parse_19 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Abs,{Typ.Op:Op.Cos,Tnum:9},{Typ.Op:Op.Sin,Tnum:3}}", 
+			                Parse("Abs[Cos[9],Sin[3]]"));                
+		}
+
+		[Test]
+		public void Parse_20 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Abs,{Typ.Op:Op.Mult,{Typ.Op:Op.Plus,Tnum:4,Tnum:6},{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}}", 
+			                Parse("Abs[(4+6) * ( 2 + 1 )]"));                
+		}
+
 //		[Test]
 //		public void IO_1 ()
 //		{
