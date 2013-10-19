@@ -199,6 +199,24 @@ namespace Akkadian.UnitTests
 			                Parse("Abs[(4+6) * ( 2 + 1 )]"));                
 		}
 
+		[Test]
+		public void Parse_21 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.Abs,Tnum:9}", Parse("Abs[9]"));                
+		}
+
+		[Test]
+		public void Parse_22 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.RndUp,Tnum:9,Tnum:2}", Parse("RndUp[9,2]"));                
+		}
+
+		[Test]
+		public void Parse_23 ()
+		{
+			Assert.AreEqual("{Typ.Op:Op.RndUp,Tnum:9,{Typ.Op:Op.Abs,Tnum:2}}", Parse("RndUp[9,Abs[2]]"));                
+		}
+
 //		[Test]
 //		public void IO_1 ()
 //		{

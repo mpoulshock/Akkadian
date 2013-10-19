@@ -36,7 +36,7 @@ namespace Akkadian
 		{
 			s = s.Trim();
 
-			// Handle parentheses
+			// Parentheses
 			string fp = FirstParenthetical(s,"(",")");
 			if (fp != "")
 			{
@@ -47,32 +47,24 @@ namespace Akkadian
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
 			}
 
-			// Handle functions with no nested functions
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9, ]+\]");
+			// Function calls (innermost functions first)
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/ " + delimiter + @"]+\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
 				string firstFcn = m1.Value;
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
+				string whatsInTheBrackets = RemoveParens(m1.Value.Replace(m1.Groups[1].Value,""));
 
-				string whatsInTheBrackets = m1.Value.Replace(m1.Groups[1].Value,"");
-				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value + "," + Parse(RemoveParens(whatsInTheBrackets),subExprs) + "}";
-
-				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
-			}
-
-			// Handle function calls with nested expressions
-			Regex rx = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[((?<BR>\[)|(?<-BR>\])|[^[]]*)+\]");
-			var m = rx.Match(s);
-			if (m.Success)
-			{
-				string firstFcn = m.Value;
-				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
-
-				string whatsInTheBrackets = m.Value.Replace(m.Groups[1].Value,"");
-				string newStr = "{Typ.Op:Op." + m.Groups[1].Value + "," + Parse(RemoveParens(whatsInTheBrackets),subExprs) + "}";
+				// Functions with multiple parameters
+				string[] args = whatsInTheBrackets.Split(',');
+				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value;
+				foreach (string arg in args)
+				{
+					newStr += "," + Parse(arg,subExprs);
+				}
+				newStr += "}";
 
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
 			}
@@ -110,7 +102,10 @@ namespace Akkadian
 			return Parse(s, new List<string>());
 		}
 
-		public static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs)
+		/// <summary>
+		/// Adds a string to the sub-expression list and parses the main string
+		/// </summary>
+		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs)
 		{
 			List<string> newSubExprs;
 			if (s.Contains(delimiter))
