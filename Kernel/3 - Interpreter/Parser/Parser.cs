@@ -59,7 +59,7 @@ namespace Akkadian
 
 				// Functions with multiple parameters
 				string[] args = whatsInTheBrackets.Split(',');
-				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value;
+				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value;  // TODO: Identify function
 				foreach (string arg in args)
 				{
 					newStr += "," + Parse(arg,subExprs);
