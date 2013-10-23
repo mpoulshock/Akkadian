@@ -55,8 +55,8 @@ namespace Akkadian
 			if (fp != "")
 			{
 				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(fp,delimiter + index + delimiter);
-				string newStr = ParseFcn(RemoveParens(fp),subExprs, fcnName, argNames);
+				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
+				string newStr = ParseFcn(RemoveParens(fp), subExprs, fcnName, argNames);
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
 			}
 
@@ -247,32 +247,10 @@ namespace Akkadian
 				Match m = Regex.Match(s, pattern);
 				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, fcnName, argNames);
 				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, fcnName, argNames);
-				return "{Typ.Op:Op." + StringToOp(op) + "," + lhs + "," + rhs + "}";
+				return "{Typ.Op:Op." + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
 			}
 
 			return "";
-		}
-
-		/// <summary>
-		/// Converts the Akkadian symbol to the Op equivalent (as a string).
-		/// </summary>
-		private static string StringToOp(string op)
-		{
-//			return Convert.ToString(OperatorRegistry[op]);	// TODO: 14 errors
-
-			if (op == "&") return "And";
-			if (op == @"\|") return "Or";
-			if (op == @"\+") return "Plus";
-			if (op == "/") return "Div";
-			if (op == "-") return "Minus";
-			if (op == "==") return "Eq";
-			if (op == "<>") return "Neq";
-			if (op == ">=") return "GrEq";
-			if (op == "<=") return "LsEq";
-			if (op == ">") return "GrTh";
-			if (op == "<") return "LsTh";
-			if (op == @"\*") return "Mult";
-			return "should%not$happen";
 		}
 
 		/// <summary>

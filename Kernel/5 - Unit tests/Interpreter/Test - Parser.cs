@@ -74,12 +74,14 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_3 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,Tnum:2}}", ParseFcn("3 + (4 * 2)"));                
 		}
 
 		[Test]
 		public void Parse_4 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:3,{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}}", 
 			                ParseFcn("3 + (4 * ( 2 + 1 ))"));                
 		}
@@ -87,12 +89,14 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_5 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:4,{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", ParseFcn("4 * ( 2 + 1 )"));                
 		}
 
 		[Test]
 		public void Parse_6 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Mult,{Typ.Op:Op.Plus,Tnum:4,Tnum:6},{Typ.Op:Op.Plus,Tnum:2,Tnum:1}}", 
 			                ParseFcn("(4+6) * ( 2 + 1 )"));                
 		}
@@ -100,18 +104,21 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_7 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Plus,Tnum:1,{Typ.Op:Op.Div,Tnum:4,Tnum:2}}", ParseFcn("1 + 4 / 2"));                
 		}
 
 		[Test]
 		public void Parse_8 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,Tbool:False}", ParseFcn("true & false"));                
 		}
 
 		[Test]
 		public void Parse_9 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.Or,Tbool:False,Tbool:True}}", 
 			                ParseFcn("true & ( false | true )"));                
 		}
@@ -119,6 +126,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_10 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.GrTh,Tnum:5,Tnum:99}}", 
 			                ParseFcn("true & 5 > 99 "));                
 		}
@@ -126,6 +134,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_11 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.GrTh,{Typ.Op:Op.Plus,Tnum:5,Tnum:31},Tnum:99}}", 
 			                ParseFcn("true & 5 + 31 > 99 "));                
 		}
@@ -133,7 +142,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_12 ()
 		{
-			InitializeParseTest();  // Need this to test parses that reference built-in functions
+			InitializeParseTest(); 
 			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:33,{Typ.Op:Op.Abs,Tnum:9}}", 
 			                ParseFcn("33 * Abs[9]"));                
 		}
@@ -340,12 +349,14 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_39 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Mult,Tnum:4,Tnum:-12}", ParseFcn("4 * -12"));        
 		}
 
 		[Test]
 		public void Parse_40 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.Not,Tbool:False}}", 
 			                ParseFcn("true & !false"));                
 		}
@@ -353,6 +364,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_41 ()
 		{
+			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.Not,{Typ.Op:Op.Not,Tbool:False}}}", 
 			                ParseFcn("true & !!false"));                
 		}
@@ -384,6 +396,22 @@ namespace Akkadian.UnitTests
 		{
 			InitializeParseTest();
 			Assert.AreEqual("{Typ.Op:Op.Not,{Typ.Op:Op.Or,Tbool:False,Tbool:True}}", ParseFcn("!(false | true)"));                
+		}
+
+		[Test]
+		public void Parse_46 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.GrEq,Tnum:5,Tnum:99}}", 
+			                ParseFcn("true & 5 >= 99 "));                
+		}
+
+		[Test]
+		public void Parse_47 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("{Typ.Op:Op.And,Tbool:True,{Typ.Op:Op.LsTh,Tnum:5,Tnum:99}}", 
+			                ParseFcn("true & 5 < 99 "));                
 		}
 
 		private static void InitializeParseTest()

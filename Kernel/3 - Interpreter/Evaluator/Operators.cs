@@ -141,19 +141,19 @@ namespace Akkadian
 
 			// Short-circuit operators
 			OperatorRegistry.Add("&",Op.And);
-			OperatorRegistry.Add("|",Op.Or);
-			OperatorRegistry.Add("*",Op.Mult);
+			OperatorRegistry.Add(@"\|",Op.Or);
+			OperatorRegistry.Add(@"\*",Op.Mult);
 
 			// Binary operators
-			OperatorRegistry.Add("+",Op.Plus);
+			OperatorRegistry.Add(@"\+",Op.Plus);
 			OperatorRegistry.Add("-",Op.Minus);
 			OperatorRegistry.Add("/",Op.Div);
 			OperatorRegistry.Add("==",Op.Eq);
 			OperatorRegistry.Add("<>",Op.Neq);
-			OperatorRegistry.Add(">",Op.GrTh);
 			OperatorRegistry.Add(">=",Op.GrEq);
-			OperatorRegistry.Add("<",Op.LsTh);
+			OperatorRegistry.Add(">",Op.GrTh);
 			OperatorRegistry.Add("<=",Op.LsEq);
+			OperatorRegistry.Add("<",Op.LsTh);
 			OperatorRegistry.Add("Mod",Op.Mod);
 			OperatorRegistry.Add("Ln",Op.Nlog);
 			OperatorRegistry.Add("Pow",Op.Pow);
