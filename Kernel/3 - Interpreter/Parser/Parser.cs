@@ -77,18 +77,18 @@ namespace Akkadian
 
 				// If function name is in operator registry, reference it;
 				// otherwise, assume this is a user-defined function (or a leaf node)
-				string newStr = "{Typ.Op:Op." + fcnRef;  // TODO: Identify function
+				string newStr = "{Op:Op." + fcnRef;  // TODO: Identify function
 				if (OperatorRegistry.ContainsKey(fcnRef))
 				{
-					newStr = "{Typ.Op:Op." + Convert.ToString(OperatorRegistry[fcnRef]);
+					newStr = "{Op:Op." + Convert.ToString(OperatorRegistry[fcnRef]);
 				}
 				else if (fcnRef == fcnName)
 				{
-					newStr = "{Typ.Rec:" + fcnRef;		// Recursive function calls
+					newStr = "{Rec:" + fcnRef;		// Recursive function calls
 				}
 				else
 				{
-					newStr = "{Typ.Fcn:" + fcnRef;  	// Should this be an int?
+					newStr = "{Fcn:" + fcnRef;  	// Should this be an int?
 				}
 
 				// Add the function's arguments
@@ -104,18 +104,18 @@ namespace Akkadian
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
 			{
-				return "Typ.Tdate:" + s;
+				return "Tdate:" + s;
 			}
 
 			// Numeric literals - must be before subtraction due to negative numbers
 			if (IsExactMatch(s,decimalLiteral))
 			{
-				return "Typ.Tnum:" + Convert.ToDecimal(s);
+				return "Tnum:" + Convert.ToDecimal(s);
 			}
 			if (IsExactMatch(s,currencyLiteral))
 			{
 				s = s.Replace("$","");
-				return "Typ.Tnum:" + Convert.ToDecimal(s);
+				return "Tnum:" + Convert.ToDecimal(s);
 			}
 
 			// Infix operators
@@ -128,7 +128,7 @@ namespace Akkadian
 			// Not - must go after infix ops
 			if (s.StartsWith("!"))
 			{
-				return "{Typ.Op:Op.Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
+				return "{Op:Op.Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
 			}
 
 			// Variable references
@@ -136,19 +136,19 @@ namespace Akkadian
 			{
 				for (int i=0; i<argNames.Length; i++)
 				{
-					if (s == argNames[i]) return "Typ.Var:" + i;
+					if (s == argNames[i]) return "Var:" + i;
 				}
 			}
 
 			// Literal values
 			if (IsExactMatch(s,boolLiteral))
 			{
-				return "Typ.Tbool:" + Convert.ToBoolean(s);
+				return "Tbool:" + Convert.ToBoolean(s);
 			}
 
 			if (IsExactMatch(s,stringLiteral))	// Should go last because it's very inclusive
 			{
-				return "Typ.Tstr:" + s.Trim('\'');
+				return "Tstr:" + s.Trim('\'');
 			}
 
 			return DecompressParse(s, subExprs);
@@ -247,7 +247,7 @@ namespace Akkadian
 				Match m = Regex.Match(s, pattern);
 				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, fcnName, argNames);
 				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, fcnName, argNames);
-				return "{Typ.Op:Op." + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
+				return "{Op:Op." + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
 			}
 
 			return "";
@@ -299,9 +299,17 @@ namespace Akkadian
 		/// <summary>
 		/// Converts a parse string into an Expr (expression) object.
 		/// </summary>
+		/// <remarks>
+		/// This is kludgy. One day, we'll have to change ParseRule to build 
+		/// the Expr object directly, rather than generating a string and then
+		/// having this function turn it into an Expr.
+		/// </remarks>
 		public static Expr StringParseToExpr(string s)
 		{
 			// Trim outer brackets
+//			string sub = s;
+//			if (s.StartsWith("{") && s.EndsWith("}")) s = s.Substring(1,s.Length-2);
+
 			string sub = s.Substring(1,s.Length-2);
 
 			// Process each part of the expression
@@ -327,36 +335,18 @@ namespace Akkadian
 					string typ = p.Substring(0,colon).Replace("Typ.","");
 					Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
 
-					// Get the value
-					string val = p.Substring(colon + 1);  // Handle types...
+					// Get the value and convert it to the proper type of object
+					string val = p.Substring(colon + 1);
+					object v = val;
+					if (typ == "Op") v = (Op)Enum.Parse(typeof(Op),val.Replace("Op.",""));
+					if (typ == "Tnum") v = (Tnum)Convert.ToDecimal(val);
+					if (typ == "Tbool") v = (Tbool)Convert.ToBoolean(val);
 
-					nodes.Add(n(theType,val));
+					nodes.Add(n(theType,v));
 				}
 			}
 
 			return new Expr(nodes);
-			return expr(n(Typ.Op,Op.Abs),nTnum(41));
-		}
-
-		public static string StringParseToExpr2(string s)
-		{
-			// Trim outer brackets
-			string sub = s.Substring(1,s.Length-2);
-
-			// Process each part of the expression
-			string[] parts = sub.Split(',');
-			List<Node> nodes = new List<Node>();
-			foreach (string p in parts)
-			{
-				int colon = p.IndexOf(":");
-				string typ = p.Substring(0,colon);
-				string val = p.Substring(colon + 1);
-//				return typ;
-				Typ theType = (Typ)Enum.Parse(typeof(Typ),typ.Replace("Typ.",""));
-				//				Node newNode = n(theType,9);
-			}
-
-			return "";
 		}
 
 		/// <summary>

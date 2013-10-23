@@ -38,7 +38,7 @@ namespace Akkadian
 		public override string ToString()
 		{
 			string result = "{";
-			foreach (Node n in nodes) { result += n.ToString() + ", "; }
+			foreach (Node n in nodes) { result += n.ToString() + ","; }
 			return result.TrimEnd(',',' ') + "}";
 		}
 	}
@@ -59,11 +59,6 @@ namespace Akkadian
 
 		public override string ToString()
 		{
-//			string t = Convert.ToString(objType);
-//
-//			if (!t.StartsWith("Typ.")) t = "Typ." + t;
-//
-//			return t + ":" + obj.ToString();
 			return Convert.ToString(objType) + ":" + obj.ToString();
 		}
 	}

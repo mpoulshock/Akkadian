@@ -166,7 +166,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void ExprToString_1 ()
 		{
-			Assert.AreEqual("{Op:Plus, Var:0, Tnum:42}", LoadedRules()[1].ToString());                
+			Assert.AreEqual("{Op:Plus,Var:0,Tnum:42}", LoadedRules()[1].ToString());                
 		}
 
 //		[Test]
@@ -387,6 +387,63 @@ namespace Akkadian.UnitTests
 			Expr exp = expr(n(Typ.Op,Op.Rev), n(Typ.Tset,new Tset(A,B)));
 			Tset r = (Tset)eval(exp).obj;
 			Assert.AreEqual("B, A", r.Out);               
+		}
+
+		[Test]
+		public void StringToParse_1 ()
+		{
+			Expr exp = StringParseToExpr("{Op:Abs,Tnum:-66}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(66, r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_2 ()
+		{
+			Expr exp = StringParseToExpr("{Op:Mult,Tnum:4,Tnum:2}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(8, r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_3 ()
+		{
+			Expr exp = StringParseToExpr("{Op:Not,Tbool:True}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_4 ()
+		{
+			Expr exp = StringParseToExpr("{Op:Op.And,Tbool:True,Tbool:False}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_5 ()
+		{
+			Expr exp = StringParseToExpr("{Op:Op.Abs,Var:0}");
+			Expr args = expr(nTnum(-109));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(109, r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_6 ()
+		{
+			Expr exp = StringParseToExpr("Tdate:2014-10-22");
+			Tdate r = (Tdate)eval(exp).obj;
+			Assert.AreEqual("2014-10-22", r.Out);                
+		}
+
+		[Test]
+		public void StringToParse_7 ()
+		{
+			Expr exp = StringParseToExpr("Tnum:22");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(22, r.Out);                
 		}
 
 		[Test]
