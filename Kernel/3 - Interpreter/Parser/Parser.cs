@@ -84,11 +84,11 @@ namespace Akkadian
 				}
 				else if (fcnRef == fcnName)
 				{
-					newStr = "{Rec:" + fcnRef;		// Recursive function calls
+					newStr = "{Typ.Rec:" + fcnRef;		// Recursive function calls
 				}
 				else
 				{
-					newStr = "{Fcn:" + fcnRef;  	// Should this be an int?
+					newStr = "{Typ.Fcn:" + fcnRef;  	// Should this be an int?
 				}
 
 				// Add the function's arguments
@@ -104,18 +104,18 @@ namespace Akkadian
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
 			{
-				return "Tdate:" + s;
+				return "Typ.Tdate:" + s;
 			}
 
 			// Numeric literals - must be before subtraction due to negative numbers
 			if (IsExactMatch(s,decimalLiteral))
 			{
-				return "Tnum:" + Convert.ToDecimal(s);
+				return "Typ.Tnum:" + Convert.ToDecimal(s);
 			}
 			if (IsExactMatch(s,currencyLiteral))
 			{
 				s = s.Replace("$","");
-				return "Tnum:" + Convert.ToDecimal(s);
+				return "Typ.Tnum:" + Convert.ToDecimal(s);
 			}
 
 			// Infix operators
@@ -136,19 +136,19 @@ namespace Akkadian
 			{
 				for (int i=0; i<argNames.Length; i++)
 				{
-					if (s == argNames[i]) return "Var:" + i;
+					if (s == argNames[i]) return "Typ.Var:" + i;
 				}
 			}
 
 			// Literal values
 			if (IsExactMatch(s,boolLiteral))
 			{
-				return "Tbool:" + Convert.ToBoolean(s);
+				return "Typ.Tbool:" + Convert.ToBoolean(s);
 			}
 
 			if (IsExactMatch(s,stringLiteral))	// Should go last because it's very inclusive
 			{
-				return "Tstr:" + s.Trim('\'');
+				return "Typ.Tstr:" + s.Trim('\'');
 			}
 
 			return DecompressParse(s, subExprs);
@@ -302,21 +302,61 @@ namespace Akkadian
 		public static Expr StringParseToExpr(string s)
 		{
 			// Trim outer brackets
-//			string sub = s.Substring(1,s.Length-2);
-//
-//			// Process each part of the expression
-//			string[] parts = sub.Split(',');
-//			List<Node> nodes = new List<Node>();
-//			foreach (string p in parts)
-//			{
-//				int colon = p.IndexOf(":");
-//				string typ = p.Substring(0,colon);
-//				string val = p.Substring(colon + 1);
-//				Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
-//				Node newNode = n(theType,9);
-//			}
+			string sub = s.Substring(1,s.Length-2);
 
+			// Process each part of the expression
+			string[] parts = sub.Split(',');
+			List<Node> nodes = new List<Node>();
+			foreach (string p in parts)
+			{
+				// If part is a nested expression (in brackets)
+				if (p.StartsWith("{") && p.EndsWith("}"))
+				{
+					// Trim outer brackets and convert the subexpression
+					string newSub = p.Substring(1,p.Length-2);
+					Expr subExpr = StringParseToExpr(newSub);
+//					nodes.Add(
+				}
+
+				// If part is not a nested expression
+				else
+				{
+					int colon = p.IndexOf(":");
+
+					// Determine the type
+					string typ = p.Substring(0,colon).Replace("Typ.","");
+					Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
+
+					// Get the value
+					string val = p.Substring(colon + 1);  // Handle types...
+
+					nodes.Add(n(theType,val));
+				}
+			}
+
+			return new Expr(nodes);
 			return expr(n(Typ.Op,Op.Abs),nTnum(41));
+		}
+
+		public static string StringParseToExpr2(string s)
+		{
+			// Trim outer brackets
+			string sub = s.Substring(1,s.Length-2);
+
+			// Process each part of the expression
+			string[] parts = sub.Split(',');
+			List<Node> nodes = new List<Node>();
+			foreach (string p in parts)
+			{
+				int colon = p.IndexOf(":");
+				string typ = p.Substring(0,colon);
+				string val = p.Substring(colon + 1);
+//				return typ;
+				Typ theType = (Typ)Enum.Parse(typeof(Typ),typ.Replace("Typ.",""));
+				//				Node newNode = n(theType,9);
+			}
+
+			return "";
 		}
 
 		/// <summary>

@@ -59,6 +59,11 @@ namespace Akkadian
 
 		public override string ToString()
 		{
+//			string t = Convert.ToString(objType);
+//
+//			if (!t.StartsWith("Typ.")) t = "Typ." + t;
+//
+//			return t + ":" + obj.ToString();
 			return Convert.ToString(objType) + ":" + obj.ToString();
 		}
 	}
