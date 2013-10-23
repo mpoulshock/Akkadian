@@ -25,7 +25,7 @@ namespace Akkadian
 	public partial class Interpreter
 	{
 		// Letters, digits, dates
-		protected const string whitespace = "[ ]*";
+		protected const string white = "[ ]*";
 		protected const string wildcard = ".*";
 		protected const string letter = "[a-zA-Z]";
 		protected const string letters = "["+letter+"]+";
@@ -35,20 +35,22 @@ namespace Akkadian
 
 		// Literal values
 		protected const string boolLiteral = "(true|false)";
-		protected const string decimalLiteral = integer+@"(\."+integer+")?";
-//		protected const string stringLiteral = @"\"[]+\"";
-		protected const string dateLiteral = @"(1|2)[0-9]{3}\-[0-9]{2}\-[0-9]{2}";		// yyyy-mm-dd
-//		protected const string setLiteral = @"\[ \]";
+		protected const string decimalLiteral = "-?" + integer+@"(\."+integer+")?";
+		protected const string currencyLiteral = @"\$[0-9\.,]+";
+		protected const string stringLiteral = @"'" + wildcard + "'";	// TODO: Change to double quotes
+		protected const string dateLiteral = @"(1|2)[0-9]{3}\-(0[1-9]|1[0-2])\-(0[1-9]|[1-2][0-9]|30|31)";		// yyyy-mm-dd
+		protected const string setLiteral = "{ }";
+		protected const string stubLiteral = "Stub";
 
 		// Time-varying literal values
 		// {Dawn: 42; 2011-01-01: 43}
 
 		// Function parts
 		protected const string akkType = "(Tbool|Tnum|Tstr|Tdate|Tset|Thing)";
-		protected const string fcnVariable = letter + "([a-zA-Z0-9_]+)?";
-		protected const string fcnName = letter + "([a-zA-Z0-9_]+)?";
-		protected const string secondaryArgs = "([, ?" + fcnVariable + " ?]+)?";
-		protected const string fcnSignature = fcnName + whitespace + @"\("+ whitespace + fcnVariable + secondaryArgs + whitespace + @"\)";
+		protected const string fcnVariable = letter + "[a-zA-Z0-9_]*";
+		protected const string fcnName = letter + "[a-zA-Z0-9_]*";
+		protected const string secondaryArgs = "([,"  + white + fcnVariable + white + "]*)?";
+		protected const string fcnSignature = fcnName + white + @"\["+ white + fcnVariable + white + secondaryArgs + white + @"\]";
 
 		// Binary operators
 		protected const string binaryOp = @"(&|\|)";

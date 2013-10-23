@@ -30,11 +30,25 @@ namespace Akkadian
 		private const string delimiter = "#";
 
 		/// <summary>
+		/// Parse a....document? set of rules? set of documents?
+		/// </summary>
+		public static void Parse(string s)
+		{
+			InitializeOperatorRegistry();
+
+		}
+
+
+		/// <summary>
 		/// Parses a function into a string of nested tokens (representing Exprs).
 		/// </summary>
-		public static string Parse(string s, List<string> subExprs)
+		public static string ParseFcn(string s, List<string> subExprs, string fcnName, string[] argNames)
 		{
 			s = s.Trim();
+
+			// Functions (e.g. F[x] = x + 1)
+			string fcnResult = TestForFcnExpression(s, subExprs);
+			if (s != fcnResult && fcnResult != "") return fcnResult;
 
 			// Parentheses
 			string fp = FirstParenthetical(s,"(",")");
@@ -42,9 +56,8 @@ namespace Akkadian
 			{
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp,delimiter + index + delimiter);
-				string newStr = Parse(RemoveParens(fp),subExprs);
-
-				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
+				string newStr = ParseFcn(RemoveParens(fp),subExprs, fcnName, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
 			}
 
 			// Function calls (innermost functions first)
@@ -59,22 +72,72 @@ namespace Akkadian
 
 				// Functions with multiple parameters
 				string[] args = whatsInTheBrackets.Split(',');
-				string newStr = "{Typ.Op:Op." + m1.Groups[1].Value;  // TODO: Identify function
+				string fcnRef = m1.Groups[1].Value;
+
+
+				// If function name is in operator registry, reference it;
+				// otherwise, assume this is a user-defined function (or a leaf node)
+				string newStr = "{Typ.Op:Op." + fcnRef;  // TODO: Identify function
+				if (OperatorRegistry.ContainsKey(fcnRef))
+				{
+					newStr = "{Typ.Op:Op." + Convert.ToString(OperatorRegistry[fcnRef]);
+				}
+				else if (fcnRef == fcnName)
+				{
+					newStr = "{Rec:" + fcnRef;		// Recursive function calls
+				}
+				else
+				{
+					newStr = "{Fcn:" + fcnRef;  	// Should this be an int?
+				}
+
+				// Add the function's arguments
 				foreach (string arg in args)
 				{
-					newStr += "," + Parse(arg,subExprs);
+					newStr += "," + ParseFcn(arg, subExprs, fcnName, argNames);
 				}
 				newStr += "}";
 
-				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, fcnName, argNames);
 			}
 
-			// Infix operators - order is important here (boolean, comparison, arithmetic)
-			string[] infixOps = {"&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
+			// Date literals - must be parsed before subtraction
+			if (IsExactMatch(s,dateLiteral))
+			{
+				return "Tdate:" + s;
+			}
+
+			// Numeric literals - must be before subtraction due to negative numbers
+			if (IsExactMatch(s,decimalLiteral))
+			{
+				return "Tnum:" + Convert.ToDecimal(s);
+			}
+			if (IsExactMatch(s,currencyLiteral))
+			{
+				s = s.Replace("$","");
+				return "Tnum:" + Convert.ToDecimal(s);
+			}
+
+			// Infix operators
 			foreach (string oprtr in infixOps)
 			{
-				string infixResult = TestForInfixOp(s, oprtr, subExprs);
+				string infixResult = TestForInfixOp(s, oprtr, subExprs, fcnName, argNames);
 				if (s != infixResult && infixResult != "") return infixResult;
+			}
+
+			// Not - must go after infix ops
+			if (s.StartsWith("!"))
+			{
+				return "{Typ.Op:Op.Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
+			}
+
+			// Variable references
+			if (argNames != null)
+			{
+				for (int i=0; i<argNames.Length; i++)
+				{
+					if (s == argNames[i]) return "Var:" + i;
+				}
 			}
 
 			// Literal values
@@ -82,30 +145,58 @@ namespace Akkadian
 			{
 				return "Tbool:" + Convert.ToBoolean(s);
 			}
-			if (IsExactMatch(s,decimalLiteral))
-			{
-				return "Tnum:" + Convert.ToDecimal(s);
-			}
 
-			// Has to come towards end
-//			if (IsExactMatch(s,fcnVariable))
-//			{
-//				// TODO: Handle multiple variables...
-//				return n(Typ.Var,0);
-//			}
+			if (IsExactMatch(s,stringLiteral))	// Should go last because it's very inclusive
+			{
+				return "Tstr:" + s.Trim('\'');
+			}
 
 			return DecompressParse(s, subExprs);
 		}
 
-		public static string Parse(string s)
+		public static string ParseFcn(string s)
 		{
-			return Parse(s, new List<string>());
+			return ParseFcn(s, new List<string>(), "", null);
+		}
+
+		/// <summary>
+		/// Decomposes expressions with infix operators.
+		/// </summary>
+		private static string TestForFcnExpression(string s, List<string> subExprs)
+		{
+			string pattern = fcnSignature + white + "=" + white + parens(wildcard);
+		
+			if (IsExactMatch(s, pattern))
+			{
+				int eq = s.IndexOf("=");
+
+				// Identify the function name
+				string fcnSig = s.Substring(0,eq).Trim();
+				int firstBrack = fcnSig.IndexOf("[");
+				string fcnName = fcnSig.Substring(0,firstBrack);
+
+				// Identify variable names in the function signature
+				string args = fcnSig.Substring(firstBrack + 1).Trim(']');
+				string[] argArray = args.Split(',');
+
+				// Parse the expression to the right of the = sign
+				string fcnText = s.Substring(eq + 1).Trim();
+				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
+
+				// Side-effect: Add function to FunctionTable
+				FunctionTable.Clear();
+				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
+
+				return parsedFcn;
+			}
+
+			return s;
 		}
 
 		/// <summary>
 		/// Adds a string to the sub-expression list and parses the main string
 		/// </summary>
-		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs)
+		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs, string fcnName, string[] argNames)
 		{
 			List<string> newSubExprs;
 			if (s.Contains(delimiter))
@@ -118,7 +209,7 @@ namespace Akkadian
 				newSubExprs = new List<string>(){newStr};
 			}
 
-			return Parse(newStrToParse, newSubExprs);
+			return ParseFcn(newStrToParse, newSubExprs, fcnName, argNames);
 		}
 
 		/// <summary>
@@ -134,7 +225,6 @@ namespace Akkadian
 		/// </summary>
 		public static string DecompressParse(string s, List<string> subExprs)
 		{
-
 			string result = s;
 			for (int i=0; i<subExprs.Count; i++)
 			{
@@ -148,15 +238,15 @@ namespace Akkadian
 		/// <summary>
 		/// Decomposes expressions with infix operators.
 		/// </summary>
-		private static string TestForInfixOp(string s, string op, List<string> subExprs)
+		private static string TestForInfixOp(string s, string op, List<string> subExprs, string fcnName, string[] argNames)
 		{
-			string w = parens(wildcard);
+			string pattern = parens(wildcard) + op + parens(wildcard);
 
-			if (IsExactMatch(s, w + op + w))
+			if (IsExactMatch(s, pattern))
 			{
-				Match m = Regex.Match(s, w + op + w);
-				string lhs = Parse(m.Groups[1].Value.Trim(), subExprs);
-				string rhs = Parse(m.Groups[2].Value.Trim(), subExprs);
+				Match m = Regex.Match(s, pattern);
+				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, fcnName, argNames);
+				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, fcnName, argNames);
 				return "{Typ.Op:Op." + StringToOp(op) + "," + lhs + "," + rhs + "}";
 			}
 
@@ -168,6 +258,8 @@ namespace Akkadian
 		/// </summary>
 		private static string StringToOp(string op)
 		{
+//			return Convert.ToString(OperatorRegistry[op]);	// TODO: 14 errors
+
 			if (op == "&") return "And";
 			if (op == @"\|") return "Or";
 			if (op == @"\+") return "Plus";
@@ -224,6 +316,29 @@ namespace Akkadian
 				}
 			}
 			return substr;
+		}
+
+		/// <summary>
+		/// Converts a parse string into an Expr (expression) object.
+		/// </summary>
+		public static Expr StringParseToExpr(string s)
+		{
+			// Trim outer brackets
+//			string sub = s.Substring(1,s.Length-2);
+//
+//			// Process each part of the expression
+//			string[] parts = sub.Split(',');
+//			List<Node> nodes = new List<Node>();
+//			foreach (string p in parts)
+//			{
+//				int colon = p.IndexOf(":");
+//				string typ = p.Substring(0,colon);
+//				string val = p.Substring(colon + 1);
+//				Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
+//				Node newNode = n(theType,9);
+//			}
+
+			return expr(n(Typ.Op,Op.Abs),nTnum(41));
 		}
 
 		/// <summary>

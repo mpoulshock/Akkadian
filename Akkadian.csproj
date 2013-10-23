@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Akkadian</RootNamespace>
     <AssemblyName>Akkadian</AssemblyName>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,15 +101,16 @@
     <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - set - higher order.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Eval.cs" />
     <Compile Include="Kernel\1 - Fundamental types\Expr.cs" />
-    <Compile Include="Kernel\3 - Interpreter\Data\Rulebase.cs" />
     <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Eval.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Switch.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Filter.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Operators.cs" />
     <Compile Include="Kernel\3 - Interpreter\Parser\Parser.cs" />
     <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Parser.cs" />
-    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Lexer.cs" />
     <Compile Include="Kernel\3 - Interpreter\Parser\Grammar.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Grammar.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Data\FunctionTable.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Evaluator\Operator evaluation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

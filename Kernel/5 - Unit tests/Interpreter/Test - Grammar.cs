@@ -25,7 +25,7 @@ using NUnit.Framework;
 namespace Akkadian.UnitTests
 {
 	[TestFixture]
-	public partial class LexTests : Interpreter
+	public partial class GrammarTests : Interpreter
 	{
 		[Test]
 		public void Regex_BinaryBooleanOp_1 ()
@@ -37,6 +37,30 @@ namespace Akkadian.UnitTests
 		public void Regex_BoolLiteral_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("true", boolLiteral));
+		}
+
+		[Test]
+		public void Regex_Currency_1 ()
+		{
+			Assert.IsTrue(IsExactMatch("$99", currencyLiteral));
+		}
+
+		[Test]
+		public void Regex_Currency_2 ()
+		{
+			Assert.IsTrue(IsExactMatch("$1.07", currencyLiteral));
+		}
+
+		[Test]
+		public void Regex_Currency_3 ()
+		{
+			Assert.IsTrue(IsExactMatch("$13,304.07", currencyLiteral));
+		}
+
+		[Test]
+		public void Regex_Currency_4 ()
+		{
+			Assert.IsTrue(IsExactMatch("$0.007", currencyLiteral));
 		}
 
 		[Test]
@@ -82,6 +106,18 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Regex_DecimalLiteral_5 ()
+		{
+			Assert.IsTrue(IsExactMatch("7.0", decimalLiteral));
+		}
+
+		[Test]
+		public void Regex_DecimalLiteral_6 ()
+		{
+			Assert.IsTrue(IsExactMatch("-42", decimalLiteral));
+		}
+
+		[Test]
 		public void Regex_FcnName_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("IsEligible",fcnName));
@@ -115,31 +151,68 @@ namespace Akkadian.UnitTests
 		public void Regex_FcnSig_1 ()
 		{
 
-			Assert.IsTrue(IsExactMatch("AreRelated(A)",fcnSignature));
+			Assert.IsTrue(IsExactMatch("AreRelated[A]",fcnSignature));
 		}
 
 		[Test]
 		public void Regex_FcnSig_2 ()
 		{
-			Assert.IsTrue(IsExactMatch("AreRelated  (A)",fcnSignature));
+			Assert.IsTrue(IsExactMatch("AreRelated  [A]",fcnSignature));
 		}
 
 		[Test]
 		public void Regex_FcnSig_3 ()
 		{
-			Assert.IsTrue(IsExactMatch("Are_Related( A )",fcnSignature));
+			Assert.IsTrue(IsExactMatch("Are_Related[ A ]",fcnSignature));
 		}
 
 		[Test]
 		public void Regex_FcnSig_4 ()
 		{
-			Assert.IsTrue(IsExactMatch("Are_Related(    A  )",fcnSignature));
+			Assert.IsTrue(IsExactMatch("Are_Related[    A  ]",fcnSignature));
 		}
 
 		[Test]
 		public void Regex_FcnSig_5 ()
 		{
-			Assert.IsTrue(IsExactMatch("AreRelated(A,B)",fcnSignature));
+			Assert.IsTrue(IsExactMatch("AreRelated[A,B]",fcnSignature));
+		}
+
+		[Test]
+		public void Regex_FcnSig_6 ()
+		{
+
+			Assert.IsTrue(IsExactMatch("f2[A]",fcnSignature));
+		}
+
+		[Test]
+		public void Regex_SecondaryArgs_1 ()
+		{
+			Assert.IsTrue(IsExactMatch("",secondaryArgs));
+		}
+
+		[Test]
+		public void Regex_SecondaryArgs_2 ()
+		{
+			Assert.IsTrue(IsExactMatch(", A",secondaryArgs));
+		}
+
+		[Test]
+		public void Regex_SecondaryArgs_3 ()
+		{
+			Assert.IsTrue(IsExactMatch(",X2",secondaryArgs));
+		}
+
+		[Test]
+		public void Regex_Whitespace_1 ()
+		{
+			Assert.IsTrue(IsExactMatch("",white));
+		}
+
+		[Test]
+		public void Regex_Whitespace_2 ()
+		{
+			Assert.IsTrue(IsExactMatch("  ",white));
 		}
 
 		[Test]
