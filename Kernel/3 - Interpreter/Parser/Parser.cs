@@ -184,8 +184,7 @@ namespace Akkadian
 				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
 
 				// Side-effect: Add function to FunctionTable
-				FunctionTable.Clear();
-				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
+//				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
 
 				return parsedFcn;
 			}
@@ -307,9 +306,6 @@ namespace Akkadian
 		public static Expr StringParseToExpr(string s)
 		{
 			// Trim outer brackets
-//			string sub = s;
-//			if (s.StartsWith("{") && s.EndsWith("}")) s = s.Substring(1,s.Length-2);
-
 			string sub = s.Substring(1,s.Length-2);
 
 			// Process each part of the expression
@@ -317,13 +313,12 @@ namespace Akkadian
 			List<Node> nodes = new List<Node>();
 			foreach (string p in parts)
 			{
-				// If part is a nested expression (in brackets)
+				// If part is a nested expression (in brackets)...
 				if (p.StartsWith("{") && p.EndsWith("}"))
 				{
-					// Trim outer brackets and convert the subexpression
-					string newSub = p.Substring(1,p.Length-2);
-					Expr subExpr = StringParseToExpr(newSub);
-//					nodes.Add(
+					// Parse that expression and add it to the node
+					Expr subExpr = StringParseToExpr(p);
+					nodes.Add(new Node(Typ.Expr,subExpr));
 				}
 
 				// If part is not a nested expression

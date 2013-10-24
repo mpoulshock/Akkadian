@@ -430,21 +430,13 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(109, r.Out);                
 		}
 
-		[Test]
-		public void StringToParse_6 ()
-		{
-			Expr exp = StringParseToExpr("Tdate:2014-10-22");
-			Tdate r = (Tdate)eval(exp).obj;
-			Assert.AreEqual("2014-10-22", r.Out);                
-		}
-
-		[Test]
-		public void StringToParse_7 ()
-		{
-			Expr exp = StringParseToExpr("Tnum:22");
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(22, r.Out);                
-		}
+//		[Test]
+//		public void StringToParse_6 ()
+//		{
+//			Expr exp = StringParseToExpr("{Op:Op.And,Tbool:True,Tbool:False}");
+//			Tbool r = (Tbool)eval(exp).obj;
+//			Assert.AreEqual(false, r.Out);                
+//		}
 
 		[Test]
 		public void Subtraction_1 ()

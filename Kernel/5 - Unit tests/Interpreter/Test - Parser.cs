@@ -421,12 +421,20 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual("{Op:Abs,Var:0}", StringParseToExpr("{Op:Abs,Var:0}").ToString());                
 		}
 
+		[Test]
+		public void StringParseToExpr_2 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("{Op:Abs,Var:0}", StringParseToExpr("{Op:And,Tbool:True,{Op:LsTh,Tnum:5,Tnum:99}}").ToString());                
+		}
 
 
 		private static void InitializeParseTest()
 		{
 			// Need this to test parses that reference built-in functions
 			InitializeOperatorRegistry();
+
+			FunctionTable.Clear();
 		}
 
 //		[Test]
