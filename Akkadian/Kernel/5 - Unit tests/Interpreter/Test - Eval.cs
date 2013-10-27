@@ -342,13 +342,24 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void FunctionCall ()
+		public void FunctionCall_1 ()
 		{
 			// (a * 2) + 1, where a = 44
 			Expr exp = expr(n(Typ.Fcn,"0"));
 			Expr args = expr(nTnum(44));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(89,r.Out);                
+		}
+
+		[Test]
+		public void FunctionCall_2 ()
+		{
+			Interpreter.ParseFcn("F[x] = x * 9");
+
+			string fcn = ParseFcn("F[3]");
+			Expr exp = StringToExpr(fcn);
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(27,r.Out);                
 		}
 
 		[Test]

@@ -427,6 +427,13 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Parse_50 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Fcn:Income,Tnum:34}", ParseFcn("Income[34]"));                
+		}
+
+		[Test]
 		public void StringToNode_1 ()
 		{
 			InitializeParseTest();

@@ -77,7 +77,6 @@ namespace Akkadian
 				string[] args = whatsInTheBrackets.Split(',');
 				string fcnRef = m1.Groups[1].Value;
 
-
 				// If function name is in operator registry, reference it;
 				// otherwise, assume this is a user-defined function (or a leaf node)
 				string newStr = ""; 
@@ -187,7 +186,7 @@ namespace Akkadian
 				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
 
 				// Side-effect: Add function to FunctionTable
-				//				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
+				FunctionTable.Add(fcnName, (Expr)StringToNode(parsedFcn).obj);
 
 				return parsedFcn;
 			}

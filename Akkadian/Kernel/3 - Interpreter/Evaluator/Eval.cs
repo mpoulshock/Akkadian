@@ -79,6 +79,7 @@ namespace Akkadian
 			else if (typ == Typ.Fcn)
 			{
 				// Calls the rule (function) at the given index number
+//				result = eval((Expr)FunctionTable[Convert.ToString(ob)], args);
 				result = eval((Expr)LoadedRules()[Convert.ToInt32(ob)], args);
 			}
 			else if (typ == Typ.Rec)
