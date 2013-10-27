@@ -164,27 +164,121 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void EvalStringExpr_1 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Abs,Tnum:-66}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(66, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_2 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Mult,Tnum:4,Tnum:2}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(8, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_3 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Not,Tbool:True}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_4 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Op.And,Tbool:True,Tbool:False}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_5 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Op.Abs,Var:0}");
+			Expr args = expr(nTnum(-109));
+			Tnum r = (Tnum)eval(exp,args).obj;
+			Assert.AreEqual(109, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_6 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Op.And,Tbool:True,Tbool:False}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_7 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:And,Tbool:True,Expr:{Op:LsTh,Tnum:5,Tnum:99}}");
+			Tbool r = (Tbool)eval(exp).obj;
+			Assert.AreEqual(true, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_8 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(-34, r.Out);                
+		}
+
+		[Test]
+		public void EvalUserString_1 ()
+		{
+			Tnum r = (Tnum)ParseEvalUserString("Abs[-66]");
+			Assert.AreEqual(66, r.Out);                
+		}
+
+		[Test]
+		public void EvalUserString_2 ()
+		{
+			Tnum r = (Tnum)ParseEvalUserString("(11 * 6) - 100");
+			Assert.AreEqual(-34, r.Out);                
+		}
+
+		[Test]
+		public void EvalUserString_3 ()
+		{
+			// Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}} (correct)
+			Tnum r = (Tnum)ParseEvalUserString("Abs[ (11 * 6) - 100]");
+			Assert.AreEqual(44, r.Out);                
+		}
+
+		[Test]
 		public void ExprToString_1 ()
 		{
+			// Note: Does not start with "Expr:"
 			Assert.AreEqual("{Op:Plus,Var:0,Tnum:42}", LoadedRules()[1].ToString());                
 		}
 
-//		[Test]
-//		public void Filter_1 ()
-//		{
-//			Thing T1 = new Thing("T1");
-//			Thing T2 = new Thing("T2");
-//
-//			Expr exp = expr(n(Typ.Op,"Filter"));
-//			Func<int> r = (Func<int>)eval(exp).obj;
-//			Assert.AreEqual(7, r.Invoke());                
-//		}
-//
-//		private Tnum IncomeOf(Thing t)
-//		{
-//			if (t.Id == "T1") return new Tnum(500);
-//			else return new Tnum(1000);
-//		}
+		[Test]
+		public void ExprToString_2 ()
+		{
+			Assert.AreEqual("{Op:Plus,Expr:{Op:Mult,Var:0,Tnum:2},Tnum:1}", LoadedRules()[0].ToString());                
+		}
+
+		//		[Test]
+		//		public void Filter_1 ()
+		//		{
+		//			Thing T1 = new Thing("T1");
+		//			Thing T2 = new Thing("T2");
+		//
+		//			Expr exp = expr(n(Typ.Op,"Filter"));
+		//			Func<int> r = (Func<int>)eval(exp).obj;
+		//			Assert.AreEqual(7, r.Invoke());                
+		//		}
+		//
+		//		private Tnum IncomeOf(Thing t)
+		//		{
+		//			if (t.Id == "T1") return new Tnum(500);
+		//			else return new Tnum(1000);
+		//		}
 
 		[Test]
 		public void FunctionsAsArguments ()
@@ -388,55 +482,6 @@ namespace Akkadian.UnitTests
 			Tset r = (Tset)eval(exp).obj;
 			Assert.AreEqual("B, A", r.Out);               
 		}
-
-		[Test]
-		public void StringToParse_1 ()
-		{
-			Expr exp = StringParseToExpr("{Op:Abs,Tnum:-66}");
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(66, r.Out);                
-		}
-
-		[Test]
-		public void StringToParse_2 ()
-		{
-			Expr exp = StringParseToExpr("{Op:Mult,Tnum:4,Tnum:2}");
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(8, r.Out);                
-		}
-
-		[Test]
-		public void StringToParse_3 ()
-		{
-			Expr exp = StringParseToExpr("{Op:Not,Tbool:True}");
-			Tbool r = (Tbool)eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void StringToParse_4 ()
-		{
-			Expr exp = StringParseToExpr("{Op:Op.And,Tbool:True,Tbool:False}");
-			Tbool r = (Tbool)eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void StringToParse_5 ()
-		{
-			Expr exp = StringParseToExpr("{Op:Op.Abs,Var:0}");
-			Expr args = expr(nTnum(-109));
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(109, r.Out);                
-		}
-
-//		[Test]
-//		public void StringToParse_6 ()
-//		{
-//			Expr exp = StringParseToExpr("{Op:Op.And,Tbool:True,Tbool:False}");
-//			Tbool r = (Tbool)eval(exp).obj;
-//			Assert.AreEqual(false, r.Out);                
-//		}
 
 		[Test]
 		public void Subtraction_1 ()

@@ -32,12 +32,15 @@ namespace Akkadian
 		/// <summary>
 		/// Parse a....document? set of rules? set of documents?
 		/// </summary>
-		public static void Parse(string s)
+		public static object ParseEvalUserString(string s)
 		{
 			InitializeOperatorRegistry();
+			FunctionTable.Clear();
 
+			string fcn = ParseFcn(s);
+			Expr exp = StringToExpr(fcn);
+			return eval(exp).obj;
 		}
-
 
 		/// <summary>
 		/// Parses a function into a string of nested tokens (representing Exprs).
@@ -77,18 +80,18 @@ namespace Akkadian
 
 				// If function name is in operator registry, reference it;
 				// otherwise, assume this is a user-defined function (or a leaf node)
-				string newStr = "{Op:Op." + fcnRef;  // TODO: Identify function
+				string newStr = ""; 
 				if (OperatorRegistry.ContainsKey(fcnRef))
 				{
-					newStr = "{Op:Op." + Convert.ToString(OperatorRegistry[fcnRef]);
+					newStr = "Expr:{Op:" + Convert.ToString(OperatorRegistry[fcnRef]);
 				}
 				else if (fcnRef == fcnName)
 				{
-					newStr = "{Rec:" + fcnRef;		// Recursive function calls
+					newStr = "Expr:{Rec:" + fcnRef;		// Recursive function calls
 				}
 				else
 				{
-					newStr = "{Fcn:" + fcnRef;  	// Should this be an int?
+					newStr = "Expr:{Fcn:" + fcnRef;  	// Should this be an int?
 				}
 
 				// Add the function's arguments
@@ -128,7 +131,7 @@ namespace Akkadian
 			// Not - must go after infix ops
 			if (s.StartsWith("!"))
 			{
-				return "{Op:Op.Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
+				return "Expr:{Op:Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
 			}
 
 			// Variable references
@@ -165,7 +168,7 @@ namespace Akkadian
 		private static string TestForFcnExpression(string s, List<string> subExprs)
 		{
 			string pattern = fcnSignature + white + "=" + white + parens(wildcard);
-		
+
 			if (IsExactMatch(s, pattern))
 			{
 				int eq = s.IndexOf("=");
@@ -184,7 +187,7 @@ namespace Akkadian
 				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
 
 				// Side-effect: Add function to FunctionTable
-//				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
+				//				FunctionTable.Add(fcnName, StringParseToExpr(parsedFcn));
 
 				return parsedFcn;
 			}
@@ -246,7 +249,7 @@ namespace Akkadian
 				Match m = Regex.Match(s, pattern);
 				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, fcnName, argNames);
 				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, fcnName, argNames);
-				return "{Op:Op." + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
+				return "Expr:{Op:" + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
 			}
 
 			return "";
@@ -295,53 +298,106 @@ namespace Akkadian
 			return substr;
 		}
 
+		/*
+		 * The following method converts parse stings into Nodes.
+		 * 
+		 * To deal with nested expressions, the function first looks for the
+		 * innermost {} first, replacing them with a delimiter.  For example:
+		 * 
+		 * {Op:Mult,{Op:Cos,Tnum:33},{Op:Sin,{Op:Abs,Tnum:9}}}
+		 * {Op:Mult,#0#,{Op:Sin,{Op:Abs,Tnum:9}}}
+		 * {Op:Mult,#0#,{Op:Sin,#1#}}
+		 * {Op:Mult,#0#,#2#}
+		 * 
+		 * Later, the placeholders are replaced with their Node objects, which
+		 * are passed around through the recursive process in the subExprs list.
+		 */
+
 		/// <summary>
-		/// Converts a parse string into an Expr (expression) object.
+		/// Converts a parse string into a Node object.
 		/// </summary>
 		/// <remarks>
 		/// This is kludgy. One day, we'll have to change ParseRule to build 
 		/// the Expr object directly, rather than generating a string and then
 		/// having this function turn it into an Expr.
 		/// </remarks>
-		public static Expr StringParseToExpr(string s)
+		protected static Node StringToNode(string s, List<Node> subExprs)
 		{
-			// Trim outer brackets
-			string sub = s.Substring(1,s.Length-2);
+			// Determine the node type
+			int colon = s.IndexOf(":");
+			string typ = s.Substring(0,colon).Replace("Typ.","");
+			Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
 
-			// Process each part of the expression
-			string[] parts = sub.Split(',');
-			List<Node> nodes = new List<Node>();
-			foreach (string p in parts)
+			// Get the node value and convert it to the proper type of object
+			string val = s.Substring(colon + 1);
+
+			// Return the node object...
+			if (typ == "Op") 		return n(theType, (Op)Enum.Parse(typeof(Op),val)); //.Replace("Op.","")));
+			if (typ == "Tnum") 		return n(theType, (Tnum)Convert.ToDecimal(val));
+			if (typ == "Tbool") 	return n(theType, (Tbool)Convert.ToBoolean(val));
+			if (typ == "Var") 		return n(theType, Convert.ToInt16(val));
+
+			if (typ == "Expr")
 			{
-				// If part is a nested expression (in brackets)...
-				if (p.StartsWith("{") && p.EndsWith("}"))
+				// Trim outer brackets, if any
+				val = val.Substring(1,val.Length-2);
+
+				// Identify nested expressions (in brackets)...
+				Match m = Regex.Match(val, "Expr:{" + "([-0-9a-zA-Z:,']+)" + "}");
+				if (m.Success)
 				{
-					// Parse that expression and add it to the node
-					Expr subExpr = StringParseToExpr(p);
-					nodes.Add(new Node(Typ.Expr,subExpr));
+					// Replace the nested text with #n#
+					string meat = m.Groups[0].Value;
+					string index = Convert.ToString(subExprs.Count);
+					string newMainStr = s.Replace(meat, delimiter + index + delimiter);
+
+					// Parse the subexpression and add it to the subexpression list
+					Node subExpr = StringToNode(meat, subExprs);
+					subExprs.Add(subExpr);
+
+					// Parse the main string
+					return StringToNode(newMainStr, subExprs);
 				}
 
-				// If part is not a nested expression
-				else
+				// Process each part of the expression
+				string[] parts = val.Split(',');
+				List<Node> nodes = new List<Node>();
+				foreach (string p in parts)
 				{
-					int colon = p.IndexOf(":");
+					// See if part is a reference to a parenthetical
+					if (p.Contains(delimiter))
+					{
+						// Get index number within delimiter
+						Match m2 = Regex.Match(p, delimiter + "([0-9]+)" + delimiter);
+						int indx = Convert.ToInt16(m2.Groups[1].Value.Trim());
 
-					// Determine the type
-					string typ = p.Substring(0,colon).Replace("Typ.","");
-					Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
-
-					// Get the value and convert it to the proper type of object
-					string val = p.Substring(colon + 1);
-					object v = val;
-					if (typ == "Op") v = (Op)Enum.Parse(typeof(Op),val.Replace("Op.",""));
-					if (typ == "Tnum") v = (Tnum)Convert.ToDecimal(val);
-					if (typ == "Tbool") v = (Tbool)Convert.ToBoolean(val);
-
-					nodes.Add(n(theType,v));
+						// Then, add that subexpression
+						nodes.Add(subExprs[indx]);
+					}
+					else
+					{
+						nodes.Add(StringToNode(p,subExprs));
+					}
 				}
+
+				return new Node(Typ.Expr,new Expr(nodes));
 			}
 
-			return new Expr(nodes);
+			return n(Typ.Null,9);
+		}
+
+		protected static Node StringToNode(string p)
+		{
+			return StringToNode(p, new List<Node>());
+		}
+
+		/// <summary>
+		/// Converts a string representing a node into an expression (Expr)
+		/// </summary>
+		public static Expr StringToExpr(string s)
+		{
+			Node n = StringToNode(s);
+			return new Expr(new List<Node>(){n});
 		}
 
 		/// <summary>
