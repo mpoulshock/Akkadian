@@ -229,6 +229,22 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void EvalStringExpr_9 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(34, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_10 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(-34, r.Out);                
+		}
+
+		[Test]
 		public void EvalUserString_1 ()
 		{
 			Tnum r = (Tnum)ParseEvalUserString("Abs[-66]");
@@ -245,28 +261,44 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void EvalUserString_3 ()
 		{
-			// Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}} (correct)
 			Tnum r = (Tnum)ParseEvalUserString("Abs[ (11 * 6) - 100]");
 			Assert.AreEqual(34, r.Out);                
 		}
 
 		[Test]
-		public void EvalStringExpr_9 ()
+		public void EvalUserString_4 ()
 		{
-			Expr exp = StringToExpr("Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}}");
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(34, r.Out);                
+			Tnum r = (Tnum)ParseEvalUserString("(4+6) * ( 2 + 1 )");
+			Assert.AreEqual(30, r.Out);                
 		}
 
 		[Test]
-		public void EvalStringExpr_10 ()
+		public void EvalUserString_5 ()
 		{
-			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(-34, r.Out);                
+			Tnum r = (Tnum)ParseEvalUserString("1 + 4 / 2");
+			Assert.AreEqual(3, r.Out);                
 		}
 
+		[Test]
+		public void EvalUserString_6 ()
+		{
+			Tbool r = (Tbool)ParseEvalUserString("true & 5 + 31 > 99 ");
+			Assert.AreEqual(false, r.Out);                
+		}
 
+		[Test]
+		public void EvalUserString_7 ()
+		{
+			Tnum r = (Tnum)ParseEvalUserString("Abs[(4+6) * ( 2 + 1 )]");
+			Assert.AreEqual(30, r.Out);                
+		}
+
+		[Test]
+		public void EvalUserString_8 ()
+		{
+			Tbool r = (Tbool)ParseEvalUserString("true & !!false");
+			Assert.AreEqual(false, r.Out);                
+		}
 
 		[Test]
 		public void ExprToString_1 ()
