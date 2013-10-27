@@ -1,25 +1,16 @@
 #################
-## Hammurabi
+## Akkadian
 #################
 
 
 *.dll
 *.pdb
 *.exe
-!AkkadianCompiler.exe
 
-*.dll
-!hammurabi.dll
-!HammurabiWebService.dll
 !nunit.core.dll
 !nunit.framework.dll
 
-Hammurabi/test-results/
 test-results/
-Unit tests - Hammurabi core/test-results/
-Generated source/
-Akkadian/Extensions/
-Source/
 
 *.VisualState.xml
 *.userprefs
