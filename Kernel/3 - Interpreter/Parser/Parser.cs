@@ -323,27 +323,24 @@ namespace Akkadian
 		/// </remarks>
 		protected static Node StringToNode(string s, List<Node> subExprs)
 		{
-			// Determine the node type
+			// Determine the node type and value
 			int colon = s.IndexOf(":");
-			string typ = s.Substring(0,colon).Replace("Typ.","");
-			Typ theType = (Typ)Enum.Parse(typeof(Typ),typ);
-
-			// Get the node value and convert it to the proper type of object
+			string typ = s.Substring(0,colon);
 			string val = s.Substring(colon + 1);
 
 			// Return the node object...
-			if (typ == "Op") 		return n(theType, (Op)Enum.Parse(typeof(Op),val)); //.Replace("Op.","")));
-			if (typ == "Tnum") 		return n(theType, (Tnum)Convert.ToDecimal(val));
-			if (typ == "Tbool") 	return n(theType, (Tbool)Convert.ToBoolean(val));
-			if (typ == "Var") 		return n(theType, Convert.ToInt16(val));
+			if (typ == "Op") 		return n(Typ.Op, (Op)Enum.Parse(typeof(Op),val));
+			if (typ == "Tnum") 		return n(Typ.Tnum, (Tnum)Convert.ToDecimal(val));
+			if (typ == "Tbool") 	return n(Typ.Tbool, (Tbool)Convert.ToBoolean(val));
+			if (typ == "Var") 		return n(Typ.Var, Convert.ToInt16(val));
 
 			if (typ == "Expr")
 			{
-				// Trim outer brackets, if any
+				// Trim outer brackets
 				val = val.Substring(1,val.Length-2);
 
 				// Identify nested expressions (in brackets)...
-				Match m = Regex.Match(val, "Expr:{" + "([-0-9a-zA-Z:,']+)" + "}");
+				Match m = Regex.Match(val, "Expr:{" + "[-0-9a-zA-Z:,'"+delimiter+"]+" + "}");
 				if (m.Success)
 				{
 					// Replace the nested text with #n#
@@ -383,7 +380,8 @@ namespace Akkadian
 				return new Node(Typ.Expr,new Expr(nodes));
 			}
 
-			return n(Typ.Null,9);
+			// Should not get here
+			return n(Typ.Null,null);
 		}
 
 		protected static Node StringToNode(string p)

@@ -190,7 +190,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void EvalStringExpr_4 ()
 		{
-			Expr exp = StringToExpr("Expr:{Op:Op.And,Tbool:True,Tbool:False}");
+			Expr exp = StringToExpr("Expr:{Op:And,Tbool:True,Tbool:False}");
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -198,7 +198,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void EvalStringExpr_5 ()
 		{
-			Expr exp = StringToExpr("Expr:{Op:Op.Abs,Var:0}");
+			Expr exp = StringToExpr("Expr:{Op:Abs,Var:0}");
 			Expr args = expr(nTnum(-109));
 			Tnum r = (Tnum)eval(exp,args).obj;
 			Assert.AreEqual(109, r.Out);                
@@ -207,7 +207,7 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void EvalStringExpr_6 ()
 		{
-			Expr exp = StringToExpr("Expr:{Op:Op.And,Tbool:True,Tbool:False}");
+			Expr exp = StringToExpr("Expr:{Op:And,Tbool:True,Tbool:False}");
 			Tbool r = (Tbool)eval(exp).obj;
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -247,8 +247,26 @@ namespace Akkadian.UnitTests
 		{
 			// Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}} (correct)
 			Tnum r = (Tnum)ParseEvalUserString("Abs[ (11 * 6) - 100]");
-			Assert.AreEqual(44, r.Out);                
+			Assert.AreEqual(34, r.Out);                
 		}
+
+		[Test]
+		public void EvalStringExpr_9 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(34, r.Out);                
+		}
+
+		[Test]
+		public void EvalStringExpr_10 ()
+		{
+			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
+			Tnum r = (Tnum)eval(exp).obj;
+			Assert.AreEqual(-34, r.Out);                
+		}
+
+
 
 		[Test]
 		public void ExprToString_1 ()
