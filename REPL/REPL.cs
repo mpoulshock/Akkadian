@@ -7,11 +7,38 @@ namespace REPL
 	{
 		public static void Main (string[] args)
 		{
-			Expr exp = Interpreter.StringToExpr("Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}}");
-			Tnum r = (Tnum)Interpreter.eval(exp).obj;
-			int i = Convert.ToInt16(r.Out);
+			while (true)
+			{
+				Console.Write("> ");
+				string userInput = Console.ReadLine();
 
-			Console.WriteLine (i);
+				string result = "";
+				object o = Interpreter.ParseEvalUserString(userInput);
+
+				if (o.GetType() == typeof(Tnum)) 
+				{
+					result = Convert.ToString(((Tnum)o).Out); 
+				}
+				else if (o.GetType() == typeof(Tbool)) 
+				{
+					result = Convert.ToString(((Tbool)o).Out); 
+				}
+				else if (o.GetType() == typeof(Tstr)) 
+				{
+					result = Convert.ToString(((Tstr)o).Out); 
+				}
+				else if (o.GetType() == typeof(Tdate)) 
+				{
+					result = Convert.ToString(((Tdate)o).Out); 
+				}
+				else if (o.GetType() == typeof(Tset)) 
+				{
+					result = Convert.ToString(((Tset)o).Out); 
+				}
+
+				Console.WriteLine("  " + result);
+				Console.WriteLine();
+			}
 		}
 	}
 }

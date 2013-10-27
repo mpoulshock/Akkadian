@@ -340,7 +340,7 @@ namespace Akkadian
 				val = val.Substring(1,val.Length-2);
 
 				// Identify nested expressions (in brackets)...
-				Match m = Regex.Match(val, "Expr:{" + "[-0-9a-zA-Z:,'"+delimiter+"]+" + "}");
+				Match m = Regex.Match(val, "Expr:{" + @"[-0-9a-zA-Z:,'\."+delimiter+"]+" + "}");
 				if (m.Success)
 				{
 					// Replace the nested text with #n#
