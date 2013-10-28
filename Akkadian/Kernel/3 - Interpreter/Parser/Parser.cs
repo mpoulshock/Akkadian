@@ -332,6 +332,7 @@ namespace Akkadian
 			if (typ == "Tnum") 		return n(Typ.Tnum, (Tnum)Convert.ToDecimal(val));
 			if (typ == "Tbool") 	return n(Typ.Tbool, (Tbool)Convert.ToBoolean(val));
 			if (typ == "Var") 		return n(Typ.Var, Convert.ToInt16(val));
+			if (typ == "Fcn")		return n(Typ.Fcn, val);
 
 			if (typ == "Expr")
 			{
