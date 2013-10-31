@@ -111,6 +111,7 @@
     <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Grammar.cs" />
     <Compile Include="Kernel\3 - Interpreter\Data\FunctionTable.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Operator evaluation.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Data\Session.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

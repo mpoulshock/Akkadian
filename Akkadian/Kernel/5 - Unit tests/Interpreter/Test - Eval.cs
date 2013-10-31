@@ -360,15 +360,21 @@ namespace Akkadian.UnitTests
 		public void FunctionCall_1 ()
 		{
 			// (a * 2) + 1, where a = 44
-			Interpreter.InitializeOperatorRegistry();
-			FcnTable.ClearFunctionTable();
+			Session sess = new Session();
+			sess.ProcessInput("F[a] = (a*2) + 1");
+			Tnum r = (Tnum)sess.ProcessInput("F[44]");
+			Assert.AreEqual(89, r.Out);
 
-			Interpreter.ParseFcn("F[a] = (a*2) + 1"); 
-
-			string fcn = Interpreter.ParseFcn("F[44]");
-			Expr exp = Interpreter.StringToExpr(fcn);
-			Tnum r = (Tnum)Interpreter.eval(exp).obj;
-			Assert.AreEqual(89, r.Out);                
+//			// (a * 2) + 1, where a = 44
+//			Interpreter.InitializeOperatorRegistry();
+//			FcnTable.ClearFunctionTable();
+//
+//			Interpreter.ParseFcn("F[a] = (a*2) + 1"); 
+//
+//			string fcn = Interpreter.ParseFcn("F[44]");
+//			Expr exp = Interpreter.StringToExpr(fcn);
+//			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+//			Assert.AreEqual(89, r.Out);                
 		}
 
 		[Test]

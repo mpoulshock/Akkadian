@@ -29,6 +29,60 @@ namespace Akkadian
 	{
 		private const string delimiter = "#";
 
+		public class ParserResponse
+		{
+			public string ParserString;
+			public bool IsNewFunction = false;
+			public Expr FunctionExpression;
+			public string FunctionName;
+
+			public ParserResponse(string parseStr, bool isFcn, Expr fcnExpr, string fcnName)
+			{
+				ParserString = parseStr;
+				IsNewFunction = isFcn;
+				FunctionExpression = fcnExpr;
+				FunctionName = fcnName;
+			}
+
+			public ParserResponse(string parseStr)
+			{
+				ParserString = parseStr;
+			}
+		}
+
+		public static ParserResponse ParseInputLine(string s)
+		{
+			s = s.Trim();
+
+			// Matches function declarations (e.g. F[x] = x + 1)
+			string pattern = fcnSignature + white + "=" + white + parens(wildcard);
+
+			if (IsExactMatch(s, pattern))
+			{
+				int eq = s.IndexOf("=");
+
+				// Identify the function name
+				string fcnSig = s.Substring(0,eq).Trim();
+				int firstBrack = fcnSig.IndexOf("[");
+				string fcnName = fcnSig.Substring(0,firstBrack);
+
+				// Identify variable names in the function signature
+				string args = fcnSig.Substring(firstBrack + 1).Trim(']');
+				string[] argArray = args.Split(',');
+
+				// Parse the expression to the right of the = sign
+				string fcnText = s.Substring(eq + 1).Trim();
+				string parsedFcn = ParseFcn(fcnText, new List<string>(), fcnName, argArray);
+
+				return new ParserResponse(parsedFcn, true, (Expr)StringToNode(parsedFcn).obj, fcnName);
+			}
+
+			return new ParserResponse(ParseFcn(s));
+		}
+
+
+
+
 		/// <summary>
 		/// Parse a....document? set of rules? set of documents?
 		/// </summary>
@@ -162,7 +216,7 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Decomposes expressions with infix operators.
+		/// Decomposes expressions defining new functions.
 		/// </summary>
 		private static string TestForFcnExpression(string s, List<string> subExprs)
 		{
