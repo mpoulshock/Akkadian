@@ -24,12 +24,12 @@ using System.Linq;
 
 namespace Akkadian
 {
-	public partial class Interpreter
+	public partial class Session
 	{
 		/// <summary>
 		/// Applies an aggregation function to a Tset and an argument function.
 		/// </summary>
-		private static T ApplyFcnToTset<T>(Tset theSet, 
+		private T ApplyFcnToTset<T>(Tset theSet, 
 		                                   Node argumentFcn, 
 		                                   Func<List<Tuple<Thing,Hval>>,Hval> aggregationFcn) where T : Tvar
 		{

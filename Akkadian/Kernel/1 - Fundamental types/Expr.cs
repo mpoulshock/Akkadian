@@ -62,4 +62,48 @@ namespace Akkadian
 			return Convert.ToString(objType) + ":" + obj.ToString();
 		}
 	}
+
+	public partial class Interpreter
+	{
+		protected static Node nTbool(Tbool t)
+		{
+			return new Node(Typ.Tbool,t);
+		}
+
+		protected static Node nTnum(Tnum t)
+		{
+			return new Node(Typ.Tnum,t);
+		}
+
+		protected static Node nTstr(Tstr t)
+		{
+			return new Node(Typ.Tstr,t);
+		}
+
+		protected static Node nTset(Tset t)
+		{
+			return new Node(Typ.Tset,t);
+		}
+
+		protected static Node nTdate(Tdate t)
+		{
+			return new Node(Typ.Tdate,t);
+		}
+
+		/// <summary>
+		/// Simple way to instantiate a new Node.
+		/// </summary>
+		protected static Node n(Typ typ, object o)
+		{
+			return new Node(typ,o);
+		}
+
+		/// <summary>
+		/// Simple way to instantiate a new expression.
+		/// </summary>
+		protected static Expr expr(params Node[] nodes)
+		{
+			return new Expr(new List<Node>(nodes));
+		}
+	}
 }

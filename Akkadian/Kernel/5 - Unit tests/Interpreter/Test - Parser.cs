@@ -242,43 +242,43 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_24 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Abs,Var:0}", ParseFcn("F[x] = Abs[x]"));                
+			ParserResponse pr = ParseInputLine("F[x] = Abs[x]");
+			Assert.AreEqual("Expr:{Op:Abs,Var:0}", pr.ParserString);                
 		}
 
 		[Test]
 		public void Parse_25 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Expr:{Op:Cos,Var:0}}", ParseFcn("F[x] = Abs[x] + Cos[x]"));                
+			ParserResponse pr = ParseInputLine("F[x] = Abs[x] + Cos[x]");
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Expr:{Op:Cos,Var:0}}", pr.ParserString);               
 		}
 
 		[Test]
 		public void Parse_26 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Expr:{Op:Cos,Var:1}}", ParseFcn("F[x,y] = Abs[x] + Cos[y]"));                
+			ParserResponse pr = ParseInputLine("F[x,y] = Abs[x] + Cos[y]");
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Expr:{Op:Cos,Var:1}}", pr.ParserString);                
 		}
 
 		[Test]
 		public void Parse_27 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:RndUp,Var:0,Var:1}", ParseFcn("F[x,y] = RoundUp[x,y]"));                
+			ParserResponse pr = ParseInputLine("F[x,y] = RoundUp[x,y]");
+			Assert.AreEqual("Expr:{Op:RndUp,Var:0,Var:1}", pr.ParserString);               
 		}
 
 		[Test]
 		public void Parse_28 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:RndUp,Var:1,Var:0}", ParseFcn("F[x,y] = RoundUp[y,x]"));                
+			ParserResponse pr = ParseInputLine("F[x,y] = RoundUp[y,x]");
+			Assert.AreEqual("Expr:{Op:RndUp,Var:1,Var:0}", pr.ParserString);               
 		}
 
 		[Test]
 		public void Parse_29 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Var:1}", ParseFcn("F2[x,y] = Abs[x] + y"));                
+			ParserResponse pr = ParseInputLine("F2[x,y] = Abs[x] + y");
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Abs,Var:0},Var:1}", pr.ParserString);               
 		}
 
 		[Test]
@@ -296,17 +296,15 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_32 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Or,Expr:{Op:GrTh,Expr:{Op:Cos,Var:0},Tnum:65},Expr:{Op:LsTh,Expr:{Op:Sin,Var:0},Tnum:17000}}", 
-			                ParseFcn("IsEligible[p]=Cos[p] > 65 | Sin[p] < $17,000"));                
+			ParserResponse pr = ParseInputLine("IsEligible[p]=Cos[p] > 65 | Sin[p] < $17,000");
+			Assert.AreEqual("Expr:{Op:Or,Expr:{Op:GrTh,Expr:{Op:Cos,Var:0},Tnum:65},Expr:{Op:LsTh,Expr:{Op:Sin,Var:0},Tnum:17000}}", pr.ParserString);           
 		}
 
 		[Test]
 		public void Parse_33 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Or,Expr:{Op:GrTh,Expr:{Fcn:Age,Var:0},Tnum:65},Expr:{Op:LsTh,Expr:{Fcn:Income,Var:0},Tnum:17000}}", 
-			                ParseFcn("IsEligible[p] = Age[p] > 65 | Income[p] < $17,000"));                
+			ParserResponse pr = ParseInputLine("IsEligible[p] = Age[p] > 65 | Income[p] < $17,000");
+			Assert.AreEqual("Expr:{Op:Or,Expr:{Op:GrTh,Expr:{Fcn:Age,Var:0},Tnum:65},Expr:{Op:LsTh,Expr:{Fcn:Income,Var:0},Tnum:17000}}", pr.ParserString);              
 		}
 
 		[Test]
@@ -318,32 +316,32 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_35 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:USD,Var:0}", ParseFcn("F[x] = ToUSD[x]"));                
+			ParserResponse pr = ParseInputLine("F[x] = ToUSD[x]");
+			Assert.AreEqual("Expr:{Op:USD,Var:0}", pr.ParserString);                             
 		}
 
 		[Test]
 		public void Parse_36 ()
 		{
 			// Evaluating this parse would cause an infinite loop, but the parser should correctly handle a recusrive function
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Plus,Expr:{Fcn:Income,Var:0},Tnum:1}", ParseFcn("Income[p] = Income[p] + 1"));                
+			ParserResponse pr = ParseInputLine("Income[p] = Income[p] + 1");
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Fcn:Income,Var:0},Tnum:1}", pr.ParserString);               
 		}
 
 		[Test]
 		public void Parse_37 ()
 		{
 			// Another infinite loop...
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Fcn:Income,Var:0}", ParseFcn("Income[p] = Income[p]"));                
+			ParserResponse pr = ParseInputLine("Income[p] = Income[p]");
+			Assert.AreEqual("Expr:{Fcn:Income,Var:0}", pr.ParserString);              
 		}
 
 		[Test]
 		public void Parse_38 ()
 		{
 			// Another infinite loop...
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Fcn:Income,Tnum:42}", ParseFcn("Income[p] = Income[42]"));                
+			ParserResponse pr = ParseInputLine("Income[p] = Income[42]");
+			Assert.AreEqual("Expr:{Fcn:Income,Tnum:42}", pr.ParserString);               
 		}
 
 		[Test]
@@ -372,8 +370,8 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_42 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Not,Expr:{Fcn:Over65,Var:0}}", ParseFcn("IsEligible[p] = !Over65[p]"));                
+			ParserResponse pr = ParseInputLine("IsEligible[p] = !Over65[p]");
+			Assert.AreEqual("Expr:{Op:Not,Expr:{Fcn:Over65,Var:0}}", pr.ParserString);                
 		}
 
 		[Test]
@@ -460,8 +458,6 @@ namespace Akkadian.UnitTests
 		{
 			// Need this to test parses that reference built-in functions
 			InitializeOperatorRegistry();
-
-			FcnTable.ClearFunctionTable();
 		}
 
 //		[Test]

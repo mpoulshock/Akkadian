@@ -23,12 +23,12 @@ using System.Collections.Generic;
 
 namespace Akkadian
 {
-	public partial class Interpreter
+	public partial class Session
 	{
 		/// <summary>
 		/// Evaluates expressions in which a short-circuit may be required.
 		/// </summary>
-		private static Node EvalShortCircuitFcns(Expr exp, Expr args, Op op)
+		private Node EvalShortCircuitFcns(Expr exp, Expr args, Op op)
 		{
 			// TODO: Forget short-circuits and instead paralellize?
 			Node n1 = eval(expr(exp.nodes [1]), args);
@@ -73,7 +73,7 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with two arguments.
 		/// </summary>
-		private static Node BinaryFcnEval(Expr exp, Expr args, Op op)
+		private Node BinaryFcnEval(Expr exp, Expr args, Op op)
 		{
 			// TODO: Paralellize
 			Node n1 = eval(expr(exp.nodes [1]), args);
@@ -155,7 +155,7 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with one argument.
 		/// </summary>
-		private static Node UnaryFcnEval(Expr exp, Expr args, Op op)
+		private Node UnaryFcnEval(Expr exp, Expr args, Op op)
 		{
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
@@ -188,7 +188,7 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with three or more arguments.
 		/// </summary>
-		private static Node MultiTnumFcnEval(Expr exp, Expr args, Op op)
+		private Node MultiTnumFcnEval(Expr exp, Expr args, Op op)
 		{
 			// TODO: Parallelize
 			Tnum[] list = new Tnum[exp.nodes.Count-1];

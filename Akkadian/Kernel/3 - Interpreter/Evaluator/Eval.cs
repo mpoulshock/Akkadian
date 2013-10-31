@@ -24,18 +24,18 @@ using System.Linq;
 
 namespace Akkadian
 {
-	public partial class Interpreter
+	public partial class Session : Interpreter
 	{
 		/// <summary>
 		/// The soul of a new machine.
 		/// </summary>
-		public static Node eval(Expr exp, Expr args)
+		public new Node eval(Expr exp, Expr args)
 		{
 			Node result = exp.nodes[0];
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
-//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
+			//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
 			if (typ == Typ.Var)
 			{
@@ -67,10 +67,10 @@ namespace Akkadian
 				{
 					result = MultiTnumFcnEval(exp, args, opType);
 				}
-//				else if (opType == "Exists")
-//				{
-//					result = EvalExists(exp, args, opType);
-//				}
+				//				else if (opType == "Exists")
+				//				{
+				//					result = EvalExists(exp, args, opType);
+				//				}
 			}
 			else if (typ == Typ.Expr)
 			{
@@ -79,34 +79,34 @@ namespace Akkadian
 			else if (typ == Typ.Fcn)
 			{
 				// Call the function with the given name
-				Expr ex1 = FcnTable.GetFunction(Convert.ToString(ob));
+				Expr ex1 = GetFunction(Convert.ToString(ob));
 				result = MixAndMatch(exp, args, ex1);
 			}
 			else if (typ == Typ.Ask)
 			{
 				// Get the info from the user / factbase
 				string s = Console.ReadLine();
-//				result = nTnum(Convert.ToDecimal(s)));
+				//				result = nTnum(Convert.ToDecimal(s)));
 				result = nTbool(Convert.ToBoolean(s));
 			}
 
 			return result;
 		}
 
-		public static Node eval(Node node, Expr args)
+		public Node eval(Node node, Expr args)
 		{
 			return eval(expr(node), args);
 		}
 
-		public static Node eval(Expr exp)
+		public Node eval(Expr exp)
 		{
 			return eval(exp, expr(n(Typ.Null,null)));
 		}
-		
+
 		/// <summary>
 		/// Evaluates an expression referencing a higher order function.
 		/// </summary>
-		private static Node EvaluateVariableReferences(Expr exp, Expr args)
+		private Node EvaluateVariableReferences(Expr exp, Expr args)
 		{
 			object ob = exp.nodes[0].obj;
 
@@ -127,7 +127,7 @@ namespace Akkadian
 		/// Cross-breeds part of the expression and part of the arguments to form a new
 		/// expression-argument pair to be evaluated.
 		/// </summary>
-		private static Node MixAndMatch(Expr exp, Expr args, Expr newExp)
+		private Node MixAndMatch(Expr exp, Expr args, Expr newExp)
 		{
 			// Expr - minus the function reference - becomes the args to be evaluated
 			List<Node> newArgList = new List<Node>();
@@ -138,47 +138,6 @@ namespace Akkadian
 			Expr newArgs = new Expr(newArgList);
 
 			return eval(newExp, newArgs);
-		}
-
-		protected static Node nTbool(Tbool t)
-		{
-			return new Node(Typ.Tbool,t);
-		}
-
-		protected static Node nTnum(Tnum t)
-		{
-			return new Node(Typ.Tnum,t);
-		}
-
-		protected static Node nTstr(Tstr t)
-		{
-			return new Node(Typ.Tstr,t);
-		}
-
-		protected static Node nTset(Tset t)
-		{
-			return new Node(Typ.Tset,t);
-		}
-
-		protected static Node nTdate(Tdate t)
-		{
-			return new Node(Typ.Tdate,t);
-		}
-
-		/// <summary>
-		/// Simple way to instantiate a new Node.
-		/// </summary>
-		protected static Node n(Typ typ, object o)
-		{
-			return new Node(typ,o);
-		}
-
-		/// <summary>
-		/// Simple way to instantiate a new expression.
-		/// </summary>
-		protected static Expr expr(params Node[] nodes)
-		{
-			return new Expr(new List<Node>(nodes));
 		}
 	}
 }

@@ -27,20 +27,22 @@ namespace Akkadian
 {
 	public partial class Interpreter
 	{
+		// Used to delineate parethetical expressions
 		private const string delimiter = "#";
 
+		/// <summary>
+		/// Object returned when an input string is parsed.
+		/// </summary> 
 		public class ParserResponse
 		{
 			public string ParserString;
 			public bool IsNewFunction = false;
-			public Expr FunctionExpression;
 			public string FunctionName;
 
-			public ParserResponse(string parseStr, bool isFcn, Expr fcnExpr, string fcnName)
+			public ParserResponse(string parseStr, bool isFcn, string fcnName)
 			{
 				ParserString = parseStr;
 				IsNewFunction = isFcn;
-				FunctionExpression = fcnExpr;
 				FunctionName = fcnName;
 			}
 
@@ -50,6 +52,9 @@ namespace Akkadian
 			}
 		}
 
+		/// <summary>
+		/// Parses a user-input string.
+		/// </summary>
 		public static ParserResponse ParseInputLine(string s)
 		{
 			s = s.Trim();
@@ -72,28 +77,12 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray);
+				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray); // F[x] = x  => Var:0 instead of Expr:{Var:0}
 
-				return new ParserResponse(parsedFcn, true, (Expr)StringToNode(parsedFcn).obj, fcnName);
+				return new ParserResponse(parsedFcn, true, fcnName);
 			}
 
 			return new ParserResponse(ParseFcn(s));
-		}
-
-
-
-
-		/// <summary>
-		/// Parse a....document? set of rules? set of documents?
-		/// </summary>
-		public static object ParseEvalUserString(string s)
-		{
-			InitializeOperatorRegistry();
-			FcnTable.ClearFunctionTable();
-
-			string fcn = ParseFcn(s);
-			Expr exp = StringToExpr(fcn);
-			return eval(exp).obj;
 		}
 
 		/// <summary>
@@ -102,10 +91,6 @@ namespace Akkadian
 		public static string ParseFcn(string s, List<string> subExprs, string[] argNames)
 		{
 			s = s.Trim();
-
-			// Functions (e.g. F[x] = x + 1)
-			string fcnResult = TestForFcnExpression(s, subExprs);
-			if (s != fcnResult && fcnResult != "") return fcnResult;
 
 			// Parentheses
 			string fp = FirstParenthetical(s,"(",")");
@@ -235,8 +220,6 @@ namespace Akkadian
 				string fcnText = s.Substring(eq + 1).Trim();
 				string parsedFcn = ParseFcn(fcnText, subExprs, argArray);
 
-				// Side-effect: Add function to FunctionTable
-				FcnTable.AddFunction(fcnName,(Expr)StringToNode(parsedFcn).obj);
 				return parsedFcn;
 			}
 
@@ -265,7 +248,7 @@ namespace Akkadian
 		/// <summary>
 		/// Removes parentheses from a string.
 		/// </summary>
-		public static string RemoveParens(string s)
+		private static string RemoveParens(string s)
 		{
 			return s.Substring(1,s.Length-2);
 		}
@@ -273,7 +256,7 @@ namespace Akkadian
 		/// <summary>
 		/// Puts extracted sub-parses back into the main parse string.
 		/// </summary>
-		public static string DecompressParse(string s, List<string> subExprs)
+		private static string DecompressParse(string s, List<string> subExprs)
 		{
 			string result = s;
 			for (int i=0; i<subExprs.Count; i++)
@@ -314,7 +297,7 @@ namespace Akkadian
 		/// <summary>
 		/// Puts parentheses around a string.
 		/// </summary>
-		protected static string parens(string s)
+		private static string parens(string s)
 		{
 			return "(" + s + ")";
 		}
@@ -322,7 +305,7 @@ namespace Akkadian
 		/// <summary>
 		/// Returns the first first-level set of {}s or ()s in the input string.
 		/// </summary>
-		public static string FirstParenthetical(string clause, string open, string close)
+		protected static string FirstParenthetical(string clause, string open, string close)
 		{
 			int start = clause.IndexOf(open);
 			if (start == -1) return "";
@@ -433,7 +416,7 @@ namespace Akkadian
 			return n(Typ.Null,null);
 		}
 
-		protected static Node StringToNode(string p)
+		public static Node StringToNode(string p)
 		{
 			return StringToNode(p, new List<Node>());
 		}

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace Akkadian
 {
-	public partial class Interpreter
+	public partial class Session
 	{
 		/// <summary>
 		/// Returns a Tvar when its associated Tbool is true.  
@@ -33,7 +33,7 @@ namespace Akkadian
 		/// Sample usage: Switch(Tbool1, Tvar1, Tbool2, Tvar2, ..., defaultTvar).  
 		/// Returns Tvar1 if Tbool2 is true, else Tvar2 if Tbool2 is true, etc., else defaultTvar. 
 		/// </remarks>
-		public static T Switch2<T>(Expr arguments, Expr args) where T : Tvar
+		public T Switch2<T>(Expr arguments, Expr args) where T : Tvar
 		{
 			// Default result
 			Hval h = new Hval(null, Hstate.Null);

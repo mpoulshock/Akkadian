@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Akkadian;
 
+
 namespace REPL
 {
 	class MainClass
@@ -10,9 +11,7 @@ namespace REPL
 		{
 			Console.Title = "Akkadian REPL";
 
-			Interpreter.InitializeOperatorRegistry();
-			FcnTable.ClearFunctionTable();
-			int fcnCount = FcnTable.Count();
+			Session sess = new Session();
 
 			// Loop
 			while (true)
@@ -23,20 +22,40 @@ namespace REPL
 					Console.Write("> ");
 					string userInput = Console.ReadLine();
 
+					// Clear all functions from the session
+					if (userInput.ToLower() == "clear rules")
+					{
+						sess.ClearFunctions();
+						Console.WriteLine("  All rules deleted.");
+						Console.WriteLine();
+						continue;
+					}
+
 					// Eval
-					string fcn = Interpreter.ParseFcn(userInput); 
+					Interpreter.ParserResponse pr = Interpreter.ParseInputLine(userInput);
 					string result = "";
 
-					if (FcnTable.Count() != fcnCount)
+					if (pr.IsNewFunction)
 					{
-						result = "Rule added.";
-						fcnCount = FcnTable.Count();
-					}
-					else 
+						string name = pr.FunctionName;
+						
+						Expr e = (Expr)Interpreter.StringToNode(pr.ParserString).obj;
 
+						if (sess.ContainsFunction(name))
+						{
+							sess.UpdateFunction(name, e);
+							result = "Rule updated.";
+						}
+						else
+						{
+							sess.AddFunction(name, e);
+							result = "Rule added.";
+						}
+					}
+					else
 					{
-						Expr exp = Interpreter.StringToExpr(fcn);
-						object o = Interpreter.eval(exp).obj;
+						Expr exp = Interpreter.StringToExpr(pr.ParserString);
+						object o = sess.eval(exp).obj;
 
 						if (o.GetType() == typeof(Tnum)) 		{ result = Convert.ToString(((Tnum)o).Out); }
 						else if (o.GetType() == typeof(Tbool)) 	{ result = Convert.ToString(((Tbool)o).Out); }

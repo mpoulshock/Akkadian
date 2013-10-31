@@ -199,10 +199,5 @@ namespace Akkadian
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
 		}
-
-//		private static Op GetOpFromString(string s)
-//		{
-//			OperatorRegistry.TryGetValue(s, out Op.Null);
-//		}
 	}
 }

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace Akkadian
 {
-	public class Session
+	public partial class Session 
 	{
 		/// <summary>
 		/// Instantiates a new Session object.
@@ -37,7 +37,7 @@ namespace Akkadian
 		/// <summary>
 		/// Data structure in which user-defined functions are stored.
 		/// </summary>
-		private Dictionary<string,Expr> FunctionTable = new Dictionary<string,Expr>();
+		private static Dictionary<string,Expr> FunctionTable = new Dictionary<string,Expr>();
 
 		/// <summary>
 		/// Adds a function to the function table.
@@ -47,12 +47,25 @@ namespace Akkadian
 			FunctionTable.Add(name, fcnExpr);
 		}
 
+		public void UpdateFunction(string name, Expr fcnExpr)
+		{
+			FunctionTable[name] = fcnExpr;
+		}
+
 		/// <summary>
 		/// Gets the expression (Expr) of a function from the function table.
 		/// </summary>
 		public Expr GetFunction(string name)
 		{
 			return FunctionTable[name];
+		}
+
+		/// <summary>
+		/// Indicates whether a function already exists in the function table.
+		/// </summary>
+		public bool ContainsFunction(string name)
+		{
+			return FunctionTable.ContainsKey(name);
 		}
 
 		/// <summary>
@@ -93,13 +106,14 @@ namespace Akkadian
 
 			if (pr.IsNewFunction)
 			{
-				AddFunction(pr.FunctionName, pr.FunctionExpression);
+				Expr e = (Expr)StringToNode(pr.ParserString).obj;
+				AddFunction(pr.FunctionName, e);
 				return true;
 			}
 			else
 			{
 				Expr exp = Interpreter.StringToExpr(pr.ParserString);
-				return Interpreter.eval(exp).obj;
+				return eval(exp).obj;
 			}
 		}
 	}
