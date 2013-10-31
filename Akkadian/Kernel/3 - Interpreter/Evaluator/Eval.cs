@@ -78,15 +78,14 @@ namespace Akkadian
 			}
 			else if (typ == Typ.Fcn)
 			{
-				result = MixAndMatch(exp, args, (Expr)FunctionTable[Convert.ToString(ob)]);
-
-				// Calls the rule (function) at the given index number - ORIGINAL
-//				result = eval((Expr)LoadedRules()[Convert.ToInt32(ob)], args);
+				// Call the function with the given name
+				Expr ex1 = FcnTable.GetFunction(Convert.ToString(ob));
+				result = MixAndMatch(exp, args, ex1);
 			}
 			else if (typ == Typ.Rec)
 			{
 				// Get the function reference from exp
-				Expr newExp = expr(n(Typ.Fcn, exp.nodes[0].obj));
+				Expr newExp = expr(n(Typ.Fcn,ob)); 
 				result = MixAndMatch(exp, args, newExp);
 			}
 			else if (typ == Typ.Ask)
@@ -137,18 +136,15 @@ namespace Akkadian
 		private static Node MixAndMatch(Expr exp, Expr args, Expr newExp)
 		{
 			// Expr - minus the function reference - becomes the args to be evaluated
-			exp.nodes.RemoveAt(0);
-			Expr newArgs = exp;
-
-			// Evaluate any variable references or nested expressions
-			for (int i=0; i < newArgs.nodes.Count; i++)
+			List<Node> newArgList = new List<Node>();
+			for (int i=0; i < exp.nodes.Count; i++)
 			{
-				newArgs.nodes[i] = eval(newArgs.nodes[i], args);
+				if (i>0) newArgList.Add(eval(exp.nodes[i], args));
 			}
+			Expr newArgs = new Expr(newArgList);
 
 			return eval(newExp, newArgs);
 		}
-
 
 		protected static Node nTbool(Tbool t)
 		{

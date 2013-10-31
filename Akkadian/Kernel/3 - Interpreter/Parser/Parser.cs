@@ -35,7 +35,7 @@ namespace Akkadian
 		public static object ParseEvalUserString(string s)
 		{
 			InitializeOperatorRegistry();
-			FunctionTable.Clear();
+			FcnTable.ClearFunctionTable();
 
 			string fcn = ParseFcn(s);
 			Expr exp = StringToExpr(fcn);
@@ -186,8 +186,7 @@ namespace Akkadian
 				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
 
 				// Side-effect: Add function to FunctionTable
-				FunctionTable.Add(fcnName, (Expr)StringToNode(parsedFcn).obj);
-
+				FcnTable.AddFunction(fcnName,(Expr)StringToNode(parsedFcn).obj);
 				return parsedFcn;
 			}
 
@@ -216,7 +215,7 @@ namespace Akkadian
 		/// <summary>
 		/// Removes parentheses from a string.
 		/// </summary>
-		private static string RemoveParens(string s)
+		public static string RemoveParens(string s)
 		{
 			return s.Substring(1,s.Length-2);
 		}

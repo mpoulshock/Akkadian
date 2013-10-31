@@ -461,7 +461,7 @@ namespace Akkadian.UnitTests
 			// Need this to test parses that reference built-in functions
 			InitializeOperatorRegistry();
 
-			FunctionTable.Clear();
+			FcnTable.ClearFunctionTable();
 		}
 
 //		[Test]

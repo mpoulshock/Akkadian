@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Akkadian;
 
 namespace REPL
@@ -10,26 +11,29 @@ namespace REPL
 			Console.Title = "Akkadian REPL";
 
 			Interpreter.InitializeOperatorRegistry();
-			Interpreter.FunctionTable.Clear();
+			FcnTable.ClearFunctionTable();
+			int fcnCount = FcnTable.Count();
 
-			int fcnCount = Interpreter.FunctionTable.Count;
-
+			// Loop
 			while (true)
 			{
 //				try
 //				{
+					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine();
 
-					string fcn = Interpreter.ParseFcn(userInput);
+					// Eval
+					string fcn = Interpreter.ParseFcn(userInput); 
 					string result = "";
 
-					if (Interpreter.FunctionTable.Count != fcnCount)
+					if (FcnTable.Count() != fcnCount)
 					{
-						Console.WriteLine("  Rule added.");
-						fcnCount = Interpreter.FunctionTable.Count;
+						result = "Rule added.";
+						fcnCount = FcnTable.Count();
 					}
-					else
+					else 
+
 					{
 						Expr exp = Interpreter.StringToExpr(fcn);
 						object o = Interpreter.eval(exp).obj;
@@ -40,6 +44,8 @@ namespace REPL
 						else if (o.GetType() == typeof(Tdate)) 	{ result = Convert.ToString(((Tdate)o).Out); }
 						else if (o.GetType() == typeof(Tset)) 	{ result = Convert.ToString(((Tset)o).Out); }
 					}
+
+					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
 //				}

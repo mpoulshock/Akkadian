@@ -91,11 +91,15 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void ChainedFunctions ()
 		{
-			// 1017 - [(x * 2) + 1], where x = 22.3
-			Expr exp = expr(n(Typ.Fcn,"2"));
-			Expr args = expr(nTnum(22.3));
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(971.4, r.Out);            
+			Interpreter.InitializeOperatorRegistry();
+			FcnTable.ClearFunctionTable();
+
+			Interpreter.ParseFcn("F[x] = 1017 - ((x*2) + 1)"); 
+
+			string fcn = Interpreter.ParseFcn("F[22]");
+			Expr exp = Interpreter.StringToExpr(fcn);
+			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+			Assert.AreEqual(972, r.Out);           
 		}
 
 		[Test]
@@ -300,18 +304,18 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(false, r.Out);                
 		}
 
-		[Test]
-		public void ExprToString_1 ()
-		{
-			// Note: Does not start with "Expr:"
-			Assert.AreEqual("{Op:Plus,Var:0,Tnum:42}", LoadedRules()[1].ToString());                
-		}
-
-		[Test]
-		public void ExprToString_2 ()
-		{
-			Assert.AreEqual("{Op:Plus,Expr:{Op:Mult,Var:0,Tnum:2},Tnum:1}", LoadedRules()[0].ToString());                
-		}
+//		[Test]
+//		public void ExprToString_1 ()
+//		{
+//			// Note: Does not start with "Expr:"
+//			Assert.AreEqual("{Op:Plus,Var:0,Tnum:42}", LoadedRules()[1].ToString());                
+//		}
+//
+//		[Test]
+//		public void ExprToString_2 ()
+//		{
+//			Assert.AreEqual("{Op:Plus,Expr:{Op:Mult,Var:0,Tnum:2},Tnum:1}", LoadedRules()[0].ToString());                
+//		}
 
 		//		[Test]
 		//		public void Filter_1 ()
@@ -335,41 +339,65 @@ namespace Akkadian.UnitTests
 		{
 			// f(x,y) = y(x,17); x = 34; y = f(a,b) = b/a
 			//        = y(34,17) = 17/34 = 0.5
-			Expr exp = expr(n(Typ.Fcn,"4"));
-			Expr args = expr(nTnum(34),n(Typ.Fcn,"3"));
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(0.5, r.Out);                
+//			Expr exp = expr(n(Typ.Fcn,"4"));
+//			Expr args = expr(nTnum(34),n(Typ.Fcn,"3"));
+//			Tnum r = (Tnum)eval(exp,args).obj;
+//			Assert.AreEqual(0.5, r.Out);        
+
+			Interpreter.InitializeOperatorRegistry();
+			FcnTable.ClearFunctionTable();
+
+			Interpreter.ParseFcn("f[x,y] = y[x,17]"); 
+			Interpreter.ParseFcn("f2[a,b] = b/a"); 
+
+			string fcn = Interpreter.ParseFcn("f[34,f2]");
+			Expr exp = Interpreter.StringToExpr(fcn);
+			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+			Assert.AreEqual(0.5, r.Out);         
 		}
 
 		[Test]
 		public void FunctionCall_1 ()
 		{
 			// (a * 2) + 1, where a = 44
-			Expr exp = expr(n(Typ.Fcn,"0"));
-			Expr args = expr(nTnum(44));
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(89,r.Out);                
+			Interpreter.InitializeOperatorRegistry();
+			FcnTable.ClearFunctionTable();
+
+			Interpreter.ParseFcn("F[a] = (a*2) + 1"); 
+
+			string fcn = Interpreter.ParseFcn("F[44]");
+			Expr exp = Interpreter.StringToExpr(fcn);
+			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+			Assert.AreEqual(89, r.Out);                
 		}
 
 		[Test]
 		public void FunctionCall_2 ()
 		{
-			Interpreter.ParseFcn("F[x] = x * 9");
+			Interpreter.InitializeOperatorRegistry();
+			FcnTable.ClearFunctionTable();
 
-			string fcn = ParseFcn("F[3]");
-			Expr exp = StringToExpr(fcn);
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(27,r.Out);                
+			Interpreter.ParseFcn("F[x] = x * 9"); 
+
+			string fcn = Interpreter.ParseFcn("F[3]");
+			Expr exp = Interpreter.StringToExpr(fcn);
+			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+			Assert.AreEqual(27, r.Out);              
 		}
 
 		[Test]
 		public void FunctionWith2Args ()
 		{
 			// y / x, where y = 99, x = 11
-			Expr exp = expr(n(Typ.Fcn,"3"));
-			Expr args = expr(nTnum(11),nTnum(99));
-			Tnum r = (Tnum)eval(exp,args).obj;
-			Assert.AreEqual(9, r.Out);                 
+			Interpreter.InitializeOperatorRegistry();
+			FcnTable.ClearFunctionTable();
+
+			Interpreter.ParseFcn("f3[x,y] = y / x"); 
+
+			string fcn = Interpreter.ParseFcn("f3[11,99]");
+			Expr exp = Interpreter.StringToExpr(fcn);
+			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+			Assert.AreEqual(9, r.Out);               
 		}
 
 		[Test]
@@ -568,7 +596,17 @@ namespace Akkadian.UnitTests
 			// if cond=true -> 42, 41
 			Expr exp = expr(n(Typ.Op,Op.Switch),nTbool(true),nTnum(42),nTnum(41));
 			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(42, r.Out);                
+			Assert.AreEqual(42, r.Out);              
+
+//			Interpreter.InitializeOperatorRegistry();
+//			FcnTable.ClearFunctionTable();
+//
+//			Interpreter.ParseFcn("f3[x,y] = y / x"); 
+//
+//			string fcn = Interpreter.ParseFcn("f3[11,99]");
+//			Expr exp = Interpreter.StringToExpr(fcn);
+//			Tnum r = (Tnum)Interpreter.eval(exp).obj;
+//			Assert.AreEqual(9, r.Out);   
 		}
 
 		[Test]
