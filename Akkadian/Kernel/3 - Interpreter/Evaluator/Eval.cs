@@ -82,12 +82,6 @@ namespace Akkadian
 				Expr ex1 = FcnTable.GetFunction(Convert.ToString(ob));
 				result = MixAndMatch(exp, args, ex1);
 			}
-			else if (typ == Typ.Rec)
-			{
-				// Get the function reference from exp
-				Expr newExp = expr(n(Typ.Fcn,ob)); 
-				result = MixAndMatch(exp, args, newExp);
-			}
 			else if (typ == Typ.Ask)
 			{
 				// Get the info from the user / factbase

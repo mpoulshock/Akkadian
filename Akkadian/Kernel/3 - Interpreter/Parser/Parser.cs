@@ -72,7 +72,7 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, new List<string>(), fcnName, argArray);
+				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray);
 
 				return new ParserResponse(parsedFcn, true, (Expr)StringToNode(parsedFcn).obj, fcnName);
 			}
@@ -99,7 +99,7 @@ namespace Akkadian
 		/// <summary>
 		/// Parses a function into a string of nested tokens (representing Exprs).
 		/// </summary>
-		public static string ParseFcn(string s, List<string> subExprs, string fcnName, string[] argNames)
+		public static string ParseFcn(string s, List<string> subExprs, string[] argNames)
 		{
 			s = s.Trim();
 
@@ -113,7 +113,7 @@ namespace Akkadian
 			{
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
-				string newStr = ParseFcn(RemoveParens(fp), subExprs, fcnName, argNames);
+				string newStr = ParseFcn(RemoveParens(fp), subExprs, argNames);
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
 			}
 
@@ -138,10 +138,6 @@ namespace Akkadian
 				{
 					newStr = "Expr:{Op:" + Convert.ToString(OperatorRegistry[fcnRef]);
 				}
-				else if (fcnRef == fcnName)
-				{
-					newStr = "Expr:{Rec:" + fcnRef;		// Recursive function calls
-				}
 				else
 				{
 					newStr = "Expr:{Fcn:" + fcnRef;  	// Should this be an int?
@@ -150,7 +146,7 @@ namespace Akkadian
 				// Add the function's arguments
 				foreach (string arg in args)
 				{
-					newStr += "," + ParseFcn(arg, subExprs, fcnName, argNames);
+					newStr += "," + ParseFcn(arg, subExprs, argNames);
 				}
 				newStr += "}";
 
@@ -184,7 +180,7 @@ namespace Akkadian
 			// Not - must go after infix ops
 			if (s.StartsWith("!"))
 			{
-				return "Expr:{Op:Not," + ParseFcn(s.Substring(1), subExprs, fcnName, argNames) + "}";
+				return "Expr:{Op:Not," + ParseFcn(s.Substring(1), subExprs, argNames) + "}";
 			}
 
 			// Variable references
@@ -212,7 +208,7 @@ namespace Akkadian
 
 		public static string ParseFcn(string s)
 		{
-			return ParseFcn(s, new List<string>(), "", null);
+			return ParseFcn(s, new List<string>(), null);
 		}
 
 		/// <summary>
@@ -237,7 +233,7 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, subExprs, fcnName, argArray);
+				string parsedFcn = ParseFcn(fcnText, subExprs, argArray);
 
 				// Side-effect: Add function to FunctionTable
 				FcnTable.AddFunction(fcnName,(Expr)StringToNode(parsedFcn).obj);
@@ -263,7 +259,7 @@ namespace Akkadian
 				newSubExprs = new List<string>(){newStr};
 			}
 
-			return ParseFcn(newStrToParse, newSubExprs, fcnName, argNames);
+			return ParseFcn(newStrToParse, newSubExprs, argNames);
 		}
 
 		/// <summary>
@@ -299,8 +295,8 @@ namespace Akkadian
 			if (IsExactMatch(s, pattern))
 			{
 				Match m = Regex.Match(s, pattern);
-				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, fcnName, argNames);
-				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, fcnName, argNames);
+				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, argNames);
+				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, argNames);
 				return "Expr:{Op:" + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
 			}
 

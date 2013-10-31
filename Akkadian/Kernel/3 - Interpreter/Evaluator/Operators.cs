@@ -41,7 +41,6 @@ namespace Akkadian
 		Expr,		// Expression
 		Fcn,		// Function call
 		Op,			// Built-in operator
-		Rec,		// Recursive function call
 		Var,		// Variable
 		Ask,		// Leaf node
 		Null		// Meaningless

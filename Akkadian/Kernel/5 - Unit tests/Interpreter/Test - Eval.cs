@@ -560,15 +560,6 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Recursion_PreliminaryStep ()
-		{
-			// f1(56) = 98
-			Expr exp = expr(n(Typ.Rec,"1"),nTnum(56));
-			Tnum r = (Tnum)eval(exp).obj;
-			Assert.AreEqual(98, r.Out);                
-		}
-
-		[Test]
 		public void Reverse ()
 		{
 			Thing A = new Thing ("A");

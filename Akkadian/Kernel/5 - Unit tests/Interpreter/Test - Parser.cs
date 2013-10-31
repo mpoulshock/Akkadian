@@ -327,7 +327,7 @@ namespace Akkadian.UnitTests
 		{
 			// Evaluating this parse would cause an infinite loop, but the parser should correctly handle a recusrive function
 			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Plus,Expr:{Rec:Income,Var:0},Tnum:1}", ParseFcn("Income[p] = Income[p] + 1"));                
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Fcn:Income,Var:0},Tnum:1}", ParseFcn("Income[p] = Income[p] + 1"));                
 		}
 
 		[Test]
@@ -335,7 +335,7 @@ namespace Akkadian.UnitTests
 		{
 			// Another infinite loop...
 			InitializeParseTest();
-			Assert.AreEqual("Expr:{Rec:Income,Var:0}", ParseFcn("Income[p] = Income[p]"));                
+			Assert.AreEqual("Expr:{Fcn:Income,Var:0}", ParseFcn("Income[p] = Income[p]"));                
 		}
 
 		[Test]
@@ -343,7 +343,7 @@ namespace Akkadian.UnitTests
 		{
 			// Another infinite loop...
 			InitializeParseTest();
-			Assert.AreEqual("Expr:{Rec:Income,Tnum:42}", ParseFcn("Income[p] = Income[42]"));                
+			Assert.AreEqual("Expr:{Fcn:Income,Tnum:42}", ParseFcn("Income[p] = Income[42]"));                
 		}
 
 		[Test]
