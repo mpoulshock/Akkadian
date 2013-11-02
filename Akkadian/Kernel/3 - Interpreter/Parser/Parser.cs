@@ -122,7 +122,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/> " + delimiter + @"]+\]");
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/> " + delimiter + @"]*\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
@@ -182,14 +182,9 @@ namespace Akkadian
 			}
 
 			// Numeric literals - must be before subtraction due to negative numbers
-			if (IsExactMatch(s,decimalLiteral))
+			if (IsExactMatch(s,decimalLiteral) || IsExactMatch(s,currencyLiteral))
 			{
-				return "Tnum:" + Convert.ToDecimal(s);
-			}
-			if (IsExactMatch(s,currencyLiteral))
-			{
-				s = s.Replace("$","");
-				return "Tnum:" + Convert.ToDecimal(s);
+				return "Tnum:" + Convert.ToDecimal(s.Replace("$",""));
 			}
 
 			// Infix operators
@@ -214,15 +209,20 @@ namespace Akkadian
 				}
 			}
 
-			// Literal values
+			// More literal values
 			if (IsExactMatch(s,boolLiteral))
 			{
 				return "Tbool:" + Convert.ToBoolean(s);
 			}
-
-			if (IsExactMatch(s,stringLiteral))	// Should go last because it's very inclusive
+			if (IsExactMatch(s,stringLiteral))
 			{
 				return "Tstr:" + s.Trim('\'');
+			}
+
+			// Constants (i.e. constant functions - those with no arguments)
+			if (IsExactMatch(s,fcnName))
+			{
+				return "Fcn:" + s;
 			}
 
 			return DecompressParse(s, subExprs);

@@ -68,7 +68,7 @@ namespace Akkadian
 					}
 					Expr newArgs = new Expr(newArgList);
 
-					result = n(Typ.Tnum,Switch2<Tnum>(newArgs, args));
+					result = n(Typ.Tnum,Switch2<Tnum>(newArgs, args));  // NEEDS TO BE TYPE-SENSITIVE
 				}
 				else if (opType == Op.Max || opType == Op.Min)
 				{
