@@ -87,7 +87,7 @@ namespace Akkadian.UnitTests
             DateTime startTime = DateTime.Now;
             Tnum t = Tb1().SlidingElapsedIntervals(TheDay, 10);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
-            Assert.IsTrue(ResponseTimeInMs < 115);    
+            Assert.IsTrue(ResponseTimeInMs < 135);    
         }
 
         [Test]

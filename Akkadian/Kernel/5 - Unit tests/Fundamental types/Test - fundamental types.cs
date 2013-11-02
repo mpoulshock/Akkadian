@@ -931,5 +931,15 @@ namespace Akkadian.UnitTests
         {
             Assert.AreEqual("Unstated", (new Tdate(Hstate.Unstated)).Quarter.Out);
         }
+
+		// Converting Tvars to more specific T-types
+
+//		[Test]
+//		public void Test_CastTvar_1()
+//		{
+//			Tvar tv = new Tvar(4);
+//			Tnum cast = (Tnum)tv;
+//			Assert.AreEqual(4, cast.Out);
+//		}
     }    
 }

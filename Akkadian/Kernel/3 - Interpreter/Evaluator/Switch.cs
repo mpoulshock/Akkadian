@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Hammura.bi LLC
+// Copyright (c) 2012-2013 Hammura.bi LLC
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,8 +53,7 @@ namespace Akkadian
 				Tbool newConditionIsUnknown = Util.HasUnknownState(newCondition);
 
 				// Merge these 'unknown' intervals in new condition into the result.
-				result = Util.MergeTvars<T>(result,
-				                            Util.ConditionalAssignment<T>(newConditionIsUnknown, newCondition));
+				result = Util.MergeTvars<T>(result, Util.ConditionalAssignment<T>(newConditionIsUnknown, newCondition));
 
 				// Identify the intervals when the new condition is true.
 				// Ignore irrelevant periods when result is already determined.
@@ -65,15 +64,13 @@ namespace Akkadian
 				if (newConditionIsTrueAndResultIsNull.IsEverTrue())
 				{
 					T val = (T)eval(arguments.nodes[arg+1],args).obj;
-					result = Util.MergeTvars<T>(result,
-					                            Util.ConditionalAssignment<T>(newConditionIsTrueAndResultIsNull, val)); 
+					result = Util.MergeTvars<T>(result, Util.ConditionalAssignment<T>(newConditionIsTrueAndResultIsNull, val)); 
 				}
 
 				if (!Util.HasUndefinedIntervals(result))
 				{
 					return result.LeanTvar<T>();
 				}
-
 			}
 
 			T defaultVal = (T)eval(arguments.nodes[len-1],args).obj;

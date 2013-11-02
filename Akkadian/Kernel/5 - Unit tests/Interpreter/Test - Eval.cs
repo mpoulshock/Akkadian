@@ -267,7 +267,7 @@ namespace Akkadian.UnitTests
 		public void EvalStringExpr_10 ()
 		{
 			Session sess = new Session();
-Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
+			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}");
 			Tnum r = (Tnum)sess.eval(exp).obj;
 			Assert.AreEqual(-34, r.Out);                
 		}
@@ -336,18 +336,23 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 			Assert.AreEqual(false, r.Out);                
 		}
 
-//		[Test]
-//		public void ExprToString_1 ()
-//		{
-//			// Note: Does not start with "Expr:"
-//			Assert.AreEqual("{Op:Plus,Var:0,Tnum:42}", LoadedRules()[1].ToString());                
-//		}
-//
-//		[Test]
-//		public void ExprToString_2 ()
-//		{
-//			Assert.AreEqual("{Op:Plus,Expr:{Op:Mult,Var:0,Tnum:2},Tnum:1}", LoadedRules()[0].ToString());                
-//		}
+		[Test]
+		public void Expression_1 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Pi[] = 3.14159");
+			Tnum r = (Tnum)sess.ProcessInput("Pi[]");
+			Assert.AreEqual(3.14159, r.Out);                
+		}
+
+		[Test]
+		public void Expression_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Pi = 3.14159");
+			Tnum r = (Tnum)sess.ProcessInput("Pi");
+			Assert.AreEqual(3.14159, r.Out);                
+		}
 
 		//		[Test]
 		//		public void Filter_1 ()
@@ -538,13 +543,12 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 		[Test]
 		public void Recursion_1 ()
 		{
-			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
-			// f7(0) = 0
+			// f(x) = if x = 0 -> 0, else f(x-1) + 3
+			// f(0) = 0
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"7"));
-			Expr args = expr(nTnum(0));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(0, r.Out);                
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tnum r = (Tnum)sess.ProcessInput("F[0]");
+			Assert.AreEqual(0, r.Out);               
 		}
 
 		[Test]
@@ -553,10 +557,9 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
 			// f7(1) = 3
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"7"));
-			Expr args = expr(nTnum(1));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(3, r.Out);                
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tnum r = (Tnum)sess.ProcessInput("F[1]");
+			Assert.AreEqual(3, r.Out);                 
 		}
 
 		[Test]
@@ -565,10 +568,9 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
 			// f7(2) = 6
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"7"));
-			Expr args = expr(nTnum(2));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(6, r.Out);                
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tnum r = (Tnum)sess.ProcessInput("F[2]");
+			Assert.AreEqual(6, r.Out);               
 		}
 
 		[Test]
@@ -576,10 +578,9 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 		{
 			// f7(450) = 1350
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"7"));
-			Expr args = expr(nTnum(450));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(1350, r.Out);                
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tnum r = (Tnum)sess.ProcessInput("F[450]");
+			Assert.AreEqual(1350, r.Out);                 
 		}
 
 		[Test]
@@ -654,20 +655,90 @@ Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tnum:11,Tnum:6},Tnum:100}"
 		public void Switch_4 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"6"));
-			Expr args = expr(nTnum(0));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(1, r.Out);                
+			sess.ProcessInput("F[x] = x -> 42, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[true]");
+			Assert.AreEqual(42, r.Out);              
 		}
 
 		[Test]
 		public void Switch_5 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Fcn,"6"));
-			Expr args = expr(nTnum(45));
-			Tnum r = (Tnum)sess.eval(exp,args).obj;
-			Assert.AreEqual(45, r.Out);                
+			sess.ProcessInput("F[x] = x -> 42, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[false]");
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Switch_6 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x -> 42, y -> 41, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[true,false]");
+			Assert.AreEqual(42, r.Out);                
+		}
+
+		[Test]
+		public void Switch_7 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x -> 42, y -> 41, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,true]");
+			Assert.AreEqual(41, r.Out);                
+		}
+
+		[Test]
+		public void Switch_8 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x -> 42, y -> 41, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,false]");
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Switch_9 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = (x -> 42, y -> 41, 0) * 3");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,true]");
+			Assert.AreEqual(123, r.Out);                
+		}
+
+		[Test]
+		public void Switch_10 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x -> 42, y -> 41*3, 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,true]");
+			Assert.AreEqual(123, r.Out);                
+		}
+
+		[Test]
+		public void Switch_11 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x -> 42, y -> Abs[-9], 0");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,true]");
+			Assert.AreEqual(9, r.Out);                
+		}
+
+		[Test]
+		public void Switch_12 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = Abs[(x -> -42, y -> -41, 0)]");
+			Tnum r = (Tnum)sess.ProcessInput("F[false,true]");
+			Assert.AreEqual(41, r.Out);                
+		}
+
+		[Test]
+		public void Switch_13 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x -> false, true");
+			Tbool r = (Tbool)sess.ProcessInput("F[true]");
+			Assert.AreEqual(false, r.Out);                
 		}
 
 		[Test]

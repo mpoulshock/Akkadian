@@ -29,13 +29,13 @@ namespace Akkadian
 		/// <summary>
 		/// The soul of a new machine.
 		/// </summary>
-		public new Node eval(Expr exp, Expr args)
+		public Node eval(Expr exp, Expr args)
 		{
 			Node result = exp.nodes[0];
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
-			//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
+//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
 			if (typ == Typ.Var)
 			{
@@ -60,17 +60,24 @@ namespace Akkadian
 				}
 				else if (opType == Op.Switch)
 				{
-					exp.nodes.RemoveAt(0);
-					result = n(Typ.Tnum,Switch2<Tnum>(exp, args));
+					// Get arguments to the switch function
+					List<Node> newArgList = new List<Node>();
+					for (int i=0; i < exp.nodes.Count; i++)
+					{
+						if (i>0) newArgList.Add(exp.nodes[i]);
+					}
+					Expr newArgs = new Expr(newArgList);
+
+					result = n(Typ.Tnum,Switch2<Tnum>(newArgs, args));
 				}
 				else if (opType == Op.Max || opType == Op.Min)
 				{
 					result = MultiTnumFcnEval(exp, args, opType);
 				}
-				//				else if (opType == "Exists")
-				//				{
-				//					result = EvalExists(exp, args, opType);
-				//				}
+//				else if (opType == "Exists")
+//				{
+//					result = EvalExists(exp, args, opType);
+//				}
 			}
 			else if (typ == Typ.Expr)
 			{
@@ -86,7 +93,7 @@ namespace Akkadian
 			{
 				// Get the info from the user / factbase
 				string s = Console.ReadLine();
-				//				result = nTnum(Convert.ToDecimal(s)));
+				// result = nTnum(Convert.ToDecimal(s)));
 				result = nTbool(Convert.ToBoolean(s));
 			}
 

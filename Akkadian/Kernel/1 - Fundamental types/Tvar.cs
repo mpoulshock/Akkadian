@@ -28,7 +28,8 @@ namespace Akkadian
     /// Ordinarily, the functions in this class should only be called by core
     /// functions, not law-related ones.
     /// </summary>
-    public abstract partial class Tvar : H 
+//    public partial class Tvar : H 
+	 public abstract partial class Tvar : H
     {
         /// <summary>
         /// The core Tvar data structure: a timeline of dates and associated values.
@@ -46,8 +47,29 @@ namespace Akkadian
             }
         }
         
+		//  EXPERIMENTAL
+//		public Tvar()
+//		{
+//		}
+//
+//		public Tvar(Hstate state)
+//		{
+//			this.SetEternally(state);
+//		}
+//
+//		public Tvar(Hval v)
+//		{
+//			this.SetEternally(v);
+//		}
+//
+//		public Tvar(object ob)
+//		{
+//			this.SetEternally(new Hval(ob));
+//		}
+
+		
         /// <summary>
-        /// Implicitly converts ints to Tvars.
+        /// Implicitly converts bools to Tvars.
         /// </summary>
         public static implicit operator Tvar(bool b) 
         {

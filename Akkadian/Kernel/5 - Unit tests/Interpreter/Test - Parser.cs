@@ -345,7 +345,7 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Parse_39 ()
+		public void Parse_39_mult_by_neg ()
 		{
 			InitializeParseTest();
 			Assert.AreEqual("Expr:{Op:Mult,Tnum:4,Tnum:-12}", ParseFcn("4 * -12"));        
@@ -432,6 +432,77 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Parse_51 ()
+		{
+			ParserResponse pr = ParseInputLine("true -> 42, 0");
+			Assert.AreEqual("Expr:{Op:Switch,Tbool:True,Tnum:42,Tnum:0}", pr.ParserString);                 
+		}
+
+		[Test]
+		public void Parse_52 ()
+		{
+			ParserResponse pr = ParseInputLine("false -> 42, true -> 41, 0");
+			Assert.AreEqual("Expr:{Op:Switch,Tbool:False,Tnum:42,Tbool:True,Tnum:41,Tnum:0}", pr.ParserString);                
+		}
+
+		[Test]
+		public void Parse_53 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x,y] = x -> 42, y -> 41, 0");
+			Assert.AreEqual("Expr:{Op:Switch,Var:0,Tnum:42,Var:1,Tnum:41,Tnum:0}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_54 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x] = x==3 -> 42, x>0  -> 41, 0");
+			Assert.AreEqual("Expr:{Op:Switch,Expr:{Op:Eq,Var:0,Tnum:3},Tnum:42,Expr:{Op:GrTh,Var:0,Tnum:0},Tnum:41,Tnum:0}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_55 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x,y] = (x -> 42, y -> 41, 0) * 3");
+			Assert.AreEqual("Expr:{Op:Mult,Expr:{Op:Switch,Var:0,Tnum:42,Var:1,Tnum:41,Tnum:0},Tnum:3}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_56 ()
+		{
+			// Without the parentheses, the parser things the commas are separating arguments to the Abs function
+			ParserResponse pr = ParseInputLine("F[x,y] = Abs[(x -> -42, y -> -41, 0)]");
+			Assert.AreEqual("Expr:{Op:Abs,Expr:{Op:Switch,Var:0,Tnum:-42,Var:1,Tnum:-41,Tnum:0}}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_58 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x] = x==0 -> 0, F[x-1]+3");
+			Assert.AreEqual("Expr:{Op:Switch,Expr:{Op:Eq,Var:0,Tnum:0},Tnum:0,Expr:{Op:Plus,Expr:{Fcn:F,Expr:{Op:Minus,Var:0,Tnum:1}},Tnum:3}}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_59 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x] = x");
+			Assert.AreEqual("Expr:{Var:0}", pr.ParserString);        
+		}
+
+		[Test]
+		public void Parse_60 ()
+		{
+			ParserResponse pr = ParseInputLine("F[] = 3.14159");
+			Assert.AreEqual("Expr:{Tnum:3.14159}", pr.ParserString);               
+		}
+
+		[Test]
+		public void Parse_61 ()
+		{
+			ParserResponse pr = ParseInputLine("Pi = 3.14159");
+			Assert.AreEqual("Expr:{Tnum:3.14159}", pr.ParserString);               
+		}
+
+		[Test]
 		public void StringToNode_1 ()
 		{
 			InitializeParseTest();
@@ -453,6 +524,28 @@ namespace Akkadian.UnitTests
 			                StringToNode("Expr:{Op:And,Tbool:True,Expr:{Op:LsTh,Tnum:5,Tnum:99}}").ToString());                
 		}
 
+		[Test]
+		public void StringToNode_4 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Op:Switch,Tbool:False,Tnum:42,Tbool:True,Tnum:41,Tnum:0}", 
+			                StringToNode("Expr:{Op:Switch,Tbool:False,Tnum:42,Tbool:True,Tnum:41,Tnum:0}").ToString());                
+		}
+
+		[Test]
+		public void StringToNode_5 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Op:Switch,Expr:{Op:Eq,Var:0,Tnum:0},Tnum:0,Expr:{Op:Plus,Expr:{Fcn:F,Expr:{Op:Minus,Var:0,Tnum:1}},Tnum:3}}", 
+			                StringToNode("Expr:{Op:Switch,Expr:{Op:Eq,Var:0,Tnum:0},Tnum:0,Expr:{Op:Plus,Expr:{Fcn:F,Expr:{Op:Minus,Var:0,Tnum:1}},Tnum:3}}").ToString());                
+		}
+
+		[Test]
+		public void StringToNode_6 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Tnum:3.14159}", StringToNode("Expr:{Tnum:3.14159}").ToString());                
+		}
 
 		private static void InitializeParseTest()
 		{

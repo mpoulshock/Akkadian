@@ -59,17 +59,33 @@ namespace Akkadian
 		{
 			s = s.Trim();
 
-			// Matches function declarations (e.g. F[x] = x + 1)
-			string pattern = fcnSignature + white + "=" + white + parens(wildcard);
+			// This could be much cleaner with the proper regex...
 
-			if (IsExactMatch(s, pattern))
+			// Matches variable declarations (e.g. Pi = 3.14159)
+			if (IsExactMatch(s, fcnName + white + "=" + white + parens(wildcard)))
 			{
-				int eq = s.IndexOf("=");
-
 				// Identify the function name
+				int eq = s.IndexOf("=");
+				string fcnSig = s.Substring(0,eq).Trim();
+
+				// Parse the expression to the right of the = sign
+				string fcnText = s.Substring(eq + 1).Trim();
+				string parsedFcn = ParseFcn(fcnText, new List<string>(), new string[]{}); 
+
+				// Compensate for one-item functions, such as F[x] = x
+				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
+
+				return new ParserResponse(parsedFcn, true, fcnSig);
+			}
+
+			// Matches function declarations (e.g. F[x] = x + 1)
+			if (IsExactMatch(s, fcnSignature + white + "=" + white + parens(wildcard)))
+			{
+				// Identify the function name
+				int eq = s.IndexOf("=");
 				string fcnSig = s.Substring(0,eq).Trim();
 				int firstBrack = fcnSig.IndexOf("[");
-				string fcnName = fcnSig.Substring(0,firstBrack);
+				string fName = fcnSig.Substring(0,firstBrack);
 
 				// Identify variable names in the function signature
 				string args = fcnSig.Substring(firstBrack + 1).Trim(']');
@@ -77,9 +93,12 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray); // F[x] = x  => Var:0 instead of Expr:{Var:0}
+				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray); 
 
-				return new ParserResponse(parsedFcn, true, fcnName);
+				// Compensate for one-item functions, such as F[x] = x
+				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
+
+				return new ParserResponse(parsedFcn, true, fName);
 			}
 
 			return new ParserResponse(ParseFcn(s));
@@ -103,7 +122,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/ " + delimiter + @"]+\]");
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/> " + delimiter + @"]+\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
@@ -136,6 +155,24 @@ namespace Akkadian
 				newStr += "}";
 
 				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, fcnName, argNames);
+			}
+
+			// Switch
+			Regex switchRegex = new Regex(switchStatement);
+			var switchMatch = switchRegex.Match(s);
+			if (switchMatch.Success)
+			{
+				string switchParts = switchMatch.Value.Replace("->",",");
+				string[] switchArgs = switchParts.Split(',');
+
+				string switchResult = "Expr:{Op:Switch"; 
+				foreach (string arg in switchArgs)
+				{
+					switchResult += "," + ParseFcn(arg, subExprs, argNames);
+				}
+				switchResult += "}";
+
+				return switchResult;
 			}
 
 			// Date literals - must be parsed before subtraction

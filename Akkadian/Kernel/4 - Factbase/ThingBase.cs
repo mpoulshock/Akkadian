@@ -55,7 +55,7 @@ namespace Akkadian
         /// <summary>
         /// Adds a thing to the ThingBase, based on the uniqueness of its name.  Returns the Thing itself.
         /// </summary>
-        new public static Thing AddThing(string thingName)
+        public static Thing AddThing(string thingName)
         {
             Thing thing = new Thing(thingName);
             

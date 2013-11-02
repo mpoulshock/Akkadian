@@ -126,6 +126,11 @@ namespace Akkadian
 		// Dot operators - needed for parsing
 		public static string[] dotOps = {""};
 
+		// Constants
+		public static string[] akkConstants = {"Unstated","Uncertain","Stub","DawnOfTime","EndOfTime",
+			"TheYear","TheQuarter","TheMonth","TheWeek","TheDay","DaysPerYear","DaysPerQuarter","DaysPerMonth","IsLeapYear",
+			"ConstPi","ConstE"};
+
 		/// <summary>
 		/// Maps operators, as used in Akkadian, to their op code (above).
 		/// </summary>
