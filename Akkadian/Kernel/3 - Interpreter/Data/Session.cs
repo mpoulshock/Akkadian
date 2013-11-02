@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Akkadian
 {
@@ -37,14 +38,14 @@ namespace Akkadian
 		/// <summary>
 		/// Data structure in which user-defined functions are stored.
 		/// </summary>
-		private static Dictionary<string,Expr> FunctionTable = new Dictionary<string,Expr>();
+		private static ConcurrentDictionary<string,Expr> FunctionTable = new ConcurrentDictionary<string,Expr>();
 
 		/// <summary>
 		/// Adds a function to the function table.
 		/// </summary>
 		public void AddFunction(string name, Expr fcnExpr)
 		{
-			FunctionTable.Add(name, fcnExpr);
+			FunctionTable.TryAdd(name, fcnExpr);
 		}
 
 		public void UpdateFunction(string name, Expr fcnExpr)

@@ -21,6 +21,7 @@ namespace REPL
 					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine();
+					string result = "";
 
 					// Clear all functions from the session
 					if (userInput.ToLower() == "clear rules")
@@ -31,9 +32,19 @@ namespace REPL
 						continue;
 					}
 
+					// Import rules from a text file
+					if (userInput.ToLower().StartsWith("import "))
+					{
+						string loc = userInput.Replace("import ","");
+						result = Interpreter.ImportRuleFile(sess, "C:\\Users\\mpoulshock\\Documents\\MP\\" + loc);  // Test.txt
+						Console.WriteLine("  " + result);
+						Console.WriteLine();
+						continue;
+					}
+
 					// Eval
 					Interpreter.ParserResponse pr = Interpreter.ParseInputLine(userInput);
-					string result = "";
+					
 
 					if (pr.IsNewFunction)
 					{

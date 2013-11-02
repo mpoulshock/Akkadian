@@ -466,21 +466,5 @@ namespace Akkadian
 			Node n = StringToNode(s);
 			return new Expr(new List<Node>(){n});
 		}
-
-		/// <summary>
-		/// Reads the source file.
-		/// </summary>
-		protected static string ReadFile()
-		{
-			string result = "";
-			StreamReader stream = new StreamReader("C:\\Users\\mpoulshock\\Documents\\Test.akk");
-			string line;
-			while ((line = stream.ReadLine()) != null) 
-			{
-				result += line;
-			}
-
-			return result;
-		}
 	}
 }

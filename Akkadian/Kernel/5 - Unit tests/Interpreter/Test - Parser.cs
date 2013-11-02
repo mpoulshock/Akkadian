@@ -552,12 +552,5 @@ namespace Akkadian.UnitTests
 			// Need this to test parses that reference built-in functions
 			InitializeOperatorRegistry();
 		}
-
-//		[Test]
-//		public void IO_1 ()
-//		{
-//			string s = ReadFile();
-//			Assert.AreEqual("", s);                
-//		}
 	}
 }
