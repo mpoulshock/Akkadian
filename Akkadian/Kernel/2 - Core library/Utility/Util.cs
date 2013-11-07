@@ -71,5 +71,43 @@ namespace Akkadian
             }
             return result;
         }
+
+		/// <summary>
+		/// Removes parentheses from a string.
+		/// </summary>
+		/// <remarks>
+		/// This function assumes that there are parentheses around the input.
+		/// </remarks>
+		public static string RemoveParens(string s)
+		{
+			return s.Substring(1,s.Length-2);
+		}
+
+		/// <summary>
+		/// Returns the first first-level set of {}s or ()s in the input string.
+		/// </summary>
+		public static string FirstParenthetical(string clause, string open, string close)
+		{
+			int start = clause.IndexOf(open);
+			if (start == -1) return "";
+
+			string substr = "";
+			int bracketLevel = 0;
+
+			// Iterate through clause from first "{" to find its spouse, "}"
+			for (int counter = start; counter < clause.Length; counter++)
+			{
+				if (clause[counter] == Convert.ToChar(open))
+					bracketLevel++;
+				else if (clause[counter] == Convert.ToChar(close))
+					bracketLevel--;
+				if (bracketLevel == 0)
+				{
+					substr = clause.Substring(start,counter-start+1);
+					return substr;
+				}
+			}
+			return substr;
+		}
     }
 }

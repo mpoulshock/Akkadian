@@ -30,31 +30,31 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void FirstParen_1 ()
 		{
-			Assert.AreEqual("", FirstParenthetical("x + 3", "(", ")"));                
+			Assert.AreEqual("", Util.FirstParenthetical("x + 3", "(", ")"));                
 		}
 
 		[Test]
 		public void FirstParen_2 ()
 		{
-			Assert.AreEqual("(a + 1)", FirstParenthetical("x + (a + 1) + b", "(", ")"));                
+			Assert.AreEqual("(a + 1)", Util.FirstParenthetical("x + (a + 1) + b", "(", ")"));                
 		}
 
 		[Test]
 		public void FirstParen_3 ()
 		{
-			Assert.AreEqual("(a + 1)", FirstParenthetical("x + (a + 1) + (b - 2)", "(", ")"));                
+			Assert.AreEqual("(a + 1)", Util.FirstParenthetical("x + (a + 1) + (b - 2)", "(", ")"));                
 		}
 
 		[Test]
 		public void FirstParen_4 ()
 		{
-			Assert.AreEqual("(a + 1b - 2)", FirstParenthetical("x + (a + 1b - 2)", "(", ")"));                
+			Assert.AreEqual("(a + 1b - 2)", Util.FirstParenthetical("x + (a + 1b - 2)", "(", ")"));                
 		}
 
 		[Test]
 		public void FirstParen_5 ()
 		{
-			Assert.AreEqual("(a + ( 1 -b ) - 2)", FirstParenthetical("x + (a + ( 1 -b ) - 2)", "(", ")"));                
+			Assert.AreEqual("(a + ( 1 -b ) - 2)", Util.FirstParenthetical("x + (a + ( 1 -b ) - 2)", "(", ")"));                
 		}
 
 		[Test]

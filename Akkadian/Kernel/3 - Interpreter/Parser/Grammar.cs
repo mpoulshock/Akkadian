@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Text.RegularExpressions;
 
 namespace Akkadian
 {
@@ -57,6 +58,22 @@ namespace Akkadian
 
 		// Binary operators
 		protected const string binaryOp = @"(&|\|)";
+
+		/// <summary>
+		/// Determines if the input string matches the regex exactly.
+		/// </summary>
+		public static bool IsExactMatch(string s, string regex)
+		{
+			return s == Regex.Match(s,regex).Groups[0].Value;
+		}
+
+		/// <summary>
+		/// Puts parentheses around a string.
+		/// </summary>
+		private static string parens(string s)
+		{
+			return "(" + s + ")";
+		}
 	}
 }
 

@@ -112,12 +112,12 @@ namespace Akkadian
 			s = s.Trim();
 
 			// Parentheses
-			string fp = FirstParenthetical(s,"(",")");
+			string fp = Util.FirstParenthetical(s,"(",")");
 			if (fp != "")
 			{
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
-				string newStr = ParseFcn(RemoveParens(fp), subExprs, argNames);
+				string newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
 			}
 
@@ -129,7 +129,7 @@ namespace Akkadian
 				string firstFcn = m1.Value;
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
-				string whatsInTheBrackets = RemoveParens(m1.Value.Replace(m1.Groups[1].Value,""));
+				string whatsInTheBrackets = Util.RemoveParens(m1.Value.Replace(m1.Groups[1].Value,""));
 
 				// Functions with multiple parameters
 				string[] args = whatsInTheBrackets.Split(',');
@@ -281,15 +281,7 @@ namespace Akkadian
 
 			return ParseFcn(newStrToParse, newSubExprs, argNames);
 		}
-
-		/// <summary>
-		/// Removes parentheses from a string.
-		/// </summary>
-		private static string RemoveParens(string s)
-		{
-			return s.Substring(1,s.Length-2);
-		}
-
+		
 		/// <summary>
 		/// Puts extracted sub-parses back into the main parse string.
 		/// </summary>
@@ -321,49 +313,6 @@ namespace Akkadian
 			}
 
 			return "";
-		}
-
-		/// <summary>
-		/// Determines if the input string matches the regex exactly.
-		/// </summary>
-		protected static bool IsExactMatch(string s, string regex)
-		{
-			return s == Regex.Match(s,regex).Groups[0].Value;
-		}
-
-		/// <summary>
-		/// Puts parentheses around a string.
-		/// </summary>
-		private static string parens(string s)
-		{
-			return "(" + s + ")";
-		}
-
-		/// <summary>
-		/// Returns the first first-level set of {}s or ()s in the input string.
-		/// </summary>
-		protected static string FirstParenthetical(string clause, string open, string close)
-		{
-			int start = clause.IndexOf(open);
-			if (start == -1) return "";
-
-			string substr = "";
-			int bracketLevel = 0;
-
-			// Iterate through clause from first "{" to find its spouse, "}"
-			for (int counter = start; counter < clause.Length; counter++)
-			{
-				if (clause[counter] == Convert.ToChar(open))
-					bracketLevel++;
-				else if (clause[counter] == Convert.ToChar(close))
-					bracketLevel--;
-				if (bracketLevel == 0)
-				{
-					substr = clause.Substring(start,counter-start+1);
-					return substr;
-				}
-			}
-			return substr;
 		}
 
 		/*
@@ -469,7 +418,7 @@ namespace Akkadian
 		/// <summary>
 		/// Converts the string to the most appropriate type of Tvar object.
 		/// </summary>
-		public static Tvar ConvertToBestType(string s)
+		private static Tvar ConvertToBestType(string s)
 		{
 			if (IsExactMatch(s,decimalLiteral)) 		return new Tvar(Convert.ToDecimal(s));
 			if (IsExactMatch(s,dateLiteral)) 			return new Tvar(Convert.ToDateTime(s));
