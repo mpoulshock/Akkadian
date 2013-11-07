@@ -85,16 +85,21 @@ namespace Akkadian
 			}
 			else if (typ == Typ.Fcn)
 			{
-				// Call the function with the given name
-				Expr ex1 = GetFunction(Convert.ToString(ob));
-				result = MixAndMatch(exp, args, ex1);
-			}
-			else if (typ == Typ.Ask)
-			{
-				// Get the info from the user / factbase
-				string s = Console.ReadLine();
-				// result = nTvar(Convert.ToDecimal(s)));
-				result = nTvar(Convert.ToBoolean(s));
+				string fcnName = Convert.ToString(ob);
+				if (ContainsFunction(fcnName))
+				{
+					// Call the function with the given name
+					Expr ex1 = GetFunction(fcnName);
+					result = MixAndMatch(exp, args, ex1);
+				}
+				else
+				{
+					Console.Write("  " + fcnName + "? ");
+					string s = Console.ReadLine();
+					result = nTvar(s);
+
+//					result = nTvar(new Tvar(Hstate.Unstated));
+				}
 			}
 
 			return result;

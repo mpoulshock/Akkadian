@@ -38,7 +38,6 @@ namespace Akkadian
 		Fcn,		// Function call
 		Op,			// Built-in operator
 		Var,		// Variable
-		Ask,		// Leaf node
 		Null		// Meaningless
 	}
 
