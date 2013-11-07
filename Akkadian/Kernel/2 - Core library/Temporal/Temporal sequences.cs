@@ -54,21 +54,21 @@ namespace Akkadian
         /// Returns the number of intervals since a given date (step up function)
         /// (e.g. 1 2 3 4 5 6 7 8 9 ...)
         /// </summary>
-        public static Tnum IntervalsSince(Tdate start, Tdate end, IntervalType interval)
+        public static Tvar IntervalsSince(Tvar start, Tvar end, IntervalType interval)
         {
             return IntervalsSince(start, end, interval, 0);
         }
         
-        public static Tnum IntervalsSince(Tdate startDate, Tdate endDate, IntervalType interval, int? startAt)
+        public static Tvar IntervalsSince(Tvar startDate, Tvar endDate, IntervalType interval, int? startAt)
         {
             // Handle unknowns
             Hstate top = PrecedingState(startDate.FirstValue, endDate.FirstValue);
-            if (top != Hstate.Known) return new Tnum(new Hval(null,top));
+            if (top != Hstate.Known) return new Tvar(new Hval(null,top));
 
             DateTime start = startDate.ToDateTime;
             DateTime end = endDate.ToDateTime;
 
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             if (start != Time.DawnOf)
             {
@@ -93,21 +93,21 @@ namespace Akkadian
         /// Returns the number of intervals until a date (step down function)
         /// (e.g. ... 7 6 5 4 3 2 1)
         /// </summary>
-        public static Tnum IntervalsUntil(Tdate start, Tdate end, IntervalType interval)
+        public static Tvar IntervalsUntil(Tvar start, Tvar end, IntervalType interval)
         {
             return IntervalsUntil(start, end, interval, 0);
         }
         
-        public static Tnum IntervalsUntil(Tdate startDate, Tdate endDate, IntervalType interval, int startAt)
+        public static Tvar IntervalsUntil(Tvar startDate, Tvar endDate, IntervalType interval, int startAt)
         {
             // Handle unknowns
             Hstate top = PrecedingState(startDate.FirstValue, endDate.FirstValue);
-            if (top != Hstate.Known) return new Tnum(new Hval(null,top));
+            if (top != Hstate.Known) return new Tvar(new Hval(null,top));
 
             DateTime start = startDate.ToDateTime;
             DateTime end = endDate.ToDateTime;
             
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             DateTime indexDate = end;
             int indexNumber = startAt-1;
@@ -136,16 +136,16 @@ namespace Akkadian
         /// <summary>
         /// Loops (cycles) through numbers over time (e.g. 1 2 3 4 1 2 3 4 ...)
         /// </summary>
-        public static Tnum Recurrence(Tdate startDate, Tdate endDate, IntervalType interval, int min, int max)
+        public static Tvar Recurrence(Tvar startDate, Tvar endDate, IntervalType interval, int min, int max)
         {    
             // Handle unknowns
             Hstate top = PrecedingState(startDate.FirstValue, endDate.FirstValue);
-            if (top != Hstate.Known) return new Tnum(new Hval(null,top));
+            if (top != Hstate.Known) return new Tvar(new Hval(null,top));
 
             DateTime start = startDate.ToDateTime;
             DateTime end = endDate.ToDateTime;
             
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             if (start != Time.DawnOf)
             {
@@ -176,7 +176,7 @@ namespace Akkadian
         /// Maps a function to a timeline, starting on a given date.
         /// </summary>
         //  TODO: Get rid of Time.IntervalType
-        public static Tnum TemporalMap(Func<Tnum,Tnum> fcn, Tdate startDate, Tnum intervalCount, Time.IntervalType intervalType)
+        public static Tvar TemporalMap(Func<Tvar,Tvar> fcn, Tvar startDate, Tvar intervalCount, Time.IntervalType intervalType)
         {
             return fcn(Time.IntervalsSince(startDate, startDate.AddYears(intervalCount), intervalType));
         }

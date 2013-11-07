@@ -28,8 +28,7 @@ namespace Akkadian
     /// Ordinarily, the functions in this class should only be called by core
     /// functions, not law-related ones.
     /// </summary>
-//    public partial class Tvar : H 
-	 public abstract partial class Tvar : H
+	public partial class Tvar : H
     {
         /// <summary>
         /// The core Tvar data structure: a timeline of dates and associated values.
@@ -46,83 +45,31 @@ namespace Akkadian
                 return TimeLine;
             }
         }
-        
-		//  EXPERIMENTAL
-//		public Tvar()
-//		{
-//		}
-//
-//		public Tvar(Hstate state)
-//		{
-//			this.SetEternally(state);
-//		}
-//
-//		public Tvar(Hval v)
-//		{
-//			this.SetEternally(v);
-//		}
-//
-//		public Tvar(object ob)
-//		{
-//			this.SetEternally(new Hval(ob));
-//		}
 
-		
-        /// <summary>
-        /// Implicitly converts bools to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(bool b) 
-        {
-            return new Tbool(b);
-        }
-        
-        /// <summary>
-        /// Implicitly converts ints to Tnums.
-        /// </summary>
-        public static implicit operator Tvar(int i) 
-        {
-            return new Tnum(i);
-        }
-        
-        /// <summary>
-        /// Implicitly converts decimals to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(decimal d) 
-        {
-            return new Tnum(d);
-        }
-        
-        /// <summary>
-        /// Implicitly converts doubles to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(double d) 
-        {
-           return new Tnum(d);
-        }
-        
-        /// <summary>
-        /// Implicitly converts strings to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(string s) 
-        {
-            return new Tstr(s);
-        }
-        
-        /// <summary>
-        /// Implicitly converts DateTimes to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(DateTime d) 
-        {
-            return new Tdate(d);
-        }
-        
-        /// <summary>
-        /// Implicitly converts a legal entity into a Tvar
-        /// </summary>
-        public static implicit operator Tvar(Thing e) 
-        {
-            return new Tset(e);
-        }
+		/// <summary>
+		/// Instantiate a Tvar object
+		/// </summary>
+		public Tvar()
+		{
+		}
+
+		public Tvar(Hstate state)
+		{
+			this.SetEternally(state);
+		}
+
+		public Tvar(Hval v)
+		{
+			this.SetEternally(v);
+		}
+
+//        /// <summary>
+//        /// Implicitly converts a legal entity into a Tvar
+//        /// </summary>
+//        public static implicit operator Tvar(Thing e) 
+//        {
+//            return new Tvar(e);
+//        }
         
         /// <summary>
         /// Indicates whether a (non-unknown) value has been determined for the Tvar 
@@ -146,24 +93,27 @@ namespace Akkadian
         /// <summary>
         /// Removes redundant intervals from the Tvar. 
         /// </summary>
-        public T LeanTvar<T>() where T : Tvar
-        {
-            T result = (T)Util.ReturnProperTvar<T>();
-            result.AddState(TimeLine.Keys[0], TimeLine.Values[0]);
+		public Tvar Lean
+		{
+			get
+			{
+				Tvar result = new Tvar();
+				result.AddState(TimeLine.Keys[0], TimeLine.Values[0]);
 
-            if (TimeLine.Count > 0)
-            {
-                for (int i=0; i < TimeLine.Count-1; i++ ) 
-                {
-                    if (!object.Equals(TimeLine.Values[i].Val, TimeLine.Values[i+1].Val))
-                    {
-                        result.AddState(TimeLine.Keys[i+1], TimeLine.Values[i+1]);
-                    }
-                }
-            }
+				if (TimeLine.Count > 0)
+				{
+					for (int i=0; i < TimeLine.Count-1; i++ ) 
+					{
+						if (!object.Equals(TimeLine.Values[i].Val, TimeLine.Values[i+1].Val))
+						{
+							result.AddState(TimeLine.Keys[i+1], TimeLine.Values[i+1]);
+						}
+					}
+				}
 
-            return result;
-        }     
+				return result;
+			}
+		}  
 
         /// <summary>
         /// Sets a Tvar to an "eternal" value (the same at all points in time). 
@@ -210,38 +160,13 @@ namespace Akkadian
             }
         }
 
+
 		/// <summary>
 		/// Displays an output object.
 		/// </summary>
 		public override string ToString()
 		{
-			if (this.TimeLine.Count == 1)
-			{
-				Hval v = this.FirstValue;
-				if (v.IsKnown)
-				{
-					if (v.IsSet())   return v.ToSerializedSet();
-
-					return Convert.ToString(v.Obj);
-				}
-				else
-				{
-					return v.ToString;
-				}
-			}
-			else
-			{
-				string result = "{";
-
-				foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
-				{
-					string date = de.Key.ToString().Replace("1/1/1800", "Dawn");
-					date = date.Replace(" 12:00:00 AM", "");
-					string val = de.Value.ToString.Replace("True","true").Replace("False","false");
-					result += date + ": " + val + "; ";
-				}
-				return result.TrimEnd(' ', ';') + "}";
-			}
+			return this.Out.ToString();
 		}
 
         /// <summary>
@@ -317,31 +242,31 @@ namespace Akkadian
         /// Returns the value of a Tvar at a specified point in time. 
         /// </summary>
         /// <remarks>
-        /// If the Tdate varies over time, only the first value is used.
+        /// If the Tvar varies over time, only the first value is used.
         /// </remarks>
-        public T AsOf<T>(Tdate date) where T : Tvar
-        {
-            Hval result;
+		public Tvar AsOf(Tvar date)
+		{
+			Hval result;
 
-            // If base Tvar has eternal, known value, return that.
-            // (In these cases, the Tdate is irrelevant.)
-            if (this.IsEternal && !this.IsEternallyUnknown)
-            {
-                result = this.FirstValue;
-            }
-            // If either the base Tvar or Tdate are unknown...
-            else if (!date.FirstValue.IsKnown || this.IsEternallyUnknown) 
-            {
-                Hstate top = PrecedingState(this.FirstValue, date.FirstValue);
-                result = new Hval(null,top);
-            }
-            else
-            {
-                result = this.ObjectAsOf(date.ToDateTime);
-            }
+			// If base Tvar has eternal, known value, return that.
+			// (In these cases, the Tvar is irrelevant.)
+			if (this.IsEternal && !this.IsEternallyUnknown)
+			{
+				result = this.FirstValue;
+			}
+			// If either the base Tvar or Tvar are unknown...
+			else if (!date.FirstValue.IsKnown || this.IsEternallyUnknown) 
+			{
+				Hstate top = PrecedingState(this.FirstValue, date.FirstValue);
+				result = new Hval(null,top);
+			}
+			else
+			{
+				result = this.ObjectAsOf(date.ToDateTime);
+			}
 
-            return (T)Util.ReturnProperTvar<T>(result);
-        }
+			return new Tvar(result);
+		}
 
         /// <summary>
         /// Returns an object value of the Tvar at a specified point in time.
@@ -372,38 +297,14 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns true when two Tvar values are equal. 
-        /// </summary>
-        public static Tbool EqualTo(Tvar tv1, Tvar tv2)
-        {
-            return ApplyFcnToTimeline<Tbool>(x => Eq(x), tv1, tv2);
-        }
-        private static Hval Eq(List<Hval> list)
-        {
-            return object.Equals(list[0].Val, list[1].Val);
-        }
-
-        /// <summary>
-        /// Returns true when two Tvar values are not equal. 
-        /// </summary>
-        public static Tbool NotEqualTo(Tvar tv1, Tvar tv2)
-        {
-            return ApplyFcnToTimeline<Tbool>(x => NotEq(x), tv1, tv2);
-        }
-        private static Hval NotEq(List<Hval> list)
-        {
-            return !object.Equals(list[0].Val, list[1].Val);
-        }
-
-        /// <summary>
         /// Returns true whenever the Tvar has a value of "unstated."
         /// </summary>
         //  TODO: Why does this exist?
-        public Tbool IsUnstated
+        public Tvar IsUnstated
         {
             get
             {
-                Tbool result = new Tbool();
+                Tvar result = new Tvar();
 
                 for (int i = 0; i < TimeLine.Count; i++ ) 
                 {
@@ -473,65 +374,65 @@ namespace Akkadian
         /// <remarks>
         /// Used, for example, to get the value of a Tvar during a prior or future
         /// time period.
-        /// Note: Time points on both the base Tvar and the temporalPeriod Tnum 
+        /// Note: Time points on both the base Tvar and the temporalPeriod Tvar 
         /// must line up in order for the method to work properly.
         /// </remarks>
         /// <example>
         ///                 N =  <--33--|--44--|--55--|--66--|--77-->
         ///              Year =  <-2010-|-2011-|-2012-|-2013-|-2014->
         ///  N.Shift(-2,Year) =  <---------33---------|--44--|--55--|--66--|--77-->
-        /// </example>            
-        public T Shift<T>(int offset, Tnum temporalPeriod) where T : Tvar
-        {
-            // TODO: Make "offset" a Tnum instead of an int
+        /// </example>
+		public Tvar Shift(int offset, Tvar temporalPeriod)
+		{
+			// TODO: Make "offset" a Tvar instead of an int
 
-            T result = (T)Util.ReturnProperTvar<T>();
-            result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
+			Tvar result = new Tvar();
+			result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
 
-            // No need to handle uncertainty b/c this method just reuses the values in
-            // the base Tvar.
+			// No need to handle uncertainty b/c this method just reuses the values in
+			// the base Tvar.
 
-            // Iterate through pairs in the base Tvar
-            foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
-            {
-                // Extract parts of the date-value pair
-                DateTime origDate = Convert.ToDateTime(de.Key);
-                Hval val = de.Value;
-                DateTime offsetDate = Time.EndOf;
+			// Iterate through pairs in the base Tvar
+			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
+			{
+				// Extract parts of the date-value pair
+				DateTime origDate = Convert.ToDateTime(de.Key);
+				Hval val = de.Value;
+				DateTime offsetDate = Time.EndOf;
 
-                // Leave the value at Time.DawnOf alone
-                if (origDate != Time.DawnOf)
-                {
-                    // Get the time point with the appropriate offset from the current time point
-                    // First, look up the original date in temporalPeriod
-                    for (int i=0; i<temporalPeriod.TimeLine.Values.Count; i++)
-                    {
-                        DateTime testDate = Convert.ToDateTime(temporalPeriod.TimeLine.Keys[i]);
-                        if (testDate == origDate)
-                        {
-                            // Then get the date offset from the original date
-                            int offsetIndex = i + (offset * -1);
+				// Leave the value at Time.DawnOf alone
+				if (origDate != Time.DawnOf)
+				{
+					// Get the time point with the appropriate offset from the current time point
+					// First, look up the original date in temporalPeriod
+					for (int i=0; i<temporalPeriod.TimeLine.Values.Count; i++)
+					{
+						DateTime testDate = Convert.ToDateTime(temporalPeriod.TimeLine.Keys[i]);
+						if (testDate == origDate)
+						{
+							// Then get the date offset from the original date
+							int offsetIndex = i + (offset * -1);
 
-                            // Don't overrun the temporalPeriod list
-                            if (offsetIndex < temporalPeriod.TimeLine.Count &&
-                                offsetIndex >= 0)
-                            {
-                                offsetDate = temporalPeriod.TimeLine.Keys[offsetIndex];
+							// Don't overrun the temporalPeriod list
+							if (offsetIndex < temporalPeriod.TimeLine.Count &&
+							    offsetIndex >= 0)
+							{
+								offsetDate = temporalPeriod.TimeLine.Keys[offsetIndex];
 
-                                // Prevent overflowing the bounds of Time
-                                if (offsetDate < Time.EndOf) 
-                                {
-                                    result.AddState(offsetDate, val);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return result;
-        }
+								// Prevent overflowing the bounds of Time
+								if (offsetDate < Time.EndOf) 
+								{
+									result.AddState(offsetDate, val);
+								}
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			return result;
+		}
 
         /// <summary>
         /// Given a base Tvar and a period, returns a Tvar where the value of each period
@@ -546,49 +447,49 @@ namespace Akkadian
         ///              Year =  <-2010-|-2011-|-2012-|-2013-|-2014->
         ///    Tvar.PEV(Year) =  <--1---|----------2---------------->
         /// </example>            
-        public T PeriodEndVal<T>(Tnum temporalPeriod) where T : Tvar
-        {
-            T result = (T)Util.ReturnProperTvar<T>();
-            result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
-            
-            // No need to handle uncertainty b/c this method just reuses the values in
-            // the base Tvar.
+		public Tvar PeriodEndVal(Tvar temporalPeriod)
+		{
+			Tvar result = new Tvar();
+			result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
 
-            // Iterate backwards through the timeline of the base Tvar
-            for(int i=this.TimeLine.Count-1; i>0; i--)
-            {
-                // If the date is not lined up with a time point in temporalPeriod
-                DateTime theDate = Convert.ToDateTime(this.TimeLine.Keys[i]);
-                if (temporalPeriod.TimeLine.Keys.Contains(theDate))
-                {
-                    // If result does not already contain the date, add it to result
-                    if (!result.TimeLine.Keys.Contains(theDate))
-                    {
-                        result.AddState(theDate, this.TimeLine.Values[i]);
-                    }
-                }
-                else
-                {
-                    // Get the date in temporalPeriod that is immediately prior to theDate
-                    // (i.e. the beginning of that period)
-                    for (int j=temporalPeriod.TimeLine.Count-1; j>0; j--)
-                    {
-                        DateTime periodDate = temporalPeriod.TimeLine.Keys[j];
-                        if (periodDate < theDate)
-                        {
-                            // If result does not already contain the new change date, add it to result
-                            if (!result.TimeLine.Keys.Contains(periodDate))
-                            {
-                                result.AddState(periodDate, this.TimeLine.Values[i]);
-                            }
+			// No need to handle uncertainty b/c this method just reuses the values in
+			// the base Tvar.
 
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            return result;
-        }
+			// Iterate backwards through the timeline of the base Tvar
+			for(int i=this.TimeLine.Count-1; i>0; i--)
+			{
+				// If the date is not lined up with a time point in temporalPeriod
+				DateTime theDate = Convert.ToDateTime(this.TimeLine.Keys[i]);
+				if (temporalPeriod.TimeLine.Keys.Contains(theDate))
+				{
+					// If result does not already contain the date, add it to result
+					if (!result.TimeLine.Keys.Contains(theDate))
+					{
+						result.AddState(theDate, this.TimeLine.Values[i]);
+					}
+				}
+				else
+				{
+					// Get the date in temporalPeriod that is immediately prior to theDate
+					// (i.e. the beginning of that period)
+					for (int j=temporalPeriod.TimeLine.Count-1; j>0; j--)
+					{
+						DateTime periodDate = temporalPeriod.TimeLine.Keys[j];
+						if (periodDate < theDate)
+						{
+							// If result does not already contain the new change date, add it to result
+							if (!result.TimeLine.Keys.Contains(periodDate))
+							{
+								result.AddState(periodDate, this.TimeLine.Values[i]);
+							}
+
+							break;
+						}
+					}
+				}
+			}
+
+			return result;
+		}
     }    
 }

@@ -29,7 +29,7 @@ namespace Akkadian
     public static class DateTimeExtensionMethods
     {
 
-//        public static implicit operator DateTime(Tdate d) 
+//        public static implicit operator DateTime(Tvar d) 
 //        {
 //            DateTime r = d.ToDateTime ?? DateTime.Now;
 //            return r;

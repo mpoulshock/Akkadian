@@ -25,13 +25,8 @@ namespace Akkadian
 {
     #pragma warning disable 660, 661
     
-    public partial class Tbool
+    public partial class Tvar
     {        
-        
-        // ********************************************************************
-        //    AND
-        // ********************************************************************
-        
         /*
          *  "Truth table" for AND:
          * 
@@ -45,7 +40,7 @@ namespace Akkadian
         /// <summary>
         /// Temporal AND function.
         /// </summary>
-        public static Tbool operator & (Tbool tb1, Tbool tb2)
+        public static Tvar operator & (Tvar tb1, Tvar tb2)
         {     
             return And(tb1,tb2);
         }
@@ -53,13 +48,13 @@ namespace Akkadian
         /// <summary>
         /// Private temporal AND function
         /// </summary>
-        private static Tbool And(Tbool t1, Tbool t2)
+        private static Tvar And(Tvar t1, Tvar t2)
         {
             // Short circuit: If any input is eternally false, return false
-            if (t1.IsFalse || t2.IsFalse) return new Tbool(false);
+            if (t1.IsFalse || t2.IsFalse) return new Tvar(false);
 
             // Else, apply the AND function to the inputs
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
             foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(t1,t2))
             {    
                 result.AddState(slice.Key, CoreAnd(slice.Value));
@@ -86,11 +81,6 @@ namespace Akkadian
             return new Hval(true);
         }
 
-        
-        // ********************************************************************
-        //    OR
-        // ********************************************************************
-
         /*
          *  "Truth table" for OR:
          * 
@@ -104,7 +94,7 @@ namespace Akkadian
         /// <summary>
         /// Temporal OR function.
         /// </summary>
-        public static Tbool operator | (Tbool tb1, Tbool tb2)
+        public static Tvar operator | (Tvar tb1, Tvar tb2)
         {
             return Or(tb1,tb2);
         }
@@ -112,13 +102,13 @@ namespace Akkadian
         /// <summary>
         /// Private temporal OR function
         /// </summary>
-        private static Tbool Or(Tbool t1, Tbool t2)
+        private static Tvar Or(Tvar t1, Tvar t2)
         {
             // Short circuit: If any input is eternally true, return true
-            if (t1.IsTrue || t2.IsTrue) return new Tbool(true);
+            if (t1.IsTrue || t2.IsTrue) return new Tvar(true);
 
             // Else, apply the AND function to the inputs
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
             foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(t1,t2))
             {    
                 result.AddState(slice.Key, CoreOr(slice.Value));
@@ -144,31 +134,22 @@ namespace Akkadian
             // Otherwise, false
             return new Hval(false);
         }
-
-        
-        // ********************************************************************
-        //    NOT
-        // ********************************************************************
         
         /// <summary>
         /// Temporal NOT function: returns true when the input is false and
         /// vice versa.
         /// </summary>
-        public static Tbool operator ! (Tbool tb)
+        public static Tvar operator ! (Tvar tb)
         {
-            return ApplyFcnToTimeline<Tbool>(x => Not(x), tb);
+            return ApplyFcnToTimeline(x => Not(x), tb);
         }
         private static Hval Not(Hval h)
         {
             return !Convert.ToBoolean(h.Val);
         }
-
-        // ********************************************************************
-        //   Either
-        // ********************************************************************
         
         /// <summary>
-        /// "Either" operator (|~ in Akkadian) - Returns either of the two Tbools.
+        /// "Either" operator (|~ in Akkadian) - Returns either of the two Tvars.
         /// </summary>
         /// <remarks>
         /// 1. This function is needed because if either A or B is false, the
@@ -178,7 +159,7 @@ namespace Akkadian
         /// 2. The ^ operator does not short-circuit like && and ||.  So in the
         ///    interview, this asks B when A is known
         /// </remarks>
-        public static Tbool operator ^ (Tbool tb1, Tbool tb2)
+        public static Tvar operator ^ (Tvar tb1, Tvar tb2)
         {
             if (!tb1.IsEternallyUnstated)
             {

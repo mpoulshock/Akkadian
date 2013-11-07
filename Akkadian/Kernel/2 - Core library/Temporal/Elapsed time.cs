@@ -22,21 +22,21 @@ using System;
 
 namespace Akkadian
 {    
-    public partial class Tbool
+    public partial class Tvar
     {
         /// <summary>
         /// Returns the total number of elapsed intervals between two dates.
         /// </summary>
-        public Tnum TotalElapsedIntervals(Tnum interval, Tdate start, Tdate end)
+        public Tvar TotalElapsedIntervals(Tvar interval, Tvar start, Tvar end)
         {
-            Tnum rei = RunningElapsedIntervals(interval);
+            Tvar rei = RunningElapsedIntervals(interval);
 
             return rei.AsOf(end) - rei.AsOf(start);
         }
 
         /// <summary>
         /// Provides a running count of the number of whole intervals 
-        /// that a Tbool has been true.
+        /// that a Tvar has been true.
         /// </summary>
         /// <remarks>
         /// Example:
@@ -45,26 +45,26 @@ namespace Akkadian
         /// 
         /// Note: An elapsed interval is counted in the subsequent interval.
         /// </remarks>
-        public Tnum RunningElapsedIntervals(Tnum interval)  
+        public Tvar RunningElapsedIntervals(Tvar interval)  
         {
-            // If base Tnum is ever unknown during the time period, return 
+            // If base Tvar is ever unknown during the time period, return 
             // the state with the proper precedence
             Hstate baseState = PrecedenceForMissingTimePeriods(this);
-            if (baseState != Hstate.Known) return new Tnum(baseState);
+            if (baseState != Hstate.Known) return new Tvar(baseState);
 
             int intervalCount = 0;
             DateTime dateNextTrue = this.DateNextTrue(Time.DawnOf);
             DateTime dateNextTrueIntervalEnds = this.NextChangeDate(dateNextTrue.AddTicks(1));
 
-            Tnum result = new Tnum(0);
+            Tvar result = new Tvar(0);
 
-            // Iterate through the time intervals in the input Tnum
+            // Iterate through the time intervals in the input Tvar
             for (int i=0; i < interval.IntervalValues.Count-1; i++)
             {
                 DateTime start = interval.IntervalValues.Keys[i];
                 DateTime end = interval.IntervalValues.Keys[i+1];
 
-                // If base Tbool is always true during the interval, increment the count
+                // If base Tvar is always true during the interval, increment the count
                 if (end <= dateNextTrueIntervalEnds)
                 {
                     if (start >= dateNextTrue)
@@ -86,7 +86,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Provides a running count of how many whole intervals a Tbool 
+        /// Provides a running count of how many whole intervals a Tvar 
         /// has been continuously true.
         /// </summary>
         /// <remarks>
@@ -96,26 +96,26 @@ namespace Akkadian
         /// 
         /// Use judiciously with TheDay and TheCalendarWeek, as they have thousands of time intervals.
         /// </remarks>
-        public Tnum ContinuousElapsedIntervals(Tnum interval)  
+        public Tvar ContinuousElapsedIntervals(Tvar interval)  
         {
-            // If base Tnum is ever unknown during the time period, return 
+            // If base Tvar is ever unknown during the time period, return 
             // the state with the proper precedence
             Hstate baseState = PrecedenceForMissingTimePeriods(this);
-            if (baseState != Hstate.Known) return new Tnum(baseState);
+            if (baseState != Hstate.Known) return new Tvar(baseState);
 
             int intervalCount = 0;
             DateTime dateNextTrue = this.DateNextTrue(Time.DawnOf);
             DateTime dateNextTrueIntervalEnds = this.NextChangeDate(dateNextTrue.AddTicks(1));
 
-            Tnum result = new Tnum(0);
+            Tvar result = new Tvar(0);
 
-            // Iterate through the time intervals in the input Tnum
+            // Iterate through the time intervals in the input Tvar
             for (int i=0; i < interval.IntervalValues.Count-1; i++)
             {
                 DateTime start = interval.IntervalValues.Keys[i];
                 DateTime end = interval.IntervalValues.Keys[i+1];
 
-                // If base Tbool is always true during the interval, increment the count
+                // If base Tvar is always true during the interval, increment the count
                 if (end <= dateNextTrueIntervalEnds)
                 {
                     if (start >= dateNextTrue)
@@ -139,21 +139,21 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Provides a running count of how many intervals (years, days, etc.) a Tbool 
+        /// Provides a running count of how many intervals (years, days, etc.) a Tvar 
         /// has been true within some sliding window of time.  At the end of that sliding 
         /// window, this function returns the amount of time that has elapsed within the 
-        /// window during which the Tbool was true.
+        /// window during which the Tvar was true.
         /// </summary>
         /// <remarks>
-        /// Example: For a given Tbool, at any given point in time, for how many days during the
-        /// previous 3 days is the Tbool true?
+        /// Example: For a given Tvar, at any given point in time, for how many days during the
+        /// previous 3 days is the Tvar true?
         /// 
         ///                     tb = <FTTTFTTTFFFF>
         ///      tb.SEI(3, TheDay) = <001232223210>
         /// </remarks>
-        public Tnum SlidingElapsedIntervals(Tnum interval, Tnum windowSize)
+        public Tvar SlidingElapsedIntervals(Tvar interval, Tvar windowSize)
         {
-            // If a Tbool is eternally true, return windowSize
+            // If a Tvar is eternally true, return windowSize
             if (this.IsTrue)
             {
                 return windowSize;
@@ -161,7 +161,7 @@ namespace Akkadian
 
             // The number of true intervals in a sliding window of time equals
             // the running count as of time1 minus the running count as of time0.
-            Tnum r = this.RunningElapsedIntervals(interval);
+            Tvar r = this.RunningElapsedIntervals(interval);
 
             int size = Convert.ToInt32(windowSize.FirstValue.Val) * -1;
 

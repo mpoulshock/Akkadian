@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Hammura.bi LLC
+// Copyright (c) 2013 Hammura.bi LLC
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,45 +20,39 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Akkadian
 {
-    #pragma warning disable 660, 661
-    
-    /// <summary>
-    /// A string object whose value changes at various  points in time. 
-    /// </summary>
-    public partial class Tvar
-    {
-        /// <summary>
-        /// Constructs a Tvar that is eternally set to a given value. 
-        /// </summary>
-        public Tvar(string val)
-        {
-            this.SetEternally(val);
-        }
+	public partial class Session 
+	{
+		/// <summary>
+		/// Instantiates a new Session object.
+		/// </summary>
+		public Session()
+		{
+			Interpreter.InitializeOperatorRegistry();
+			ClearFunctions();
+		}
 
-        /// <summary>
-        /// Implicitly converts strings to Tvars.
-        /// </summary>
-        public static implicit operator Tvar(string s) 
-        {
-            return new Tvar(s);
-        }
-      
-        /// <summary>
-        /// Concatenates two or more Tvars. 
-        /// </summary>
-        public static Tvar Concat(Tvar ts1, Tvar ts2)    
-        {
-            return ApplyFcnToTimeline(x => Concat(x), ts1, ts2);
-        }
-        private static Hval Concat(List<Hval> list)
-        {
-            return Convert.ToString(list[0].Val) + Convert.ToString(list[1].Val);
-        }
+		/// <summary>
+		/// Processes a user-input string in light of the session data.
+		/// </summary>
+		public object ProcessInput(string s)
+		{
+			Interpreter.ParserResponse pr = Interpreter.ParseInputLine(s);
 
-    }
-    
-    #pragma warning restore 660, 661
+			if (pr.IsNewFunction)
+			{
+				Expr e = (Expr)StringToNode(pr.ParserString).obj;
+				AddFunction(pr.FunctionName, e);
+				return true;
+			}
+			else
+			{
+				Expr exp = Interpreter.StringToExpr(pr.ParserString);
+				return eval(exp).obj;
+			}
+		}
+	}
 }

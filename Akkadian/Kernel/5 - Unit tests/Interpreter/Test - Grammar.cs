@@ -118,6 +118,12 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Regex_DecimalLiteral_7 ()
+		{
+			Assert.IsTrue(IsExactMatch("3.14159", decimalLiteral));
+		}
+
+		[Test]
 		public void Regex_FcnName_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("IsEligible",fcnName));

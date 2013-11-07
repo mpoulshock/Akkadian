@@ -23,42 +23,42 @@ using NUnit.Framework;
 namespace Akkadian.UnitTests
 {
     [TestFixture]
-    public class StringComparison : H
+    public class StringComparison : Tvar
     {
         // EQUALS
         
         [Test]
         public void StringComparison1 ()
         {
-            Tbool t = new Tstr("Hello, world!") == new Tstr("Hello, world!");
+			Tvar t = EqualTo(new Tvar("Hello, world!"), new Tvar("Hello, world!"));
             Assert.AreEqual(true , t.Out);        
         }
 
         [Test]
         public void StringComparison2 ()
         {
-            Tbool t = new Tstr("Hello, world!") == new Tstr("Jello, world!");
+			Tvar t = EqualTo(new Tvar("Hello, world!"), new Tvar("Jello, world!"));
             Assert.AreEqual(false , t.Out);                
         }
         
         [Test]
         public void StringComparison3 ()
         {
-            Tbool t = new Tstr("Hello, world!") == "Hello, world!";
+			Tvar t = EqualTo(new Tvar("Hello, world!"), "Hello, world!");
             Assert.AreEqual(true , t.Out);                
         }
         
         [Test]
         public void StringComparison4 ()
         {
-            Tbool t = new Tstr("Hello, world!") == "Hello, world";
+			Tvar t = EqualTo(new Tvar("Hello, world!"), "Hello, world");
             Assert.AreEqual(false , t.Out);                
         }
         
         [Test]
         public void StringComparison5 ()
         {
-            Tbool t = new Tstr(Hstate.Unstated) == "Hello, world";
+			Tvar t = EqualTo(new Tvar(Hstate.Unstated), "Hello, world");
             Assert.AreEqual("Unstated", t.Out);                
         }
         
@@ -67,28 +67,28 @@ namespace Akkadian.UnitTests
         [Test]
         public void StringComparison11 ()
         {
-            Tbool t = new Tstr("Hello, world!") != new Tstr("Hello, world!");
+            Tvar t = new Tvar("Hello, world!") != new Tvar("Hello, world!");
             Assert.AreEqual(false , t.Out);        
         }
 
         [Test]
         public void StringComparison12 ()
         {
-            Tbool t = new Tstr("Hello, world!") != new Tstr("Jello, world!");
+            Tvar t = new Tvar("Hello, world!") != new Tvar("Jello, world!");
             Assert.AreEqual(true , t.Out);                
         }
         
         [Test]
         public void StringComparison13 ()
         {
-            Tbool t = new Tstr("Hello, world!") != "Hello, world!";
+            Tvar t = new Tvar("Hello, world!") != "Hello, world!";
             Assert.AreEqual(false , t.Out);                
         }
         
         [Test]
         public void StringComparison14 ()
         {
-            Tbool t = new Tstr("Hello, world!") != "Hello, world";
+            Tvar t = new Tvar("Hello, world!") != "Hello, world";
             Assert.AreEqual(true , t.Out);                
         }
         

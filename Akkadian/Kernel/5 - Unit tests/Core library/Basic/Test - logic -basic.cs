@@ -25,16 +25,16 @@ namespace Akkadian.UnitTests
     [TestFixture]
     public class BasicLogic : H
     {
-        private static Tbool tbt = new Tbool(true);
-        private static Tbool tbf = new Tbool(false);
-        private static Tbool stub = new Tbool(Hstate.Stub);
-        private static Tbool unstat = new Tbool(Hstate.Unstated); 
-        private static Tbool uncert = new Tbool(Hstate.Uncertain);  
-        private static Tbool tbv = VaryingTbool(); 
+        private static Tvar tbt = new Tvar(true);
+        private static Tvar tbf = new Tvar(false);
+        private static Tvar stub = new Tvar(Hstate.Stub);
+        private static Tvar unstat = new Tvar(Hstate.Unstated); 
+        private static Tvar uncert = new Tvar(Hstate.Uncertain);  
+        private static Tvar tbv = VaryingTvar(); 
 
-        private static Tbool VaryingTbool()
+        private static Tvar VaryingTvar()
         {
-            Tbool result = new Tbool(false);
+            Tvar result = new Tvar(false);
             result.AddState(Date(2000,1,1), true);
             result.AddState(Date(2001,1,1), Hstate.Uncertain);
             result.AddState(Date(2002,1,1), Hstate.Unstated);
@@ -46,154 +46,154 @@ namespace Akkadian.UnitTests
         [Test]
         public void LogicAnd1 ()
         {
-            Tbool t1 = tbt & tbf;
+            Tvar t1 = tbt & tbf;
             Assert.AreEqual(false, t1.Out);        
         }
         
         [Test]
         public void LogicAnd2 ()
         {
-            Tbool t2 = tbt & tbt;
+            Tvar t2 = tbt & tbt;
             Assert.AreEqual(true, t2.Out);        
         }
         
         [Test]
         public void LogicAnd3 ()
         {
-            Tbool t7 = tbf & tbf;
+            Tvar t7 = tbf & tbf;
             Assert.AreEqual(false, t7.Out);        
         }
         
         [Test]
         public void LogicAnd4 ()
         {
-            Tbool t1 = tbt & tbt & tbf;
+            Tvar t1 = tbt & tbt & tbf;
             Assert.AreEqual(false, t1.Out);            
         }
         
         [Test]
         public void LogicAnd5 ()
         {
-            Tbool r = tbt & uncert;
+            Tvar r = tbt & uncert;
             Assert.AreEqual("Uncertain", r.Out);          
         }
         
         [Test]
         public void LogicAnd6 ()
         {
-            Tbool r = tbf & uncert;
+            Tvar r = tbf & uncert;
             Assert.AreEqual(false, r.Out);          
         }
         
         [Test]
         public void LogicAnd7 ()
         {
-            Tbool r = uncert & uncert;
+            Tvar r = uncert & uncert;
             Assert.AreEqual("Uncertain", r.Out);          
         }
         
         [Test]
         public void LogicAnd8 ()
         {
-            Tbool r = unstat & uncert;
+            Tvar r = unstat & uncert;
             Assert.AreEqual("Unstated", r.Out);          
         }
         
         [Test]
         public void LogicAnd9 ()
         {
-            Tbool t1 = tbt & false;
+            Tvar t1 = tbt & false;
             Assert.AreEqual(false, t1.Out);            
         }
         
         [Test]
         public void LogicAnd10 ()
         {
-            Tbool t1 = false & tbt;
+            Tvar t1 = false & tbt;
             Assert.AreEqual(false, t1.Out);            
         }
         
         [Test]
         public void Unknown_Logic_And_1 ()
         {
-            Tbool t1 = tbt & tbf & unstat;
+            Tvar t1 = tbt & tbf & unstat;
             Assert.AreEqual(false, t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_And_2 ()
         {
-            Tbool t1 = tbt & unstat & tbf;
+            Tvar t1 = tbt & unstat & tbf;
             Assert.AreEqual(false, t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_And_3 ()
         {
-            Tbool t1 = tbt & unstat;
+            Tvar t1 = tbt & unstat;
             Assert.AreEqual("Unstated", t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_And_4 ()
         {
-            Tbool t1 = tbf & unstat;
+            Tvar t1 = tbf & unstat;
             Assert.AreEqual(false, t1.Out);        
         }
 
         [Test]
         public void Unknown_Logic_And_5 ()
         {
-            Tbool r = unstat & stub;
+            Tvar r = unstat & stub;
             Assert.AreEqual("Unstated", r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_And_6 ()
         {
-            Tbool r = tbf & stub;
+            Tvar r = tbf & stub;
             Assert.AreEqual(false, r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_And_7 ()
         {
-            Tbool r = tbt & stub;
+            Tvar r = tbt & stub;
             Assert.AreEqual("Stub", r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_And_8 ()
         {
-            Tbool r = uncert & stub;
+            Tvar r = uncert & stub;
             Assert.AreEqual("Uncertain", r.Out);        
         }
 
         [Test]
         public void LogicAndTime1 ()
         {
-            Tbool t1 = tbv & unstat;
+            Tvar t1 = tbv & unstat;
             Assert.AreEqual("{Dawn: false; 1/1/2000: Unstated}", t1.Out);            
         }
         
         [Test]
         public void LogicAndTime2 ()
         {
-            Tbool t1 = tbv & tbt;
+            Tvar t1 = tbv & tbt;
             Assert.AreEqual("{Dawn: false; 1/1/2000: true; 1/1/2001: Uncertain; 1/1/2002: Unstated}", t1.Out);            
         }
 
         [Test]
         public void LogicAndTime3 ()
         {
-            Tbool t1 = tbv & tbf;
+            Tvar t1 = tbv & tbf;
             Assert.AreEqual(false, t1.Out);            
         }
         
         [Test]
         public void LogicAndTime4 ()
         {
-            Tbool t1 = tbv & uncert;
+            Tvar t1 = tbv & uncert;
             Assert.AreEqual("{Dawn: false; 1/1/2000: Uncertain; 1/1/2002: Unstated}", t1.Out);            
         }
         
@@ -202,119 +202,119 @@ namespace Akkadian.UnitTests
         [Test]
         public void LogicOr1 ()
         {
-            Tbool t1 = tbt | tbf;
+            Tvar t1 = tbt | tbf;
             Assert.AreEqual(true, t1.Out);        
         }
         
         [Test]
         public void LogicOr2 ()
         {
-            Tbool t2 = tbt | tbt;
+            Tvar t2 = tbt | tbt;
             Assert.AreEqual(true, t2.Out);        
         }
         
         [Test]
         public void LogicOr3 ()
         {
-            Tbool t7 = tbf | tbf;
+            Tvar t7 = tbf | tbf;
             Assert.AreEqual(false, t7.Out);        
         }
         
         [Test]
         public void LogicOr4 ()
         {
-            Tbool t1 = tbf | tbf | tbt;
+            Tvar t1 = tbf | tbf | tbt;
             Assert.AreEqual(true, t1.Out);            
         }
         
         [Test]
         public void LogicOr5 ()
         {
-            Tbool t1 = tbf | (tbf | tbt);
+            Tvar t1 = tbf | (tbf | tbt);
             Assert.AreEqual(true, t1.Out);            
         }
         
         [Test]
         public void Unknown_Logic_Or_1 ()
         {
-            Tbool t1 = unstat | tbf | tbt;
+            Tvar t1 = unstat | tbf | tbt;
             Assert.AreEqual(true, t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_Or_2 ()
         {
-            Tbool t1 = tbt | unstat | tbf;
+            Tvar t1 = tbt | unstat | tbf;
             Assert.AreEqual(true, t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_Or_3 ()
         {
-            Tbool t1 = tbt | unstat;
+            Tvar t1 = tbt | unstat;
             Assert.AreEqual(true, t1.Out);        
         }
         
         [Test]
         public void Unknown_Logic_Or_4 ()
         {
-            Tbool t1 = tbf | unstat;
+            Tvar t1 = tbf | unstat;
             Assert.AreEqual("Unstated", t1.Out);         
         }
 
         [Test]
         public void Unknown_Logic_Or_5 ()
         {
-            Tbool r = unstat | stub;
+            Tvar r = unstat | stub;
             Assert.AreEqual("Unstated", r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_Or_6 ()
         {
-            Tbool r = tbf | stub;
+            Tvar r = tbf | stub;
             Assert.AreEqual("Stub", r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_Or_7 ()
         {
-            Tbool r = tbt | stub;
+            Tvar r = tbt | stub;
             Assert.AreEqual(true, r.Out);        
         }
 
         [Test]
         public void Unknown_Logic_Or_8 ()
         {
-            Tbool r = uncert | stub;
+            Tvar r = uncert | stub;
             Assert.AreEqual("Uncertain", r.Out);        
         }
         
         [Test]
         public void LogicOrTime1 ()
         {
-            Tbool t1 = tbv | unstat;
+            Tvar t1 = tbv | unstat;
             Assert.AreEqual("{Dawn: Unstated; 1/1/2000: true; 1/1/2001: Unstated}", t1.Out);            
         }
         
         [Test]
         public void LogicOrTime2 ()
         {
-            Tbool t1 = tbv | tbt;
+            Tvar t1 = tbv | tbt;
             Assert.AreEqual(true, t1.Out);            
         }
         
         [Test]
         public void LogicOrTime3 ()
         {
-            Tbool t1 = tbv | tbf;
+            Tvar t1 = tbv | tbf;
             Assert.AreEqual("{Dawn: false; 1/1/2000: true; 1/1/2001: Uncertain; 1/1/2002: Unstated}", t1.Out);            
         }
         
         [Test]
         public void LogicOrTime4 ()
         {
-            Tbool t1 = tbv | uncert;
+            Tvar t1 = tbv | uncert;
             Assert.AreEqual("{Dawn: Uncertain; 1/1/2000: true; 1/1/2001: Uncertain; 1/1/2002: Unstated}", t1.Out);            
         }
         
@@ -323,35 +323,35 @@ namespace Akkadian.UnitTests
         [Test]
         public void LogicNot1 ()
         {
-            Tbool t1 = !tbt;
+            Tvar t1 = !tbt;
             Assert.AreEqual(false, t1.Out);    
         }
         
         [Test]
         public void LogicNot2 ()
         {
-            Tbool t2 = !tbf;
+            Tvar t2 = !tbf;
             Assert.AreEqual(true, t2.Out);        
         }
         
         [Test]
         public void LogicNot3 ()
         {
-            Tbool t2 = !unstat;
+            Tvar t2 = !unstat;
             Assert.AreEqual("Unstated", t2.Out);        
         }
 
         [Test]
         public void LogicNot4 ()
         {
-            Tbool t2 = !uncert;
+            Tvar t2 = !uncert;
             Assert.AreEqual("Uncertain", t2.Out);        
         }
         
         [Test]
         public void LogicNot5 () 
         {
-            Tbool t1 = !tbv;
+            Tvar t1 = !tbv;
             Assert.AreEqual("{Dawn: true; 1/1/2000: false; 1/1/2001: Uncertain; 1/1/2002: Unstated}", t1.Out);        
         }
 
@@ -366,7 +366,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Logic_AndOr_1 ()
         {
-            Tbool t1 = tbf | ( unstat & tbt );
+            Tvar t1 = tbf | ( unstat & tbt );
             Assert.AreEqual("Unstated", t1.Out);        
         }
  
@@ -375,35 +375,35 @@ namespace Akkadian.UnitTests
         [Test]
         public void LogicBoolCount1 ()
         {
-            Tnum result = BoolCount(tbt);
+            Tvar result = BoolCount(tbt);
             Assert.AreEqual(1, result.Out);    
         }
         
         [Test]
         public void LogicBoolCount2 ()
         {
-            Tnum result = BoolCount(tbf);
+            Tvar result = BoolCount(tbf);
             Assert.AreEqual(0, result.Out);    
         }
         
         [Test]
         public void LogicBoolCount3 ()
         {
-            Tnum result = BoolCount(tbf, tbt);
+            Tvar result = BoolCount(tbf, tbt);
             Assert.AreEqual(1, result.Out);    
         }
         
         [Test]
         public void LogicBoolCount4 ()
         {
-            Tnum result = BoolCount(tbt, tbt);
+            Tvar result = BoolCount(tbt, tbt);
             Assert.AreEqual(2, result.Out);    
         }
         
         [Test]
         public void LogicBoolCount5 ()
         {
-            Tnum result = BoolCount(tbt, tbf);
+            Tvar result = BoolCount(tbt, tbf);
             Assert.AreEqual(1, result.Out);    
         }
         

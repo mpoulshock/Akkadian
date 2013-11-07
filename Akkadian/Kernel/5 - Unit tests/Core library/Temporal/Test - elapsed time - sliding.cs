@@ -31,11 +31,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals1 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,1,3),false);
 
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
 
             Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/3/2015: 2; 1/4/2015: 1; 1/5/2015: 0}", r.Out);    
         }
@@ -43,8 +43,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals2 ()
         {
-            Tbool tb = new Tbool(false);
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar tb = new Tvar(false);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
 
             Assert.AreEqual(0, r.Out);    
         }
@@ -52,11 +52,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals3 () 
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1), Hstate.Unstated);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
 
             Assert.AreEqual("Unstated", r.Out);    
         }
@@ -64,11 +64,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals4 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1), Hstate.Stub);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
 
             Assert.AreEqual("Stub", r.Out);    
         }
@@ -76,13 +76,13 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals5 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,1,3),false);
             tb.AddState(new DateTime(2015,1,10),true);
             tb.AddState(new DateTime(2015,2,18),false);
 
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
             string tline = "{Dawn: 0; 1/2/2015: 1; 1/3/2015: 2; 1/4/2015: 1; 1/5/2015: 0; " +
                 "1/11/2015: 1; 1/12/2015: 2; 2/19/2015: 1; 2/20/2015: 0}"; 
 
@@ -92,33 +92,33 @@ namespace Akkadian.UnitTests
         [Test]
         public void SlidingElapsedIntervals6 ()
         {
-            Tbool tb = new Tbool(true);
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar tb = new Tvar(true);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
             Assert.AreEqual(2, r.Out);    
         }
 
         [Test]
         public void SlidingElapsedIntervals7 ()
         {
-            Tbool t = new Tbool(true);
+            Tvar t = new Tvar(true);
             t.AddState(Date(2012,1,1), false);
-            Tnum actual = t.SlidingElapsedIntervals(TheYear, 2);
+            Tvar actual = t.SlidingElapsedIntervals(TheYear, 2);
             Assert.AreEqual("{Dawn: 0; 1/1/1801: 1; 1/1/1802: 2; 1/1/2013: 1; 1/1/2014: 0}", actual.Out);
         }
 
         [Test]
         public void SlidingElapsedIntervals8 ()
         {
-            Tbool t = new Tbool(true);
-            Tnum actual = t.SlidingElapsedIntervals(TheYear, 2);
+            Tvar t = new Tvar(true);
+            Tvar actual = t.SlidingElapsedIntervals(TheYear, 2);
             Assert.AreEqual(2, actual.Out);      
         }
 
         [Test]
         public void SlidingElapsedIntervals9 () 
         {
-            Tbool tb = new Tbool(Hstate.Unstated);
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, 2);
+            Tvar tb = new Tvar(Hstate.Unstated);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
             Assert.AreEqual("Unstated", r.Out);    
         }
 
@@ -126,8 +126,8 @@ namespace Akkadian.UnitTests
         public void SlidingElapsedIntervals10 () 
         {
             // Window size is unstated
-            Tbool tb = new Tbool(true);
-            Tnum r = tb.SlidingElapsedIntervals(TheDay, new Tnum(Hstate.Unstated));
+            Tvar tb = new Tvar(true);
+            Tvar r = tb.SlidingElapsedIntervals(TheDay, new Tvar(Hstate.Unstated));
             Assert.AreEqual("Unstated", r.Out);    
         }
     }

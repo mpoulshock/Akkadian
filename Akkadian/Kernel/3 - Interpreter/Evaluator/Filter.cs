@@ -26,67 +26,67 @@ namespace Akkadian
 {
 	public partial class Session
 	{
-		/// <summary>
-		/// Applies an aggregation function to a Tset and an argument function.
-		/// </summary>
-		private T ApplyFcnToTset<T>(Tset theSet, 
-		                                   Node argumentFcn, 
-		                                   Func<List<Tuple<Thing,Hval>>,Hval> aggregationFcn) where T : Tvar
-		{
-			Dictionary<Thing,Tvar> fcnValues = new Dictionary<Thing,Tvar>();
-			List<Tvar> listOfTvars = new List<Tvar>();
-
-			// Get the temporal value of each distinct entity in the set
-			foreach(Thing le in Tset.DistinctEntities(theSet))
-			{
-				// Func<Thing,Tvar> argumentFcn
-				Tvar val = (Tvar)eval(argumentFcn, expr(n(Typ.Thing,le))).obj;
-				fcnValues.Add(le, val);
-				listOfTvars.Add(val);
-			} 
-
-			// At each breakpoint, for each member of the set,
-			// aggregate and analyze the values of the functions
-			T result = (T)Akkadian.Util.ReturnProperTvar<T>();
-			foreach(DateTime dt in Tset.AggregatedTimePoints(theSet, listOfTvars))
-			{
-				Hval membersOfSet = theSet.ObjectAsOf(dt);
-
-				// If theSet is unknown...
-				if (!membersOfSet.IsKnown)
-				{
-					result.AddState(dt, membersOfSet);
-				}
-				else
-				{
-					// Cube that gets sent to the aggregation function
-					List<Tuple<Thing,Hval>> thingValPairs = new List<Tuple<Thing,Hval>>();
-
-					// Values to check for uncertainty
-					List<Hval> values = new List<Hval>();
-
-					foreach(Thing le in (List<Thing>)membersOfSet.Val)
-					{
-						Tvar funcVal = (Tvar)fcnValues[le];    
-						Hval funcValAt = funcVal.ObjectAsOf(dt);
-						values.Add(funcValAt);
-						thingValPairs.Add(new Tuple<Thing,Hval>(le,funcValAt));
-					}
-
-					Hstate top = H.PrecedingState(values);
-					if (top != Hstate.Known)
-					{
-						result.AddState(dt, new Hval(null, top));
-					}
-					else
-					{
-						// List<Tuple<Thing,Hval>>,Hval> aggregationFcn
-						result.AddState(dt, aggregationFcn(thingValPairs));
-					} 
-				}
-			}
-
-			return result.LeanTvar<T>();
-		}
+//		/// <summary>
+//		/// Applies an aggregation function to a Tvar and an argument function.
+//		/// </summary>
+//		private T ApplyFcnToTvar<T>(Tvar theSet, 
+//		                                   Node argumentFcn, 
+//		                                   Func<List<Tuple<Thing,Hval>>,Hval> aggregationFcn) where T : Tvar
+//		{
+//			Dictionary<Thing,Tvar> fcnValues = new Dictionary<Thing,Tvar>();
+//			List<Tvar> listOfTvars = new List<Tvar>();
+//
+//			// Get the temporal value of each distinct entity in the set
+//			foreach(Thing le in Tvar.DistinctEntities(theSet))
+//			{
+//				// Func<Thing,Tvar> argumentFcn
+//				Tvar val = (Tvar)eval(argumentFcn, expr(n(Typ.Thing,le))).obj;
+//				fcnValues.Add(le, val);
+//				listOfTvars.Add(val);
+//			} 
+//
+//			// At each breakpoint, for each member of the set,
+//			// aggregate and analyze the values of the functions
+//			T result = (T)Akkadian.Util.ReturnProperTvar<T>();
+//			foreach(DateTime dt in Tvar.AggregatedTimePoints(theSet, listOfTvars))
+//			{
+//				Hval membersOfSet = theSet.ObjectAsOf(dt);
+//
+//				// If theSet is unknown...
+//				if (!membersOfSet.IsKnown)
+//				{
+//					result.AddState(dt, membersOfSet);
+//				}
+//				else
+//				{
+//					// Cube that gets sent to the aggregation function
+//					List<Tuple<Thing,Hval>> thingValPairs = new List<Tuple<Thing,Hval>>();
+//
+//					// Values to check for uncertainty
+//					List<Hval> values = new List<Hval>();
+//
+//					foreach(Thing le in (List<Thing>)membersOfSet.Val)
+//					{
+//						Tvar funcVal = (Tvar)fcnValues[le];    
+//						Hval funcValAt = funcVal.ObjectAsOf(dt);
+//						values.Add(funcValAt);
+//						thingValPairs.Add(new Tuple<Thing,Hval>(le,funcValAt));
+//					}
+//
+//					Hstate top = H.PrecedingState(values);
+//					if (top != Hstate.Known)
+//					{
+//						result.AddState(dt, new Hval(null, top));
+//					}
+//					else
+//					{
+//						// List<Tuple<Thing,Hval>>,Hval> aggregationFcn
+//						result.AddState(dt, aggregationFcn(thingValPairs));
+//					} 
+//				}
+//			}
+//
+//			return (T)result.Lean;
+//		}
 	}
 }

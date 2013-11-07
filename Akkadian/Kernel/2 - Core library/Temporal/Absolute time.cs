@@ -25,9 +25,9 @@ namespace Akkadian
     public partial class H
     {
         /// <summary>
-        /// Returns a Tnum representing the calendar year, spanning all of time.
+        /// Returns a Tvar representing the calendar year, spanning all of time.
         /// </summary>
-        public static Tnum TheYear
+        public static Tvar TheYear
         {
             get
             {
@@ -36,10 +36,10 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the fiscal quarter (by default, a 20-year
+        /// Returns a Tvar representing the fiscal quarter (by default, a 20-year
         /// span centered on day 1 of the fiscal year that begins in current year)
         /// </summary>
-        public static Tnum TheQuarter
+        public static Tvar TheQuarter
         {
             // TODO: Consider making a field for Q1StartMonth and Q1StartDay (so TheQuarter
             // can be used when Q1 starts sometime other than Jan. 1)
@@ -50,10 +50,10 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the calendar month (by default, a
+        /// Returns a Tvar representing the calendar month (by default, a
         /// 20-year span centered on Jan. 1st of the current year)
         /// </summary>
-        public static Tnum TheMonth
+        public static Tvar TheMonth
         {
             get
             {
@@ -62,7 +62,7 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the calendar week (by default, a
+        /// Returns a Tvar representing the calendar week (by default, a
         /// 10-year span centered on the start of the current year).
         /// </summary>
         /// <remarks>
@@ -73,7 +73,7 @@ namespace Akkadian
         /// Note that weeks are not numbered (because sometimes week 1 and 53 of
         /// adjacent years overlap).  Each interval has the value 0.
         /// </remarks>
-        public static Tnum TheCalendarWeek
+        public static Tvar TheCalendarWeek
         {
             get
             {
@@ -82,12 +82,12 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns a Tnum representing the day, spanning a 200-year period.
+        /// Returns a Tvar representing the day, spanning a 200-year period.
         /// </summary>
         /// <remarks>
         /// Warning: This has over 73,000 intervals, so use judiciously.
         /// </remarks>
-        public static Tnum TheDay
+        public static Tvar TheDay
         {
             get
             {
@@ -99,23 +99,23 @@ namespace Akkadian
         /// <summary>
         /// Number of days in the calendar quarter (fiscal year assumed to start on Jan. 1) (temporal).
         /// </summary>
-        public static Tnum DaysInQuarter()
+        public static Tvar DaysInQuarter()
         {
-            return Switch<Tnum>(
+            return Switch(
                     ()=> TheQuarter == 1 && IsLeapYear(), ()=> 91,
                     ()=> TheQuarter == 1, ()=> 90,
                     ()=> TheQuarter == 2, ()=> 91,
                     ()=> TheQuarter == 3, ()=> 92,
                     ()=> TheQuarter == 4, ()=> 92,
-                    ()=> new Tnum(Hstate.Stub));
+                    ()=> new Tvar(Hstate.Stub));
         }
 
         /// <summary>
         /// Number of days in the calendar month (temporal).
         /// </summary>
-        public static Tnum DaysInMonth()
+        public static Tvar DaysInMonth()
         {
-            return Switch<Tnum>(
+            return Switch(
                     ()=> TheMonth ==  1, ()=> 31,
                     ()=> TheMonth ==  2 && IsLeapYear(), ()=> 29,
                     ()=> TheMonth ==  2, ()=> 28,
@@ -129,15 +129,15 @@ namespace Akkadian
                     ()=> TheMonth == 10, ()=> 31,
                     ()=> TheMonth == 11, ()=> 30,
                     ()=> TheMonth == 12, ()=> 31,
-                    ()=> new Tnum(Hstate.Stub));
+                    ()=> new Tvar(Hstate.Stub));
         }
 
         /// <summary>
         /// Number of days in the calendar year (temporal).
         /// </summary>
-        public static Tnum DaysInYear()
+        public static Tvar DaysInYear()
         {
-            return Switch<Tnum>(
+            return Switch(
                     ()=> IsLeapYear(), ()=> 366,
                     ()=> 365);
         }
@@ -145,9 +145,9 @@ namespace Akkadian
         /// <summary>
         /// True when the year is a leap year (temporal)
         /// </summary>
-        public static Tbool IsLeapYear()
+        public static Tvar IsLeapYear()
         {
-            return Switch<Tbool>(
+            return Switch(
                     ()=> TheYear == 2100 , ()=> false,
                     ()=> TheYear % 4 == 0, ()=> true,
                     ()=> false);
@@ -185,19 +185,19 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns a Tbool that's true at and after a specified DateTime, 
+        /// Returns a Tvar that's true at and after a specified DateTime, 
         /// and otherwise false.
         /// </summary>
-        public static Tbool IsAtOrAfter(Tdate dt)
+        public static Tvar IsAtOrAfter(Tvar dt)
         {
             // Handle unknowns
             if (!dt.FirstValue.IsKnown)
             {
-                return new Tbool(dt.FirstValue);
+                return new Tvar(dt.FirstValue);
             }
 
             // Create boolean
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
             if (dt == Time.DawnOf)
             {
                 result.AddState(DawnOf, true);
@@ -211,19 +211,19 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tbool that's true up to a specified DateTime, and false
+        /// Returns a Tvar that's true up to a specified DateTime, and false
         /// at and after it.
         /// </summary>
-        public static Tbool IsBefore(Tdate dt)
+        public static Tvar IsBefore(Tvar dt)
         {
             // Handle unknowns
             if (!dt.FirstValue.IsKnown)
             {
-                return new Tbool(dt.FirstValue);
+                return new Tvar(dt.FirstValue);
             }
 
             // Create boolean
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
 
             if (dt == DawnOf)
             {
@@ -238,21 +238,21 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tbool that's true during a specified time interval (including
+        /// Returns a Tvar that's true during a specified time interval (including
         /// at the "start"), and otherwise false (including at the moment represented 
         /// by the "end").
         /// </summary>
-        public static Tbool IsBetween(Tdate start, Tdate end)
+        public static Tvar IsBetween(Tvar start, Tvar end)
         {
              return IsAtOrAfter(start) && IsBefore(end);
         }
          
         /// <summary>
-        /// Returns a Tnum representing the calendar year (with some
+        /// Returns a Tvar representing the calendar year (with some
         /// span centered on the current year)
         /// </summary>
         //  TODO: Delete?
-        public static Tnum Year(int halfSpanInYears)
+        public static Tvar Year(int halfSpanInYears)
         {
             int currentYear = DateTime.Now.Year;
             DateTime firstOfCurrentYear = new DateTime(currentYear,1,1);
@@ -264,15 +264,15 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the fiscal quarter (by default, a 20-year
+        /// Returns a Tvar representing the fiscal quarter (by default, a 20-year
         /// span centered on day 1 of the fiscal year that begins in current year)
         /// </summary>
-        public static Tnum Quarter(int Q1StartMonth, int Q1StartDay)
+        public static Tvar Quarter(int Q1StartMonth, int Q1StartDay)
         {
             return Quarter(Q1StartMonth, Q1StartDay, 20);
         }
         
-        public static Tnum Quarter(int Q1StartMonth, int Q1StartDay, int halfSpanInYears)
+        public static Tvar Quarter(int Q1StartMonth, int Q1StartDay, int halfSpanInYears)
         {
             DateTime Q1Start = new DateTime(DateTime.Now.Year, Q1StartMonth, Q1StartDay);
             
@@ -282,10 +282,10 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the calendar month (by default, a
+        /// Returns a Tvar representing the calendar month (by default, a
         /// 10-year span centered on Jan. 1st of the current year)
         /// </summary>
-        public static Tnum Month(int halfSpanInYears)
+        public static Tvar Month(int halfSpanInYears)
         {
             int currentYear = DateTime.Now.Year;
             DateTime firstOfCurrentYear = new DateTime(currentYear,1,1);
@@ -296,15 +296,15 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns a Tnum representing the calendar week (by default, a
+        /// Returns a Tvar representing the calendar week (by default, a
         /// 10-year span centered on the start of the current year).
         /// </summary>
         /// <remarks>
         /// See remarks in the CalendarWeek method in the H class.
         /// </remarks>
-        public static Tnum CalendarWeek(int halfSpanInYears)
+        public static Tvar CalendarWeek(int halfSpanInYears)
         {
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             result.AddState(Time.DawnOf, 0);
             
             // Get the start date for week 1, n years in the past

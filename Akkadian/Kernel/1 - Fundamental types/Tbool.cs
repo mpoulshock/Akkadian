@@ -28,80 +28,29 @@ namespace Akkadian
     /// <summary>
     /// An temporal object that represents boolean values along a timeline.
     /// </summary>
-    public partial class Tbool : Tvar
+    public partial class Tvar
     {
         
         /// <summary>
-        /// Constructs an "unknown" Tbool - that is, one with no states 
+        /// Constructs a Tbool 
         /// </summary>
-        public Tbool()
-        {
-        }
-
-        public Tbool(Hstate state)
-        {
-            this.SetEternally(state);
-        }
-
-        public Tbool(Hval v)
-        {
-            this.SetEternally(v);
-        }
-
-        public Tbool(bool b)
+        public Tvar(bool b)
         {
             this.SetEternally(b);
         }
 
         /// <summary>
-        /// Implicitly converts bools to Tbools.
+        /// Implicitly converts bools to Tvars.
         /// </summary>
-        public static implicit operator Tbool(bool b) 
+        public static implicit operator Tvar(bool b) 
         {
-            return new Tbool(b);
+            return new Tvar(b);
         }
 
         /// <summary>
-        /// Removes redundant intervals from the Tbool. 
+        /// Indicates whether the Tvar is always true.
         /// </summary>
-        public Tbool Lean
-        {
-            get
-            {
-                return this.LeanTvar<Tbool>();
-            }
-        }
-
-        /// <summary>
-        /// Returns the value of a Tbool at a specified point in time. 
-        /// </summary>
-        public Tbool AsOf(Tdate dt)
-        {
-            return this.AsOf<Tbool>(dt);
-        }
-
-        /// <summary>
-        /// Returns a Tbool in which the values are shifted in time relative to
-        /// the dates.
-        /// </summary>
-        public Tbool Shift(int offset, Tnum temporalPeriod)
-        {
-            return this.Shift<Tbool>(offset, temporalPeriod);
-        }
-
-        /// <summary>
-        /// Returns a Tbool in which the last value in a time period is the
-        /// final value.
-        /// </summary>
-        public Tbool PeriodEndVal(Tnum temporalPeriod)
-        {
-            return this.PeriodEndVal<Tbool>(temporalPeriod).Lean;
-        }
-
-        /// <summary>
-        /// Indicates whether the Tbool is always true.
-        /// </summary>
-        public Tbool IsAlwaysTrue()
+        public Tvar IsAlwaysTrue()
         {
             // If timeline varies, it cannot always be the given value
             if (this.TimeLine.Count > 1) return false;
@@ -110,7 +59,7 @@ namespace Akkadian
             // return the typical precedence state
             if (!this.FirstValue.IsKnown)
             {
-                return new Tbool(this.FirstValue);
+                return new Tvar(this.FirstValue);
             }
 
             // Else, test for equality
@@ -122,15 +71,15 @@ namespace Akkadian
         /// <summary>
         /// Determines whether this instance is always true during a specified interval.
         /// </summary>
-        public Tbool IsAlwaysTrue(Tdate start, Tdate end)
+        public Tvar IsAlwaysTrue(Tvar start, Tvar end)
         {
-            Tbool equalsVal = this == true; 
+            Tvar equalsVal = this == true; 
 
-            Tbool isDuringInterval = Time.IsBetween(start, end);
+            Tvar isDuringInterval = Time.IsBetween(start, end);
             
-            Tbool isOverlap = equalsVal & isDuringInterval;
+            Tvar isOverlap = equalsVal & isDuringInterval;
 
-            Tbool overlapAndIntervalAreCoterminous = isOverlap == isDuringInterval;
+            Tvar overlapAndIntervalAreCoterminous = isOverlap == isDuringInterval;
 
             return !overlapAndIntervalAreCoterminous.IsEver(false);
         }
@@ -138,21 +87,21 @@ namespace Akkadian
         /// <summary>
         /// Determines whether this instance is ever true during a specified time period.
         /// </summary>
-        public Tbool IsEverTrue(Tdate start, Tdate end)
+        public Tvar IsEverTrue(Tvar start, Tvar end)
         {
-            Tbool equalsVal = this == true; 
+            Tvar equalsVal = this == true; 
             
-            Tbool isDuringInterval = Time.IsBetween(start, end);
+            Tvar isDuringInterval = Time.IsBetween(start, end);
             
-            Tbool isOverlap = equalsVal & isDuringInterval;
+            Tvar isOverlap = equalsVal & isDuringInterval;
             
             return isOverlap.IsEverTrue();
         }
         
         /// <summary>
-        /// Returns true if the Tbool ever has a specified boolean value. 
+        /// Returns true if the Tvar ever has a specified boolean value. 
         /// </summary>
-        public Tbool IsEverTrue()
+        public Tvar IsEverTrue()
         {
             return this.IsEver(true);
         }
@@ -160,7 +109,7 @@ namespace Akkadian
         /// <summary>
         /// Determines whether the Tvar is ever the specified boolean val.
         /// </summary>
-        private Tbool IsEver(Hval val)
+        private Tvar IsEver(Hval val)
         {
             // If val is unknown and base Tvar is eternally unknown,
             // return the typical precedence state
@@ -169,12 +118,12 @@ namespace Akkadian
                 if (!this.FirstValue.IsKnown)
                 {
                     Hstate s = PrecedingState(this.FirstValue, val);
-                    return new Tbool(s);
+                    return new Tvar(s);
                 }
             }
 
             // If val is unknown, return its state
-            if (!val.IsKnown) return new Tbool(val);
+            if (!val.IsKnown) return new Tvar(val);
            
             // If the base Tvar is ever val, return true
             foreach (Hval h in this.TimeLine.Values)
@@ -185,15 +134,15 @@ namespace Akkadian
             // If base Tvar has a time period of unknownness, return 
             // the state with the proper precedence
             Hstate returnState = PrecedenceForMissingTimePeriods(this);
-            if (returnState != Hstate.Known) return new Tbool(returnState);
+            if (returnState != Hstate.Known) return new Tvar(returnState);
 
             return false;
         }
 
         /// <summary>
-        /// Returns the DateTime when the Tbool is first true.
+        /// Returns the DateTime when the Tvar is first true.
         /// </summary>
-        public Tdate DateFirstTrue
+        public Tvar DateFirstTrue
         {
             get
             {
@@ -220,7 +169,7 @@ namespace Akkadian
                         else if (Convert.ToBoolean(line.Values[i].Val))
                         {
                             result = line.Keys[i];
-                            return new Tdate(result);
+                            return new Tvar(result);
                         }
                         else
                         {
@@ -229,14 +178,14 @@ namespace Akkadian
                     }
                 }
     
-                return new Tdate(result);
+                return new Tvar(result);
             }
         }
 
         /// <summary>
-        /// Returns the DateTime when the Tbool is true for the last time
+        /// Returns the DateTime when the Tvar is true for the last time
         /// </summary>
-        public Tdate DateLastTrue
+        public Tvar DateLastTrue
         {
             get
             {
@@ -278,20 +227,20 @@ namespace Akkadian
                     }
                 }
     
-                return new Tdate(result);
+                return new Tvar(result);
             }
         }
 
         /// <summary>
         /// Overloaded boolean operator: True.
         /// </summary>
-        public static bool operator true (Tbool tb)
+        public static bool operator true (Tvar tb)
         {
             return tb.IsTrue;
         }
         
         /// <summary>
-        /// Returns true only if the Tbool is true during the window of concern;
+        /// Returns true only if the Tvar is true during the window of concern;
         /// otherwise false. 
         /// Used in symmetrical facts and short-circuit evaluation.
         /// </summary>
@@ -321,13 +270,13 @@ namespace Akkadian
         /// <summary>
         /// Overloaded boolean operator: False.
         /// </summary>
-        public static bool operator false (Tbool tb)
+        public static bool operator false (Tvar tb)
         {
             return tb.IsFalse;
         }
         
         /// <summary>
-        /// Returns true only if the Tbool is false during the window of concern;
+        /// Returns true only if the Tvar is false during the window of concern;
         /// otherwise true. 
         /// </summary>
         public bool IsFalse
@@ -353,8 +302,8 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Converts a Tbool to a nullable boolean.
-        /// Returns null if the Tbool is unknown, if it's value changes over
+        /// Converts a Tvar to a nullable boolean.
+        /// Returns null if the Tvar is unknown, if it's value changes over
         /// time (that is, if it's not eternal), and when it's null.
         /// </summary>
         public bool? ToBool
@@ -370,23 +319,15 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Overloaded boolean operator: Equal.
+        /// Equality when the Tvars are known to be Tbools.
         /// </summary>
-        public static Tbool operator == (Tbool tb1, Tbool tb2)
+        public static Tvar TboolEquality(Tvar tb1, Tvar tb2)
         {
             return EqualTo(tb1,tb2);
         }
-        
-        /// <summary>
-        /// Overloaded boolean operator: Not equal.
-        /// </summary>
-        public static Tbool operator != (Tbool tb1, Tbool tb2)
-        {
-            return NotEqualTo(tb1,tb2);
-        }
 
         /// <summary>
-        /// Given a Tbool and an index date, returns the date of the next change date of the Tbool.
+        /// Given a Tvar and an index date, returns the date of the next change date of the Tvar.
         /// </summary>
         public DateTime NextChangeDate(DateTime indexDate)
         {
@@ -402,7 +343,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Given a Tbool and an index date, returns the date the Tbool is next true.
+        /// Given a Tvar and an index date, returns the date the Tvar is next true.
         /// </summary>
         public DateTime DateNextTrue(DateTime indexDate)
         {

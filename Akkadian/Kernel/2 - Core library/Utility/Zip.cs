@@ -150,25 +150,25 @@ namespace Akkadian
         /// <summary>
         /// Apply a function to all values in a list of zipped Tvar values.
         /// </summary>
-        public static T ApplyFcnToTimeline<T>(Func<List<Hval>,Hval> fcn, params Tvar[] list) where T : Tvar
-        {
-            T result = (T)Util.ReturnProperTvar<T>();
+		public static Tvar ApplyFcnToTimeline(Func<List<Hval>,Hval> fcn, params Tvar[] list)
+		{
+			Tvar result = new Tvar();
 
-            foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(list))
-            {  
-                Hstate top = PrecedingState(slice.Value);
-                if (top != Hstate.Known)
-                {
-                    result.AddState(slice.Key, new Hval(null, top));
-                }
-                else
-                {
-                    result.AddState(slice.Key, fcn(slice.Value));
-                }
-            }
+			foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(list))
+			{  
+				Hstate top = PrecedingState(slice.Value);
+				if (top != Hstate.Known)
+				{
+					result.AddState(slice.Key, new Hval(null, top));
+				}
+				else
+				{
+					result.AddState(slice.Key, fcn(slice.Value));
+				}
+			}
 
-            return result.LeanTvar<T>();
-        }
+			return result.Lean;
+		}
 
         /// <summary>
         /// Apply a function to the values in a single Tvar.
@@ -176,24 +176,24 @@ namespace Akkadian
         /// <remarks>
         /// This is used for unary functions (those that only operate on a single Tvar).
         /// </remarks>
-        public static T ApplyFcnToTimeline<T>(Func<Hval,Hval> fcn, Tvar tv) where T : Tvar
-        {
-            T result = (T)Util.ReturnProperTvar<T>();
+		public static Tvar ApplyFcnToTimeline(Func<Hval,Hval> fcn, Tvar tv)
+		{
+			Tvar result = new Tvar();
 
-            foreach(KeyValuePair<DateTime,Hval> slice in tv.IntervalValues)
-            {  
-                Hstate top = PrecedingState(slice.Value);
-                if (top != Hstate.Known)
-                {
-                    result.AddState(slice.Key, new Hval(null, top));
-                }
-                else
-                {
-                    result.AddState(slice.Key, fcn(slice.Value));
-                }
-            }
+			foreach(KeyValuePair<DateTime,Hval> slice in tv.IntervalValues)
+			{  
+				Hstate top = PrecedingState(slice.Value);
+				if (top != Hstate.Known)
+				{
+					result.AddState(slice.Key, new Hval(null, top));
+				}
+				else
+				{
+					result.AddState(slice.Key, fcn(slice.Value));
+				}
+			}
 
-            return result.LeanTvar<T>();
-        }
+			return result.Lean;
+		}
     }    
 }

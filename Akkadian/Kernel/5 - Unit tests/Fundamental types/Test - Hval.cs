@@ -127,13 +127,13 @@ namespace Akkadian.UnitTests
 
         // Using Hvals in Tvars
 //
-//        private static Tbool tb1 = new Tbool(true);
-//        private static Tbool tb2 = new Tbool(true);  
-//        private static Tnum tn0 = new Tnum(42); 
-//        private static Tnum tn1 = new Tnum(42);
-//        private static Tnum tn2 = new Tnum(43); 
-//        private static Tbool tbu = new Tbool(Hstate.Unstated);
-//        private static Tbool tbn = new Tbool(Hstate.Uncertain);
+//        private static Tvar tb1 = new Tvar(true);
+//        private static Tvar tb2 = new Tvar(true);  
+//        private static Tvar tn0 = new Tvar(42); 
+//        private static Tvar tn1 = new Tvar(42);
+//        private static Tvar tn2 = new Tvar(43); 
+//        private static Tvar tbu = new Tvar(Hstate.Unstated);
+//        private static Tvar tbn = new Tvar(Hstate.Uncertain);
 //
 //        [Test]
 //        public void TestTvar1 () //
@@ -156,49 +156,49 @@ namespace Akkadian.UnitTests
 //        [Test]
 //        public void TestTvar5 ()
 //        {
-//            Tbool eq = tb1 == tb2;
+//            Tvar eq = tb1 == tb2;
 //            Assert.AreEqual(true, eq.Out);        
 //        }
 //        
 //        [Test]
 //        public void TestTvar6 () 
 //        {
-//            Tbool eq = tn1 == tn2;
+//            Tvar eq = tn1 == tn2;
 //            Assert.AreEqual(false, eq.Out);        
 //        }
 //
 //        [Test]
 //        public void TestTvar6a() 
 //        {
-//            Tbool eq = tn0 == tn1;
+//            Tvar eq = tn0 == tn1;
 //            Assert.AreEqual(true, eq.Out);        
 //        }
 //
 //        [Test]
 //        public void TestTvar6b() 
 //        {
-//            Tbool eq = tn1 != tn2;
+//            Tvar eq = tn1 != tn2;
 //            Assert.AreEqual(true, eq.Out);        
 //        }
 //
 //        [Test]
 //        public void TestTvar8 ()
 //        {
-//            Tbool t2 = tbu;
+//            Tvar t2 = tbu;
 //            Assert.AreEqual("Unstated", t2.Out);        
 //        }
 //
 //        [Test]
 //        public void TestTvar9 ()
 //        {
-//            Tbool t2 = tbn;
+//            Tvar t2 = tbn;
 //            Assert.AreEqual("Uncertain", t2.Out);        
 //        }
 //
 //        [Test]
 //        public void TestTvar10 ()
 //        {
-//            Tbool t2 = new Tbool(true);
+//            Tvar t2 = new Tvar(true);
 //            Assert.AreEqual(true, t2.Out);        
 //        }
 

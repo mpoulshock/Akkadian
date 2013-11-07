@@ -25,14 +25,14 @@ namespace Akkadian
 {
     #pragma warning disable 660, 661
     
-    public partial class Tnum
+    public partial class Tvar
     {        
         /// <summary>
-        /// Adds two Tnums together.
+        /// Adds two Tvars together.
         /// </summary>
-        public static Tnum operator + (Tnum tn1, Tnum tn2)    
+        public static Tvar operator + (Tvar tn1, Tvar tn2)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreSum(x), tn1, tn2);
+            return ApplyFcnToTimeline(x => CoreSum(x), tn1, tn2);
         }
         private static Hval CoreSum(List<Hval> list)
         {
@@ -40,11 +40,11 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Subtracts one Tnum from another.
+        /// Subtracts one Tvar from another.
         /// </summary>
-        public static Tnum operator - (Tnum tn1, Tnum tn2)    
+        public static Tvar operator - (Tvar tn1, Tvar tn2)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => Minus(x), tn1, tn2);
+            return ApplyFcnToTimeline(x => Minus(x), tn1, tn2);
         }
         private static Hval Minus(List<Hval> list)
         {
@@ -52,11 +52,11 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Multiplies two Tnums together.
+        /// Multiplies two Tvars together.
         /// </summary>
-        public static Tnum operator * (Tnum tn1, Tnum tn2)    
+        public static Tvar operator * (Tvar tn1, Tvar tn2)    
         {
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(tn1,tn2))
             {    
@@ -84,11 +84,11 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Divides one Tnum by another. 
+        /// Divides one Tvar by another. 
         /// </summary>
-        public static Tnum operator / (Tnum tn1, Tnum tn2)    
+        public static Tvar operator / (Tvar tn1, Tvar tn2)    
         {
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             foreach(KeyValuePair<DateTime,List<Hval>> slice in TimePointValues(tn1,tn2))
             {    
@@ -116,33 +116,28 @@ namespace Akkadian
         /// <summary>
         /// Temporal modulo function. 
         /// </summary>
-        public static Tnum operator % (Tnum tn1, Tnum tn2)    
+        public static Tvar operator % (Tvar tn1, Tvar tn2)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => Mod(x), tn1, tn2);
+            return ApplyFcnToTimeline(x => Mod(x), tn1, tn2);
         }
         private static Hval Mod(List<Hval> list)
         {
             return Convert.ToDecimal(list[0].Val) % Convert.ToDecimal(list[1].Val);
         }
 
-        
-        // ********************************************************************
-        // ROUNDING FUNCTIONS
-        // ********************************************************************
-        
         /// <summary>
         /// Rounds a value to the nearest multiple of a given number.  By default, 
         /// it rounds up in case of a tie.
         /// </summary>
-        public Tnum RoundToNearest(Tnum multiple)
+        public Tvar RoundToNearest(Tvar multiple)
         {
             return RoundToNearest(multiple,false);
         }
 
-        public Tnum RoundToNearest(Tnum multiple, Tbool breakTieByRoundingDown)
+        public Tvar RoundToNearest(Tvar multiple, Tvar breakTieByRoundingDown)
         {
-            Tnum diff = this % multiple;
-            return Switch<Tnum>(() => diff > multiple / 2, () => this - diff + multiple,
+            Tvar diff = this % multiple;
+            return Switch(() => diff > multiple / 2, () => this - diff + multiple,
                                 ()=> diff < multiple / 2 || breakTieByRoundingDown, ()=> this - diff,
                                 () => true, () => this - diff + multiple);
         }
@@ -150,18 +145,18 @@ namespace Akkadian
         /// <summary>
         /// Rounds a value up to the next multiple of a given number.
         /// </summary>
-        public Tnum RoundUp(Tnum multiple)
+        public Tvar RoundUp(Tvar multiple)
         {
-            return Switch<Tnum>(() => this % multiple != 0, () => this - (this % multiple) + multiple,
+            return Switch(() => this % multiple != 0, () => this - (this % multiple) + multiple,
                                 () => true, () => this);
         }        
         
         /// <summary>
         /// Rounds a value down to the next multiple of a given number.
         /// </summary>
-        public Tnum RoundDown(Tnum multiple)
+        public Tvar RoundDown(Tvar multiple)
         {
-            return Switch<Tnum>(() => this % multiple != 0, () => this - (this % multiple),
+            return Switch(() => this % multiple != 0, () => this - (this % multiple),
                                 () => true, () => this);
         }
     }
@@ -171,9 +166,9 @@ namespace Akkadian
         /// <summary>
         /// Temporal absolute value function
         /// </summary>
-        public static Tnum Abs(Tnum tn)
+        public static Tvar Abs(Tvar tn)
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreAbs(x), tn);
+            return ApplyFcnToTimeline(x => CoreAbs(x), tn);
         }
         private static Hval CoreAbs(Hval h)
         {
@@ -183,9 +178,9 @@ namespace Akkadian
         /// <summary>
         /// A raised to the B power
         /// </summary>
-        public static Tnum Pow(Tnum tnA, Tnum tnB)    
+        public static Tvar Pow(Tvar tnA, Tvar tnB)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CorePow(x), tnA, tnB);
+            return ApplyFcnToTimeline(x => CorePow(x), tnA, tnB);
         }
         private static Hval CorePow(List<Hval> list)
         {
@@ -195,9 +190,9 @@ namespace Akkadian
         /// <summary>
         /// Square root
         /// </summary>
-        public static Tnum Sqrt(Tnum tn)    
+        public static Tvar Sqrt(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreSqrt(x), tn);
+            return ApplyFcnToTimeline(x => CoreSqrt(x), tn);
         }
         private static Hval CoreSqrt(Hval h)
         {
@@ -207,9 +202,9 @@ namespace Akkadian
         /// <summary>
         /// Natural logarithm
         /// </summary>
-        public static Tnum Log(Tnum tn)    
+        public static Tvar Log(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreNatLog(x), tn);
+            return ApplyFcnToTimeline(x => CoreNatLog(x), tn);
         }
         private static Hval CoreNatLog(Hval h)
         {
@@ -219,9 +214,9 @@ namespace Akkadian
         /// <summary>
         /// Logarithm of n to base b
         /// </summary>
-        public static Tnum Log(Tnum b, Tnum n)    
+        public static Tvar Log(Tvar b, Tvar n)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreLog(x), b, n);
+            return ApplyFcnToTimeline(x => CoreLog(x), b, n);
         }
         private static Hval CoreLog(List<Hval> list)
         {
@@ -231,9 +226,9 @@ namespace Akkadian
         /// <summary>
         /// Sine
         /// </summary>
-        public static Tnum Sin(Tnum tn)    
+        public static Tvar Sin(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreSin(x), tn);
+            return ApplyFcnToTimeline(x => CoreSin(x), tn);
         }
         private static Hval CoreSin(Hval h)
         {
@@ -243,9 +238,9 @@ namespace Akkadian
         /// <summary>
         /// Cosine
         /// </summary>
-        public static Tnum Cos(Tnum tn)    
+        public static Tvar Cos(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreCos(x), tn);
+            return ApplyFcnToTimeline(x => CoreCos(x), tn);
         }
         private static Hval CoreCos(Hval h)
         {
@@ -255,9 +250,9 @@ namespace Akkadian
         /// <summary>
         /// Tangent
         /// </summary>
-        public static Tnum Tan(Tnum tn)    
+        public static Tvar Tan(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreTan(x), tn);
+            return ApplyFcnToTimeline(x => CoreTan(x), tn);
         }
         private static Hval CoreTan(Hval h)
         {
@@ -267,9 +262,9 @@ namespace Akkadian
         /// <summary>
         /// ArcSin
         /// </summary>
-        public static Tnum ArcSin(Tnum tn)    
+        public static Tvar ArcSin(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreArcSin(x), tn);
+            return ApplyFcnToTimeline(x => CoreArcSin(x), tn);
         }
         private static Hval CoreArcSin(Hval h)
         {
@@ -279,9 +274,9 @@ namespace Akkadian
         /// <summary>
         /// ArcCos
         /// </summary>
-        public static Tnum ArcCos(Tnum tn)    
+        public static Tvar ArcCos(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreArcCos(x), tn);
+            return ApplyFcnToTimeline(x => CoreArcCos(x), tn);
         }
         private static Hval CoreArcCos(Hval h)
         {
@@ -291,9 +286,9 @@ namespace Akkadian
         /// <summary>
         /// ArcTan
         /// </summary>
-        public static Tnum ArcTan(Tnum tn)    
+        public static Tvar ArcTan(Tvar tn)    
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreArcTan(x), tn);
+            return ApplyFcnToTimeline(x => CoreArcTan(x), tn);
         }
         private static Hval CoreArcTan(Hval h)
         {
@@ -303,12 +298,12 @@ namespace Akkadian
         /// <summary>
         /// Constant Pi
         /// </summary>
-        public static Tnum ConstPi = new Tnum(Math.PI);
+        public static Tvar ConstPi = new Tvar(Math.PI);
 
         /// <summary>
         /// Constant e
         /// </summary>
-        public static Tnum ConstE = new Tnum(Math.E);
+        public static Tvar ConstE = new Tvar(Math.E);
     }
     
     #pragma warning restore 660, 661

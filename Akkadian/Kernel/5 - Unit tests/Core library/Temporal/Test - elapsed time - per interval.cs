@@ -31,47 +31,47 @@ namespace Akkadian.UnitTests
         [Test]
         public void ElapsedDaysPerInterval_1 ()
         {
-            Tbool t = new Tbool(false);
+            Tvar t = new Tvar(false);
             t.AddState(Date(2000,1,1), true);
             t.AddState(Date(2001,1,1), false);
             t.AddState(Date(2002,1,1), true);
             t.AddState(Date(2003,1,1), false);
-            Tnum result = t.TotalElapsedDaysPer(TheYear);
+            Tvar result = t.TotalElapsedDaysPer(TheYear);
             Assert.AreEqual("{Dawn: 0; 1/1/2000: 366; 1/1/2001: 0; 1/1/2002: 365; 1/1/2003: 0}", result.Out);      
         }
 
         [Test]
         public void ElapsedDaysPerInterval_2 ()
         {
-            Tbool t = new Tbool(false);
+            Tvar t = new Tvar(false);
             t.AddState(Date(2000,6,1), true);
             t.AddState(Date(2001,1,1), false);
-            Tnum result = t.TotalElapsedDaysPer(TheYear);
+            Tvar result = t.TotalElapsedDaysPer(TheYear);
             Assert.AreEqual("{Dawn: 0; 1/1/2000: 214; 1/1/2001: 0}", result.Out);      
         }
 
         [Test]
         public void ElapsedDaysPerInterval_3 ()
         {
-            Tbool t = new Tbool(false);
-            Tnum result = t.TotalElapsedDaysPer(TheYear);
+            Tvar t = new Tvar(false);
+            Tvar result = t.TotalElapsedDaysPer(TheYear);
             Assert.AreEqual(0, result.Out);      
         }
 
         [Test]
         public void ElapsedDaysPerInterval_4 ()
         {
-            Tbool t = new Tbool(Hstate.Unstated);
-            Tnum result = t.TotalElapsedDaysPer(TheYear);
+            Tvar t = new Tvar(Hstate.Unstated);
+            Tvar result = t.TotalElapsedDaysPer(TheYear);
             Assert.AreEqual("Unstated", result.Out);      
         }
 
         [Test]
         public void ElapsedDaysPerInterval_5 ()
         {
-            Tbool t = new Tbool(false);
-            Tnum n = new Tnum(Hstate.Unstated);
-            Tnum result = t.TotalElapsedDaysPer(n);
+            Tvar t = new Tvar(false);
+            Tvar n = new Tvar(Hstate.Unstated);
+            Tvar result = t.TotalElapsedDaysPer(n);
             Assert.AreEqual("Unstated", result.Out);      
         }
     }

@@ -28,9 +28,9 @@ namespace Akkadian.UnitTests
         // .Lean
         
         [Test]
-        public void Tdate_Lean_1 ()
+        public void Tvar_Lean_1 ()
         {
-            Tdate td = new Tdate();
+            Tvar td = new Tvar();
             td.AddState(Time.DawnOf, Date(2011,01,01));
             td.AddState(Time.DawnOf.AddYears(2), Date(2011,01,01));
             Assert.AreEqual(Date(2011,1,1), td.Lean.Out);        
@@ -39,18 +39,18 @@ namespace Akkadian.UnitTests
         // .AsOf
         
         [Test]
-        public void Tdate_AsOf_1 ()
+        public void Tvar_AsOf_1 ()
         {
-            Tdate td = new Tdate();
+            Tvar td = new Tvar();
             td.AddState(Time.DawnOf, Date(2011,01,01));
             td.AddState(Time.DawnOf.AddYears(2), Date(2012,01,01));
             Assert.AreEqual(Date(2012,1,1), td.AsOf(Time.DawnOf.AddYears(3)).Out);        
         }
         
         [Test]
-        public void Tdate_AsOf_2 ()
+        public void Tvar_AsOf_2 ()
         {
-            Tdate td = new Tdate();
+            Tvar td = new Tvar();
             td.AddState(Time.DawnOf, Date(2011,01,01));
             td.AddState(Time.DawnOf.AddYears(2), Date(2012,01,01));
             Assert.AreEqual(Date(2011,1,1), td.AsOf(Time.DawnOf.AddYears(1)).Out);        
@@ -59,127 +59,127 @@ namespace Akkadian.UnitTests
         // Equals
         
         [Test]
-        public void Tdate_Equals_1 ()
+        public void Tvar_Equals_1 ()
         {
-            Tdate td1 = new Tdate(2010,5,13);
+            Tvar td1 = new Tvar(2010,5,13);
 
-            Tdate td2 = new Tdate();
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(2011,01,01));
             td2.AddState(Date(2000,1,1), Date(2010,5,13));
 
-            Tbool result = td1 == td2;
+            Tvar result = td1 == td2;
             Assert.AreEqual("{Dawn: false; 1/1/2000: true}", result.Out);        
         }
         
         [Test]
-        public void Tdate_Equals_2 ()
+        public void Tvar_Equals_2 ()
         {
-            Tdate td1 = new Tdate(2010,5,13);
-            Tdate td2 = new Tdate();
+            Tvar td1 = new Tvar(2010,5,13);
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(2011,01,01));
             td2.AddState(Date(2000,1,1), Date(2010,5,13));
-            Tbool result = td1 != td2;
+            Tvar result = td1 != td2;
             Assert.AreEqual("{Dawn: true; 1/1/2000: false}", result.Out);        
         }
         
         // IsBefore / IsAfter
         
         [Test]
-        public void Tdate_IsAfter_1 ()
+        public void Tvar_IsAfter_1 ()
         {
-            Tdate td1 = new Tdate(2010,1,1);
-            Tdate td2 = new Tdate();
+            Tvar td1 = new Tvar(2010,1,1);
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2011,1,1));
-            Tbool result = td1 > td2;
+            Tvar result = td1 > td2;
             Assert.AreEqual("{Dawn: true; 1/1/2000: false}", result.Out);        
         }
         
         [Test]
-        public void Tdate_IsBefore_1 ()
+        public void Tvar_IsBefore_1 ()
         {
-            Tdate td1 = new Tdate(2010,1,1);
-            Tdate td2 = new Tdate();
+            Tvar td1 = new Tvar(2010,1,1);
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2011,1,1));
-            Tbool result = td1 < td2;
+            Tvar result = td1 < td2;
             Assert.AreEqual("{Dawn: false; 1/1/2000: true}", result.Out);        
         }
         
         [Test]
-        public void Tdate_IsAtOrAfter_1 ()
+        public void Tvar_IsAtOrAfter_1 ()
         {
-            Tdate td1 = new Tdate(2008,1,1);
-            Tdate td2 = new Tdate();
+            Tvar td1 = new Tvar(2008,1,1);
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2008,1,1));
-            Tbool result = td1 >= td2;
+            Tvar result = td1 >= td2;
             Assert.AreEqual("{Dawn: false; 1/1/2000: true}", result.Out);        
         }
         
         [Test]
-        public void Tdate_IsAtOrBefore_1 ()
+        public void Tvar_IsAtOrBefore_1 ()
         {
-            Tdate td1 = new Tdate(2000,1,1);
-            Tdate td2 = new Tdate();
+            Tvar td1 = new Tvar(2000,1,1);
+            Tvar td2 = new Tvar();
             td2.AddState(Time.DawnOf, Date(1999,1,1));
             td2.AddState(Date(2000,1,1), Date(2000,1,1));
             td2.AddState(Date(2001,1,1), Date(2008,1,1));
-            Tbool result = td2 <= td1;
+            Tvar result = td2 <= td1;
             Assert.AreEqual("{Dawn: true; 1/1/2001: false}", result.Out);        
         }
         
         // .AddDays
         
         [Test]
-        public void Tdate_AddDays_1 ()
+        public void Tvar_AddDays_1 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddDays(3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddDays(3);
             Assert.AreEqual(Date(2000,1,4), result.Out);        
         }
         
         [Test]
-        public void Tdate_AddDays_2 ()
+        public void Tvar_AddDays_2 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddDays(-3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddDays(-3);
             Assert.AreEqual(Date(1999,12,29), result.Out);        
         }
         
         // .AddMonths
         
         [Test]
-        public void Tdate_AddMonths_1 ()
+        public void Tvar_AddMonths_1 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddMonths(3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddMonths(3);
             Assert.AreEqual(Date(2000,4,1), result.Out);        
         }
         
         [Test]
-        public void Tdate_AddMonths_2 ()
+        public void Tvar_AddMonths_2 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddMonths(-3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddMonths(-3);
             Assert.AreEqual(Date(1999,10,1), result.Out);        
         }
         
         // .AddYears
         
         [Test]
-        public void Tdate_AddYears_1 ()
+        public void Tvar_AddYears_1 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddYears(3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddYears(3);
             Assert.AreEqual(Date(2003,1,1), result.Out);        
         }
         
         [Test]
-        public void Tdate_AddYears_2 ()
+        public void Tvar_AddYears_2 ()
         {
-            Tdate td = new Tdate(2000,1,1);
-            Tdate result = td.AddYears(-3);
+            Tvar td = new Tvar(2000,1,1);
+            Tvar result = td.AddYears(-3);
             Assert.AreEqual(Date(1997,1,1), result.Out);        
         }
 
@@ -187,11 +187,11 @@ namespace Akkadian.UnitTests
         // When the earlier date is put after the prior date, DayDiff returns a negative number.
         
         [Test]
-        public void Tdate_DayDiff_2 ()
+        public void Tvar_DayDiff_2 ()
         {
-            Tdate td1 = new Tdate(2010,1,1);
-            Tdate td2 = new Tdate(2000,1,1);
-            Tnum result = Tdate.DayDiff(td1,td2);
+            Tvar td1 = new Tvar(2010,1,1);
+            Tvar td2 = new Tvar(2000,1,1);
+            Tvar result = Tvar.DayDiff(td1,td2);
             Assert.AreEqual(-3653, result.Out);        
         }
     }

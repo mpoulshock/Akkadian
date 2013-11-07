@@ -26,78 +26,56 @@ namespace Akkadian
     /// <summary>
     /// An object that represents DateTime values along a timeline.
     /// </summary>
-    public partial class Tnum : Tvar
+    public partial class Tvar
     {
         /// <summary>
-        /// Constructs an unknown Tnum. 
+        /// Constructs an unknown Tvar. 
         /// </summary>
-        public Tnum()
-        {
-        }
 
-        public Tnum(int n)
+        public Tvar(int n)
         {
             this.SetEternally(n);
         }
 
-        public Tnum(decimal n)
+        public Tvar(decimal n)
         {
             this.SetEternally(n);
         }
 
-        public Tnum(double n)
+        public Tvar(double n)
         {
             this.SetEternally(n);
         }
 
-        public Tnum(Hstate state)
-        {
-            this.SetEternally(state);
-        }
-
-        public Tnum(Hval val)
-        {
-            this.SetEternally(val);
-        }
 
         /// <summary>
-        /// Implicitly converts ints to Tnums.
+        /// Implicitly converts ints to Tvars.
         /// </summary>
-        public static implicit operator Tnum(int i) 
+        public static implicit operator Tvar(int i) 
         {
-            return new Tnum(i);
+            return new Tvar(i);
         }
         
         /// <summary>
-        /// Implicitly converts decimals to Tnums.
+        /// Implicitly converts decimals to Tvars.
         /// </summary>
-        public static implicit operator Tnum(decimal d) 
+        public static implicit operator Tvar(decimal d) 
         {
-            return new Tnum(d);
+            return new Tvar(d);
         }
         
         /// <summary>
-        /// Implicitly converts doubles to Tnums.
+        /// Implicitly converts doubles to Tvars.
         /// </summary>
-        public static implicit operator Tnum(double d) 
+        public static implicit operator Tvar(double d) 
         {
-            return new Tnum(d);
+            return new Tvar(d);
         }
         
-        /// <summary>
-        /// Removes redundant intervals from the Tnum timeline. 
-        /// </summary>
-        public Tnum Lean
-        {
-            get
-            {
-                return this.LeanTvar<Tnum>();
-            }
-        }
         
         /// <summary>
-        /// Converts a Tnum to a nullable integer.
-        /// Returns null if the Tnum is unknown or if it's value changes over
+        /// Converts a Tvar to a nullable integer.
+        /// Returns null if the Tvar is unknown or if it's value changes over
         /// time (that is, if it's not eternal).
         /// </summary>
         public int? ToInt
@@ -113,7 +91,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Converts a Tnum to an integer.  Should only be used when it is
+        /// Converts a Tvar to an integer.  Should only be used when it is
         /// not possible for the value to be unknown.
         /// </summary>
         public int ToHardInt
@@ -125,8 +103,8 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Converts a Tnum to a nullable decimal.
-        /// Returns null if the Tnum is unknown or if it's value changes over
+        /// Converts a Tvar to a nullable decimal.
+        /// Returns null if the Tvar is unknown or if it's value changes over
         /// time (that is, if it's not eternal).
         /// </summary>
         public decimal? ToDecimal
@@ -142,7 +120,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Converts a Tnum to an decimal.  Should only be used when it is
+        /// Converts a Tvar to an decimal.  Should only be used when it is
         /// not possible for the value to be unknown.
         /// </summary>
         public decimal ToHardDecimal
@@ -154,35 +132,9 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the value of the Tnum at a specified point in time.
+        /// Converts a Tvar value in days to the equivalent (fractional) years.
         /// </summary>
-        public Tnum AsOf(Tdate dt)
-        {
-            return this.AsOf<Tnum>(dt);
-        }
-
-        /// <summary>
-        /// Returns a Tnum in which the values are shifted in time relative to
-        /// the dates.
-        /// </summary>
-        public Tnum Shift(int offset, Tnum temporalPeriod)
-        {
-            return this.Shift<Tnum>(offset, temporalPeriod);
-        }
-
-        /// <summary>
-        /// Returns a Tnum in which the last value in a time period is the
-        /// final value.
-        /// </summary>
-        public Tnum PeriodEndVal(Tnum temporalPeriod)
-        {
-            return this.PeriodEndVal<Tnum>(temporalPeriod).Lean;
-        }
-
-        /// <summary>
-        /// Converts a Tnum value in days to the equivalent (fractional) years.
-        /// </summary>
-        public Tnum DaysToYears
+        public Tvar DaysToYears
         {
             get
             {
@@ -191,9 +143,9 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Converts a Tnum value in days to the equivalent (fractional) months.
+        /// Converts a Tvar value in days to the equivalent (fractional) months.
         /// </summary>
-        public Tnum DaysToMonths
+        public Tvar DaysToMonths
         {
             get
             {
@@ -202,9 +154,9 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Converts a Tnum value in days to the equivalent (fractional) weeks.
+        /// Converts a Tvar value in days to the equivalent (fractional) weeks.
         /// </summary>
-        public Tnum DaysToWeeks
+        public Tvar DaysToWeeks
         {
             get
             {
@@ -212,20 +164,16 @@ namespace Akkadian
             }
         }
 
-        // *************************************************************
-        // All-time min / max
-        // *************************************************************
-        
         // TODO: Max(startDate,endDate), Min(startDate,endDate)
         
         /// <summary>
-        /// Returns the all-time maximum value of the Tnum. 
+        /// Returns the all-time maximum value of the Tvar. 
         /// </summary>
-        public Tnum Max()
+        public Tvar Max()
         {
             // Deal with unknowns
             Hstate state = PrecedenceForMissingTimePeriods(this);
-            if (state != Hstate.Known) { return new Tnum(state); }
+            if (state != Hstate.Known) { return new Tvar(state); }
 
             // Determine the maximum value
             decimal max = Convert.ToDecimal(this.FirstValue.Val);
@@ -236,18 +184,17 @@ namespace Akkadian
                     max = Convert.ToDecimal(s.Val);
                 }
             }
-            return new Tnum(max);
+            return new Tvar(max);
         }
-
-
+		
         /// <summary>
-        /// Returns the all-time minimum value of the Tnum. 
+        /// Returns the all-time minimum value of the Tvar. 
         /// </summary>
-        public Tnum Min() 
+        public Tvar Min() 
         {     
             // Deal with unknowns
             Hstate state = PrecedenceForMissingTimePeriods(this);
-            if (state != Hstate.Known) { return new Tnum(state); }
+            if (state != Hstate.Known) { return new Tvar(state); }
 
             // Determine the maximum value
             decimal min = Convert.ToDecimal(this.FirstValue.Val);
@@ -258,17 +205,17 @@ namespace Akkadian
                     min = Convert.ToDecimal(s.Val);
                 }
             }
-            return new Tnum(min);
+            return new Tvar(min);
         }
 
         /// <summary>
-        /// Converts a Tnum to a Tstr formatted as U.S. dollars.
+        /// Converts a Tvar to a Tvar formatted as U.S. dollars.
         /// </summary>
-        public Tstr ToUSD
+        public Tvar ToUSD
         {
             get
             {
-                return ApplyFcnToTimeline<Tstr>(x => CoreToUSD(x), this);
+                return ApplyFcnToTimeline(x => CoreToUSD(x), this);
             }
         }
         private static Hval CoreToUSD(Hval h)
@@ -280,12 +227,12 @@ namespace Akkadian
         /// Converts Uncertain and Stub time periods to a given value.
         /// </summary>
         /// <remarks>
-        /// Used to rid a Tnum of uncertainty.  Note that it does not convert Unstated 
+        /// Used to rid a Tvar of uncertainty.  Note that it does not convert Unstated 
         /// periods because doing so would break the backward chaining interview.
         /// </remarks>
-        public Tnum NormalizedTo(decimal val)
+        public Tvar NormalizedTo(decimal val)
         {
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
 
             foreach (KeyValuePair<DateTime,Hval> slice in this.IntervalValues)
             {

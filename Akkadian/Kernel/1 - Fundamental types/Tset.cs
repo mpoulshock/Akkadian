@@ -31,45 +31,28 @@ namespace Akkadian
     /// Example: a family that is composed of different members at various
     /// points in time.
     /// </summary>
-    public partial class Tset : Tvar
+    public partial class Tvar
     {
         /// <summary>
-        /// Constructs an unknown Tset (one with no states). 
+        /// Constructs a Tvar consisting eternally of a list of members. 
         /// </summary>
-        public Tset()
-        {
-        }
-
-        public Tset(Hstate state)
-        {
-            this.SetEternally(state);
-        }
-
-        public Tset(Hval val)
-        {
-            this.SetEternally(val);
-        }
-
-        /// <summary>
-        /// Constructs a Tset consisting eternally of a list of members. 
-        /// </summary>
-        public Tset(params Thing[] list)
+        public Tvar(params Thing[] list)
         {
             this.SetEternally(list);
         }
         
         /// <summary>
-        /// Constructs a Tset consisting eternally of a list of members. 
+        /// Constructs a Tvar consisting eternally of a list of members. 
         /// </summary>
-        public Tset(List<Thing> list)
+        public Tvar(List<Thing> list)
         {
             this.SetEternally(new Hval(list));
         }
   
         /// <summary>
-        /// Constructs a Tset from an existing Tset. 
+        /// Constructs a Tvar from an existing Tvar. 
         /// </summary>
-        public Tset(Tset s)
+        public Tvar(Tvar s)
         {
             for (int i=0; i<s.TimeLine.Count; i++)
             {
@@ -78,11 +61,11 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Implicitly converts a legal entity into a Tset
+        /// Implicitly converts a legal entity into a Tvar
         /// </summary>
-        public static implicit operator Tset(Thing e) 
+        public static implicit operator Tvar(Thing e) 
         {
-            return new Tset(e);
+            return new Tvar(e);
         }
         
         /// <summary>
@@ -99,7 +82,7 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Sets the Tset to eternally have a given member. 
+        /// Sets the Tvar to eternally have a given member. 
         /// </summary>
         public void SetEternally(Thing val)
         {
@@ -107,41 +90,11 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Sets the Tset to eternally have a list of members. 
+        /// Sets the Tvar to eternally have a list of members. 
         /// </summary>
         public void SetEternally(params Thing[] list)
         {
             AddState(Time.DawnOf,list);
-        }
-        
-        /// <summary>
-        /// Eliminates redundant intervals in the Tset. 
-        /// </summary>
-        public Tset Lean
-        {
-            get
-            {
-                Tset n = this;
-            
-                // Identify redundant intervals
-                List<DateTime> dupes = new List<DateTime>();
-                
-                if (TimeLine.Count > 0)
-                {
-                    for (int i=0; i < TimeLine.Count-1; i++ ) 
-                    {
-                        if (AreEquivalentSets((List<Thing>)TimeLine.Values[i+1].Val,(List<Thing>)TimeLine.Values[i].Val))
-                        {
-                            dupes.Add(TimeLine.Keys[i+1]);
-                        }
-                    }
-                }
-                
-                // Remove redundant intervals
-                foreach (DateTime d in dupes) TimeLine.Remove(d);
-                    
-                return n;
-            }
         }
         
         /// <summary>
@@ -160,8 +113,8 @@ namespace Akkadian
         }                             
         
         /// <summary>
-        /// Converts a Tset containing a single member into a (nullable) 
-        /// LegalEntity.  Returns null if the Tset is unknown, if it's 
+        /// Converts a Tvar containing a single member into a (nullable) 
+        /// LegalEntity.  Returns null if the Tvar is unknown, if it's 
         /// value changes over time, or if it has more than one member.
         /// </summary>
         public Thing ToThing
@@ -174,45 +127,19 @@ namespace Akkadian
                 List<Thing> list = (List<Thing>)this.TimeLine.Values[0].Obj;
                 return (Thing)list[0];
             }
-        }
-
-        /// <summary>
-        /// Returns the members of the set at a specified point in time. 
-        /// </summary>
-        public Tset AsOf(Tdate dt)
-        {
-            return this.AsOf<Tset>(dt);
-        }
-
-        /// <summary>
-        /// Returns a Tset in which the values are shifted in time relative to
-        /// the dates.
-        /// </summary>
-        public Tset Shift(int offset, Tnum temporalPeriod)
-        {
-            return this.Shift<Tset>(offset, temporalPeriod);
-        }
-
-        /// <summary>
-        /// Returns a Tset in which the last value in a time period is the
-        /// final value.
-        /// </summary>
-        public Tset PeriodEndVal(Tnum temporalPeriod)
-        {
-            return this.PeriodEndVal<Tset>(temporalPeriod).Lean;
-        }
+		}
 
         /// <summary>
         /// Counts the number of set members at each time interval. 
         /// </summary>
-        public Tnum Count
+        public Tvar Count
         {
             get
             {
-                return ApplyFcnToTimeline<Tnum>(x => CoreTsetCount(x), this);
+                return ApplyFcnToTimeline(x => CoreTvarCount(x), this);
             }
         }
-        private static Hval CoreTsetCount(Hval h)
+        private static Hval CoreTvarCount(Hval h)
         {
             return ((List<Thing>)h.Val).Count;
         }
@@ -220,7 +147,7 @@ namespace Akkadian
         /// <summary>
         /// Returns true when the set has no members.
         /// </summary>
-        public Tbool IsEmpty
+        public Tvar IsEmpty
         {
             get
             {
@@ -229,11 +156,11 @@ namespace Akkadian
         }    
         
         /// <summary>
-        /// Returns true when one Tset is a subset of another. 
+        /// Returns true when one Tvar is a subset of another. 
         /// </summary>
-        public Tbool IsSubsetOf(Tset super)
+        public Tvar IsSubsetOf(Tvar super)
         {
-            return ApplyFcnToTimeline<Tbool>(x => CoreSubset(x), this, super);
+            return ApplyFcnToTimeline(x => CoreSubset(x), this, super);
         }
         private static Hval CoreSubset(List<Hval> list)
         {
@@ -243,15 +170,15 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns true when the Tset contains a given legal entity. 
+        /// Returns true when the Tvar contains a given legal entity. 
         /// </summary>
-        public Tbool Contains(Thing e)
+        public Tvar Contains(Thing e)
         {
-            return ApplyFcnToTimeline<Tbool>(x => CoreSubset(x), new Tset(e), this);
+            return ApplyFcnToTimeline(x => CoreSubset(x), new Tvar(e), this);
         }
 
         /// <summary>
-        /// Returns the temporal union of two Tsets.
+        /// Returns the temporal union of two Tvars.
         /// This is equivalent to a logical OR of two sets.
         /// </summary>
         /// <remarks>
@@ -261,20 +188,20 @@ namespace Akkadian
         /// notion that you can add two sets together to get the
         /// sum of the parts.
         /// </remarks>            
-        public static Tset operator + (Tset set1, Tset set2)    
-        {
-            return set1 | set2;
-        }
+//        public static Tvar operator + (Tvar set1, Tvar set2)    
+//        {
+//            return set1 | set2;
+//        }
         
         /// <summary>
-        /// Returns the temporal union of two Tsets.
+        /// Returns the temporal union of two Tvars.
         /// This is equivalent to a logical OR of two sets.
         /// </summary>
-        public static Tset operator | (Tset set1, Tset set2)
+        public static Tvar Union(Tvar set1, Tvar set2)
         {
-            return ApplyFcnToTimeline<Tset>(x => CoreTsetUnion(x), set1, set2);
+            return ApplyFcnToTimeline(x => CoreTvarUnion(x), set1, set2);
         }
-        private static Hval CoreTsetUnion(List<Hval> list)
+        private static Hval CoreTvarUnion(List<Hval> list)
         {
             List<Thing> s1 = (List<Thing>)list[0].Val;
             List<Thing> s2 = (List<Thing>)list[1].Val;
@@ -282,14 +209,14 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the temporal intersection of two Tsets.
+        /// Returns the temporal intersection of two Tvars.
         /// This is equivalent to a logical AND of two sets.
         /// </summary>
-        public static Tset operator & (Tset set1, Tset set2)
+        public static Tvar Intersection(Tvar set1, Tvar set2)
         {
-            return ApplyFcnToTimeline<Tset>(x => CoreTsetIntersection(x), set1, set2);
+            return ApplyFcnToTimeline(x => CoreTvarIntersection(x), set1, set2);
         }
-        private static Hval CoreTsetIntersection(List<Hval> list)
+        private static Hval CoreTvarIntersection(List<Hval> list)
         {
             List<Thing> s1 = (List<Thing>)list[0].Val;
             List<Thing> s2 = (List<Thing>)list[1].Val;
@@ -297,47 +224,68 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Returns the relative complement (set difference) of two Tsets.
+        /// Returns the relative complement (set difference) of two Tvars.
         /// This is equivalent to subtracting the members of the second
-        /// Tset from those of the first (Tset1 - Tset2).
+        /// Tvar from those of the first (Tvar1 - Tvar2).
         /// Example: theAdults = thePeople - theKids.
         /// </summary>
-        public static Tset operator - (Tset set1, Tset set2)
+        public static Tvar RelativeComplement(Tvar set1, Tvar set2)
         {
-            return ApplyFcnToTimeline<Tset>(x => CoreTsetRC(x), set1, set2);
+            return ApplyFcnToTimeline(x => CoreTvarRC(x), set1, set2);
         }
-        private static Hval CoreTsetRC(List<Hval> list)
+        private static Hval CoreTvarRC(List<Hval> list)
         {
             List<Thing> s1 = (List<Thing>)list[0].Val;
             List<Thing> s2 = (List<Thing>)list[1].Val;
             return new Hval(s1.Except(s2).ToList());
         }
 
+		/// <summary>
+		/// Eliminates redundant intervals in the Tset. 
+		/// </summary>
+		public Tvar LeanTset
+		{
+			get
+			{
+				Tvar n = this;
+
+				// Identify redundant intervals
+				List<DateTime> dupes = new List<DateTime>();
+
+				if (TimeLine.Count > 0)
+				{
+					for (int i=0; i < TimeLine.Count-1; i++ ) 
+					{
+						if (AreEquivalentSets((List<Thing>)TimeLine.Values[i+1].Val,(List<Thing>)TimeLine.Values[i].Val))
+						{
+							dupes.Add(TimeLine.Keys[i+1]);
+						}
+					}
+				}
+
+				// Remove redundant intervals
+				foreach (DateTime d in dupes) TimeLine.Remove(d);
+
+				return n;
+			}
+		}
+
         /// <summary>
         /// Returns true when two sets are equal (have the same members). 
         /// </summary>
-        public static Tbool operator == (Tset set1, Tset set2)    
+        public static Tvar AreEquivalentSets(Tvar set1, Tvar set2)    
         {
             return set1.IsSubsetOf(set2) && set2.IsSubsetOf(set1);
         }
-        
-        /// <summary>
-        /// Returns true when two sets are not equal (i.e. when they do 
-        /// not have the same members). 
-        /// </summary>
-        public static Tbool operator != (Tset set1, Tset set2)    
-        {
-            return !(set1 == set2);
-        }
 
         /// <summary>
-        /// Reverses the order of the members of a Tset. 
+        /// Reverses the order of the members of a Tvar. 
         /// </summary>
-        public Tset Reverse
+        public Tvar Reverse
         {
             get
             {
-                return ApplyFcnToTimeline<Tset>(x => CoreReverse(x), this);
+                return ApplyFcnToTimeline(x => CoreReverse(x), this);
             }
         }
         private static Hval CoreReverse(Hval h)

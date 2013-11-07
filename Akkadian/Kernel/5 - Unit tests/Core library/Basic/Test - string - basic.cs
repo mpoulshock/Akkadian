@@ -23,44 +23,35 @@ using NUnit.Framework;
 namespace Akkadian.UnitTests
 {
     [TestFixture]
-    public class BasicString : H
+    public class BasicString : Tvar
     {
         [Test]
         public void Concat_1 ()
         {
-            Tstr ts1 = new Tstr("hello,");
-            Tstr ts2 = new Tstr("world");
-            Tstr ts3 = ts1 + ts2;
+            Tvar ts1 = new Tvar("hello,");
+            Tvar ts2 = new Tvar("world");
+            Tvar ts3 = Concat(ts1,ts2);
             Assert.AreEqual("hello,world", ts3.Out);            
         }
         
         [Test]
         public void Concat_2 ()
         {
-            Tstr ts1 = new Tstr("hello,");
-            Tstr ts2 = new Tstr("world");
-            Tstr ts3 = ts1 + " " + ts2;
-            Assert.AreEqual("hello, world", ts3.Out);            
-        }
-        
-        [Test]
-        public void Concat_3 ()
-        {
-            Tstr ts1 = new Tstr("hello,") + " world";
+			Tvar ts1 = Concat(new Tvar("hello,")," world");
             Assert.AreEqual("hello, world", ts1.Out);            
         }   
 
         [Test]
         public void ToUSD_1 ()
         {
-            Tstr ts1 = new Tnum(91.246).ToUSD;
+            Tvar ts1 = new Tvar(91.246).ToUSD;
             Assert.AreEqual("$91.25", ts1.Out);            
         } 
 
         [Test]
         public void ToUSD_2 ()
         {
-            Tstr ts1 = new Tnum(1234567).ToUSD;
+            Tvar ts1 = new Tvar(1234567).ToUSD;
             Assert.AreEqual("$1,234,567.00", ts1.Out);            
         } 
     }

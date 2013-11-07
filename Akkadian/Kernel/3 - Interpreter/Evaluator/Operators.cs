@@ -29,13 +29,9 @@ namespace Akkadian
 	public enum Typ
 	{
 		//  Akkadian types
-		Tbool,
-		Tdate,
+		Tvar,
 		Thing,
 		Tline,
-		Tnum,
-		Tset,
-		Tstr,
 
 		// Types used by the parser
 		Expr,		// Expression

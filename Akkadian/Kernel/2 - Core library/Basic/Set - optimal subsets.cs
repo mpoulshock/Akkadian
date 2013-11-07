@@ -24,32 +24,32 @@ using System.Collections.Generic;
 
 namespace Akkadian
 {
-    public partial class Tset
+    public partial class Tvar
     {
         /// <summary>
-        /// Tries all combinations of Things in the input Tset and returns the
+        /// Tries all combinations of Things in the input Tvar and returns the
         /// combo that yields the highest value of the input function (fcn).
         /// </summary>
         /// <remarks>
         /// 1. Ties are broken based on the maximal combo that's found first.  Custom
         ///    tie-breaking logic can be built into the input function.
         /// 2. Performance is proportional to 2^n, where n is the number of Things
-        ///    in the input Tset.
+        ///    in the input Tvar.
         /// 3. At present, it does not pass an empty set as an arg to the input fcn.
         /// </remarks>
-        public Tset OptimalSubset(Func<Tset,Tnum> fcn)
+        public Tvar OptimalSubset(Func<Tvar,Tvar> fcn)
         {
             return OptimalSubsetCore(this, x => fcn(x));
         }
 
         /// <summary>
-        /// Implements Tset.OptimalSubset(Tnum fcn).
+        /// Implements Tvar.OptimalSubset(Tvar fcn).
         /// </summary>
-        private static Tset OptimalSubsetCore(Tset theSet, Func<Tset,Tnum> fcn)
+        private static Tvar OptimalSubsetCore(Tvar theSet, Func<Tvar,Tvar> fcn)
         {
-            Tset result = new Tset();
+            Tvar result = new Tvar();
 
-            // For each time period in the Tset
+            // For each time period in the Tvar
             for (int i=0; i < theSet.IntervalValues.Count; i++)
             {
                 // Get some useful values
@@ -69,28 +69,28 @@ namespace Akkadian
                     try {end = theSet.IntervalValues.Keys[i+1];} catch {}
 
                     // For each combination of set members, get the associated fcn val
-                    List<Tuple<Tset,Tnum>> setFcnVals = new List<Tuple<Tset,Tnum>>();
-                    Tnum maxVal = new Tnum(Decimal.MinValue);
-                    foreach (Tset s in Combos(mems))
+                    List<Tuple<Tvar,Tvar>> setFcnVals = new List<Tuple<Tvar,Tvar>>();
+                    Tvar maxVal = new Tvar(Decimal.MinValue);
+                    foreach (Tvar s in Combos(mems))
                     {
                         // Invoke the fcn for that subset
-                        Tnum val = fcn(s);
+                        Tvar val = fcn(s);
 
-                        // Save the result of the fcn and the associated Tset
+                        // Save the result of the fcn and the associated Tvar
                         setFcnVals.Add(Tuple.Create(s, val));
 
                         // Update the running maximum value
                         maxVal = Max(maxVal, val);
                     }
 
-                    // Foreach changepoint in maxVal, find the associated Tset
+                    // Foreach changepoint in maxVal, find the associated Tvar
                     for (int j=0; j < maxVal.IntervalValues.Count; j++)
                     {
                         DateTime mDate = maxVal.IntervalValues.Keys[j];
                         if (mDate >= start && mDate < end)
                         {
-                            // Get the associated Tset
-                            Hval outSet = AssociatedTset(setFcnVals, maxVal, mDate);
+                            // Get the associated Tvar
+                            Hval outSet = AssociatedTvar(setFcnVals, maxVal, mDate);
 
                             // Add the change point
                             result.AddState(mDate, outSet);
@@ -103,11 +103,11 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Finds the Tset associated with a given Tnum value on a given date.
+        /// Finds the Tvar associated with a given Tvar value on a given date.
         /// </summary>
-        private static Hval AssociatedTset(List<Tuple<Tset,Tnum>> setFcnVals, Tnum val, DateTime asOfDate)
+        private static Hval AssociatedTvar(List<Tuple<Tvar,Tvar>> setFcnVals, Tvar val, DateTime asOfDate)
         {
-            foreach(Tuple<Tset,Tnum> t in setFcnVals)
+            foreach(Tuple<Tvar,Tvar> t in setFcnVals)
             {
                 // Handle uncertainty
                 Hval s = t.Item2.AsOf(asOfDate).FirstValue;
@@ -119,7 +119,7 @@ namespace Akkadian
                 // Compare numeric values
                 if (t.Item2.AsOf(asOfDate) == val.AsOf(asOfDate))
                 {
-                    // Tsets created in Combos() are eternal, so FirstValue is ok here
+                    // Tvars created in Combos() are eternal, so FirstValue is ok here
                     return t.Item1.FirstValue;
                 }
             }
@@ -127,11 +127,11 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Given a list of Things, returns a list of all possible Tset combinations.
+        /// Given a list of Things, returns a list of all possible Tvar combinations.
         /// </summary>
-        private static List<Tset> Combos(List<Thing> thingList)
+        private static List<Tvar> Combos(List<Thing> thingList)
         {
-            List<Tset> result = new List<Tset>();
+            List<Tvar> result = new List<Tvar>();
 
             // Count in binary to explore all combinations of included/excluded Things
             // Beware: number of combos = 2^n
@@ -141,17 +141,17 @@ namespace Akkadian
                 // Create a bit array representing the number
                 BitArray bits = new BitArray(new int[] { i });
 
-                // Convert the bit array into a Tset combo
+                // Convert the bit array into a Tvar combo
                 List<Thing> tsetVal = new List<Thing>();
                 for(int b=0; b < bits.Count; b++)
                 {
                     if (bits[b]) tsetVal.Add(thingList[b]);
                 }
 
-                // Create a new Tset out of the combo and add it to the output list
+                // Create a new Tvar out of the combo and add it to the output list
                 if (tsetVal.Count > 0)  // TODO: Consider not omitting null sets?
                 {
-                    result.Add(new Tset(tsetVal));
+                    result.Add(new Tvar(tsetVal));
                 }
             }
 

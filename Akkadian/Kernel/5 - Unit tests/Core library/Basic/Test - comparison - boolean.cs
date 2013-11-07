@@ -30,49 +30,49 @@ namespace Akkadian.UnitTests
         [Test]
         public void BooleanComparison1 ()
         {
-            Tbool t = new Tbool(true) == new Tbool(false);
+            Tvar t = new Tvar(true) == new Tvar(false);
             Assert.AreEqual(false , t.Out);        
         }
 
         [Test]
         public void BooleanComparison2 ()
         {
-            Tbool t = new Tbool(true) == new Tbool(true);
+            Tvar t = new Tvar(true) == new Tvar(true);
             Assert.AreEqual(true , t.Out);            
         }
         
         [Test]
         public void BooleanComparison3 ()
         {
-            Tbool t = new Tbool(false) == new Tbool(false);
+            Tvar t = new Tvar(false) == new Tvar(false);
             Assert.AreEqual(true , t.Out);        
         }
         
         [Test]
         public void BooleanComparison4 ()
         {
-            Tbool t = new Tbool(true) == true;
+            Tvar t = new Tvar(true) == true;
             Assert.AreEqual(true , t.Out);        
         }
         
         [Test]
         public void BooleanComparison5 ()
         {
-            Tbool t = new Tbool(true) == false;
+            Tvar t = new Tvar(true) == false;
             Assert.AreEqual(false , t.Out);        
         }
         
         [Test]
         public void BooleanComparison6 ()
         {
-            Tbool t = true == new Tbool(true);
+            Tvar t = true == new Tvar(true);
             Assert.AreEqual(true , t.Out);        
         }
         
         [Test]
         public void BooleanComparison7 ()
         {
-            Tbool t = false == new Tbool(true);
+            Tvar t = false == new Tvar(true);
             Assert.AreEqual(false , t.Out);        
         }
         
@@ -81,49 +81,49 @@ namespace Akkadian.UnitTests
         [Test]
         public void BooleanComparison11 ()
         {
-            Tbool t = new Tbool(true) != new Tbool(false);
+            Tvar t = new Tvar(true) != new Tvar(false);
             Assert.AreEqual(true , t.Out);        
         }
 
         [Test]
         public void BooleanComparison12 ()
         {
-            Tbool t = new Tbool(true) != new Tbool(true);
+            Tvar t = new Tvar(true) != new Tvar(true);
             Assert.AreEqual(false , t.Out);            
         }
     
         [Test]
         public void BooleanComparison13 ()
         {
-            Tbool t = new Tbool(false) != new Tbool(false);
+            Tvar t = new Tvar(false) != new Tvar(false);
             Assert.AreEqual(false , t.Out);        
         }
         
         [Test]
         public void BooleanComparison14 ()
         {
-            Tbool t = new Tbool(true) != true;
+            Tvar t = new Tvar(true) != true;
             Assert.AreEqual(false , t.Out);        
         }
         
         [Test]
         public void BooleanComparison15 ()
         {
-            Tbool t = new Tbool(true) != false;
+            Tvar t = new Tvar(true) != false;
             Assert.AreEqual(true , t.Out);        
         }
         
         [Test]
         public void BooleanComparison16 ()
         {
-            Tbool t = true != new Tbool(true);
+            Tvar t = true != new Tvar(true);
             Assert.AreEqual(false , t.Out);        
         }
         
         [Test]
         public void BooleanComparison17 ()
         {
-            Tbool t = false != new Tbool(true);
+            Tvar t = false != new Tvar(true);
             Assert.AreEqual(true , t.Out);        
         }
         

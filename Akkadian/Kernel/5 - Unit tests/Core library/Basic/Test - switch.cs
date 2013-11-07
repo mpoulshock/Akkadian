@@ -25,163 +25,163 @@ namespace Akkadian.UnitTests
     [TestFixture]
     public class SwitchFcn : H
     {
-        private static Tbool tbt = new Tbool(true);
-        private static Tbool tbf = new Tbool(false);
+        private static Tvar tbt = new Tvar(true);
+        private static Tvar tbf = new Tvar(false);
         
-        // Switch<Tnum>
+        // Switch<Tvar>
         
         [Test]
-        public void TnumSwitch1_lazy ()
+        public void TvarSwitch1_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> tbf, ()=> new Tnum(41),
-                                 ()=> tbt, ()=> new Tnum(42),
+            Tvar result = Switch(()=> tbf, ()=> new Tvar(41),
+                                 ()=> tbt, ()=> new Tvar(42),
                                  ()=> 43);
             
             Assert.AreEqual(42, result.Out);        
         }
 
         [Test]
-        public void TnumSwitch2_lazy ()
+        public void TvarSwitch2_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> tbt, ()=> new Tnum(41),
-                                 ()=> tbf, ()=> new Tnum(42),
+            Tvar result = Switch(()=> tbt, ()=> new Tvar(41),
+                                 ()=> tbf, ()=> new Tvar(42),
                                  ()=> 43);
             
             Assert.AreEqual(41, result.Out);        
         }
 
         [Test]
-        public void TnumSwitch3_lazy ()
+        public void TvarSwitch3_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> tbf, ()=> 41,
+            Tvar result = Switch(()=> tbf, ()=> 41,
                                  ()=> tbt, ()=> 42,
-                                 ()=> new Tnum(43));
+                                 ()=> new Tvar(43));
             
             Assert.AreEqual(42, result.Out);        
         }
 
         [Test]
-        public void TnumSwitch4_lazy ()
+        public void TvarSwitch4_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> false, ()=> 41,
+            Tvar result = Switch(()=> false, ()=> 41,
                                  ()=> true, ()=> 42,
-                                 ()=> new Tnum(43)); 
+                                 ()=> new Tvar(43)); 
             
             Assert.AreEqual(42, result.Out);        
         }
 
         [Test]
-        public void TnumSwitch5_lazy ()
+        public void TvarSwitch5_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> tbf, ()=> new Tnum(41),
-                                 ()=> tbf, ()=> new Tnum(42),
+            Tvar result = Switch(()=> tbf, ()=> new Tvar(41),
+                                 ()=> tbf, ()=> new Tvar(42),
                                  ()=> 43);
 
             Assert.AreEqual(43, result.Out);        
         }
 
         [Test]
-        public void TnumSwitch6_lazy ()
+        public void TvarSwitch6_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> tbf, ()=> new Tnum(41),
-                                 ()=> tbf, ()=> new Tnum(42),
-                                 ()=> new Tnum(Hstate.Uncertain));  
+            Tvar result = Switch(()=> tbf, ()=> new Tvar(41),
+                                 ()=> tbf, ()=> new Tvar(42),
+                                 ()=> new Tvar(Hstate.Uncertain));  
 
             Assert.AreEqual("Uncertain", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch7_lazy ()
+        public void TvarSwitch7_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> false, ()=> 41,
-                                 ()=> true, ()=> new Tnum(Hstate.Uncertain),
+            Tvar result = Switch(()=> false, ()=> 41,
+                                 ()=> true, ()=> new Tvar(Hstate.Uncertain),
                                  ()=> 42);   
             
             Assert.AreEqual("Uncertain", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch8_lazy ()
+        public void TvarSwitch8_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> false, ()=> 41,
-                                 ()=> new Tbool(Hstate.Uncertain), ()=> 101,
+            Tvar result = Switch(()=> false, ()=> 41,
+                                 ()=> new Tvar(Hstate.Uncertain), ()=> 101,
                                  ()=> 42);   
             
             Assert.AreEqual("Uncertain", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch9_lazy ()
+        public void TvarSwitch9_lazy ()
         {
-            Tnum result = Switch<Tnum>(()=> false, ()=> 41,
-                                 ()=> new Tbool(Hstate.Uncertain), ()=> new Tnum(Hstate.Stub),
+            Tvar result = Switch(()=> false, ()=> 41,
+                                 ()=> new Tvar(Hstate.Uncertain), ()=> new Tvar(Hstate.Stub),
                                  ()=> 42);   
             
             Assert.AreEqual("Uncertain", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch10_lazy ()
+        public void TvarSwitch10_lazy ()
         {
-            Tnum x = new Tnum(10);
+            Tvar x = new Tvar(10);
             x.AddState(Date(2000,1,1), 1);
             
-            Tnum result = Switch<Tnum>(()=> x <= 1, ()=> new Tnum(1),
+            Tvar result = Switch(()=> x <= 1, ()=> new Tvar(1),
                                  ()=> 2);   
             
             Assert.AreEqual("{Dawn: 2; 1/1/2000: 1}", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch11_lazy ()
+        public void TvarSwitch11_lazy ()
         {
-            Tnum x = new Tnum(10);
+            Tvar x = new Tvar(10);
             x.AddState(Date(2000,1,1), 1);
             
-            Tnum result = Switch<Tnum>(()=> x >= 5, ()=> new Tnum(1),
+            Tvar result = Switch(()=> x >= 5, ()=> new Tvar(1),
                                  ()=> 2);   
             
             Assert.AreEqual("{Dawn: 1; 1/1/2000: 2}", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch12_lazy ()
+        public void TvarSwitch12_lazy ()
         {
-            Tbool tb = new Tbool(true);
+            Tvar tb = new Tvar(true);
             tb.AddState(Date(2000,1,1), false);
             
-            Tnum result = Switch<Tnum>(()=> tb, ()=> new Tnum(41),
-                                 ()=> true, ()=> new Tnum(42),
-                                 ()=> new Tnum(43));   
+            Tvar result = Switch(()=> tb, ()=> new Tvar(41),
+                                 ()=> true, ()=> new Tvar(42),
+                                 ()=> new Tvar(43));   
             
             Assert.AreEqual("{Dawn: 41; 1/1/2000: 42}", result.Out);        
         }
 
         [Test]
-        public void TnumSwitch13_lazy ()  // Tests whether irrelevant values are skipped/ignored
+        public void TvarSwitch13_lazy ()  // Tests whether irrelevant values are skipped/ignored
         {
-            Tbool tb1 = new Tbool(true);
+            Tvar tb1 = new Tvar(true);
             tb1.AddState(Date(2000,1,1), false);
 
-            Tbool tb2 = new Tbool(false);
+            Tvar tb2 = new Tvar(false);
             tb2.AddState(Date(1900,1,1),true);  // true but irrelevant b/c interval subsubmed by tb1
             tb2.AddState(Date(1912,1,1),false);
 
-            Tnum result = Switch<Tnum>(()=> tb1, ()=> new Tnum(41),
-                                 ()=> tb2, ()=> new Tnum(42),
-                                 ()=> new Tnum(43));   
+            Tvar result = Switch(()=> tb1, ()=> new Tvar(41),
+                                 ()=> tb2, ()=> new Tvar(42),
+                                 ()=> new Tvar(43));   
             
             Assert.AreEqual("{Dawn: 41; 1/1/2000: 43}", result.Out);        
         }
 
-        // Switch<Tbool>
+        // Switch<Tvar>
 
         [Test]
         public void TboolSwitch1_lazy ()
         {
-            Tbool result = Switch<Tbool>(()=> false, ()=> true,
+            Tvar result = Switch(()=> false, ()=> true,
                                   ()=> true, ()=> true, 
-                                  ()=> new Tbool(false));   
+                                  ()=> new Tvar(false));   
             
             Assert.AreEqual(true, result.Out);        
         }
@@ -189,9 +189,9 @@ namespace Akkadian.UnitTests
         [Test]
         public void TboolSwitch2_lazy ()
         {
-            Tbool result = Switch<Tbool>(()=> false, ()=> false,
+            Tvar result = Switch(()=> false, ()=> false,
                                   ()=> true, ()=> true,
-                                  ()=> new Tbool(Hstate.Uncertain));   
+                                  ()=> new Tvar(Hstate.Uncertain));   
             
             Assert.AreEqual(true, result.Out);        
         }
@@ -199,20 +199,20 @@ namespace Akkadian.UnitTests
         [Test]
         public void TboolSwitch3_lazy () 
         {
-            Tbool result = Switch<Tbool>(()=> false, ()=> true,
-                                  ()=> new Tbool(true));   
+            Tvar result = Switch(()=> false, ()=> true,
+                                  ()=> new Tvar(true));   
             
             Assert.AreEqual(true, result.Out);        
         }
 
-        // Switch<Tstr>
+        // Switch<Tvar>
 
         [Test]
         public void TstrSwitch1_lazy ()
         {
-            Tstr result = Switch<Tstr>(()=> false, ()=> "41",
+            Tvar result = Switch(()=> false, ()=> "41",
                                   ()=> true, ()=> "42",
-                                  ()=> new Tstr("43"));   
+                                  ()=> new Tvar("43"));   
             
             Assert.AreEqual("42", result.Out);        
         }
@@ -224,19 +224,19 @@ namespace Akkadian.UnitTests
         {
             Hval unst = new Hval(null,Hstate.Null);
 
-            Tnum tn1 = new Tnum(unst);
+            Tvar tn1 = new Tvar(unst);
             tn1.AddState(Date(2000,1,1), 1);
             tn1.AddState(Date(2001,1,1), unst);
             tn1.AddState(Date(2002,1,1), 3);
             tn1.AddState(Date(2003,1,1), unst);
 
-            Tnum tn2 = new Tnum(0);
+            Tvar tn2 = new Tvar(0);
             tn2.AddState(Date(2000,1,1), unst);
             tn2.AddState(Date(2001,1,1), 2);
             tn2.AddState(Date(2002,1,1), unst);
             tn2.AddState(Date(2003,1,1), unst);
 
-            Tnum result = Util.MergeTvars<Tnum>(tn1,tn2);
+            Tvar result = Util.MergeTvars(tn1,tn2);
             Assert.AreEqual("{Dawn: 0; 1/1/2000: 1; 1/1/2001: 2; 1/1/2002: 3; 1/1/2003: Null}", result.Out);        
         }
 
@@ -245,14 +245,14 @@ namespace Akkadian.UnitTests
         {
             Hval unst = new Hval(null,Hstate.Null);
 
-            Tnum tn1 = new Tnum(unst);
+            Tvar tn1 = new Tvar(unst);
 
-            Tnum tn2 = new Tnum(0);
+            Tvar tn2 = new Tvar(0);
             tn2.AddState(Date(2000,1,1), unst);
             tn2.AddState(Date(2001,1,1), 2);
             tn2.AddState(Date(2002,1,1), unst);
 
-            Assert.AreEqual(tn2.Out, Util.MergeTvars<Tnum>(tn1,tn2).Out);        
+            Assert.AreEqual(tn2.Out, Util.MergeTvars(tn1,tn2).Out);        
         }
 
         //  HasUndefinedValues
@@ -260,7 +260,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void HasUndefinedIntervals1 ()
         {
-            Tnum r = new Tnum(new Hval(null,Hstate.Null));
+            Tvar r = new Tvar(new Hval(null,Hstate.Null));
             r.AddState(Date(2000,1,1), new Hval(null,Hstate.Unstated));
             r.AddState(Date(2001,1,1), 2);
 
@@ -270,7 +270,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void HasUndefinedIntervals2 ()
         {
-            Tnum r = new Tnum(7);
+            Tvar r = new Tvar(7);
             r.AddState(Date(2000,1,1), new Hval(null,Hstate.Unstated));
             r.AddState(Date(2001,1,1), 2);
 
@@ -280,7 +280,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void HasUndefinedIntervals3 ()  
         {
-            Tnum r = new Tnum(7);
+            Tvar r = new Tvar(7);
             r.AddState(Date(2000,1,1), 6);
             r.AddState(Date(2001,1,1), 2);
 
@@ -292,12 +292,12 @@ namespace Akkadian.UnitTests
         [Test]
         public void AssignAndMerge1 ()
         {
-            Tbool newCondition = new Tbool(Hstate.Uncertain);
-            Tnum initialResult = new Tnum(Hstate.Null);
-            Tbool newConditionIsUnknown = new Tbool(true);
+            Tvar newCondition = new Tvar(Hstate.Uncertain);
+            Tvar initialResult = new Tvar(Hstate.Null);
+            Tvar newConditionIsUnknown = new Tvar(true);
 
-            Tnum result = Util.MergeTvars<Tnum>(initialResult,
-                                         Util.ConditionalAssignment<Tnum>(newConditionIsUnknown, newCondition));
+            Tvar result = Util.MergeTvars(initialResult,
+                                         Util.ConditionalAssignment(newConditionIsUnknown, newCondition));
 
             Assert.AreEqual("Uncertain", result.Out); 
         }
@@ -305,12 +305,12 @@ namespace Akkadian.UnitTests
         [Test]
         public void AssignAndMerge2 ()
         {
-            Tbool newCondition = new Tbool(Hstate.Uncertain);
-            Tnum initialResult = new Tnum(Hstate.Null);
-            Tbool newConditionIsUnknown = new Tbool(true);
+            Tvar newCondition = new Tvar(Hstate.Uncertain);
+            Tvar initialResult = new Tvar(Hstate.Null);
+            Tvar newConditionIsUnknown = new Tvar(true);
 
-            Tnum result = Util.MergeTvars<Tnum>(initialResult,
-                                         Util.ConditionalAssignment<Tnum>(newConditionIsUnknown, newCondition));
+            Tvar result = Util.MergeTvars(initialResult,
+                                         Util.ConditionalAssignment(newConditionIsUnknown, newCondition));
 
             Assert.AreEqual(false, Util.HasUndefinedIntervals(result)); 
         }
@@ -318,8 +318,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void AssignAndMerge3 ()
         {
-            Tbool newCondition = new Tbool(Hstate.Uncertain);
-            Tbool newConditionIsUnknown = Util.HasUnknownState(newCondition);
+            Tvar newCondition = new Tvar(Hstate.Uncertain);
+            Tvar newConditionIsUnknown = Util.HasUnknownState(newCondition);
             Assert.AreEqual(true, newConditionIsUnknown.Out); 
         }
     }

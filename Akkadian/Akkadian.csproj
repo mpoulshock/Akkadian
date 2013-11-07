@@ -40,8 +40,6 @@
     <Compile Include="Kernel\1 - Fundamental types\Hval.cs" />
     <Compile Include="Kernel\1 - Fundamental types\Thing.cs" />
     <Compile Include="Kernel\5 - Unit tests\Fundamental types\Test - Hval.cs" />
-    <Compile Include="Kernel\2 - Core library\Basic\Comparison - dates.cs" />
-    <Compile Include="Kernel\2 - Core library\Basic\Comparison - numeric.cs" />
     <Compile Include="Kernel\2 - Core library\Basic\Logic.cs" />
     <Compile Include="Kernel\2 - Core library\Basic\Math.cs" />
     <Compile Include="Kernel\2 - Core library\Basic\Set - higher-order.cs" />
@@ -51,20 +49,15 @@
     <Compile Include="Kernel\2 - Core library\Temporal\Elapsed time - per interval.cs" />
     <Compile Include="Kernel\2 - Core library\Temporal\Elapsed time.cs" />
     <Compile Include="Kernel\2 - Core library\Temporal\Summed intervals.cs" />
-    <Compile Include="Kernel\2 - Core library\Temporal\Tbool - temporal.cs" />
+    <Compile Include="Kernel\2 - Core library\Temporal\Tvar - temporal.cs" />
     <Compile Include="Kernel\2 - Core library\Temporal\Temporal sequences.cs" />
     <Compile Include="Kernel\2 - Core library\Utility\DateTime extension methods.cs" />
     <Compile Include="Kernel\2 - Core library\Utility\Misc.cs" />
     <Compile Include="Kernel\2 - Core library\Utility\Unknown.cs" />
     <Compile Include="Kernel\2 - Core library\Utility\Util.cs" />
     <Compile Include="Kernel\2 - Core library\Utility\Zip.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tbool.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tdate.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tline.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tnum.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tset.cs" />
-    <Compile Include="Kernel\1 - Fundamental types\Tstr.cs" />
     <Compile Include="Kernel\1 - Fundamental types\Tvar.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tline.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - absolute time.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - continuous.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Temporal\Test - elapsed time - per interval.cs" />
@@ -87,16 +80,8 @@
     <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - misc.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - performance.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Utility\Test - utility.cs" />
-    <Compile Include="Kernel\4 - Factbase\FactBase.cs" />
-    <Compile Include="Kernel\4 - Factbase\Facts.cs" />
-    <Compile Include="Kernel\4 - Factbase\Inputs.cs" />
-    <Compile Include="Kernel\4 - Factbase\Set-assert.cs" />
-    <Compile Include="Kernel\4 - Factbase\ThingBase.cs" />
-    <Compile Include="Kernel\4 - Factbase\Unknown facts.cs" />
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - facts - symmetrical.cs" />
-    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - facts - unknowns.cs" />
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - short-circuit evaluation.cs" />
-    <Compile Include="Kernel\5 - Unit tests\Factbase\Test - ThingBase.cs" />
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - unknown.cs" />
     <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - set - higher order.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Eval.cs" />
@@ -110,8 +95,16 @@
     <Compile Include="Kernel\3 - Interpreter\Parser\Grammar.cs" />
     <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Grammar.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Operator evaluation.cs" />
-    <Compile Include="Kernel\3 - Interpreter\Data\Session.cs" />
     <Compile Include="Kernel\3 - Interpreter\Parser\Import rules.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tbool.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tdate.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tnum.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tset.cs" />
+    <Compile Include="Kernel\1 - Fundamental types\Tstr.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Session\Function table.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Session\Fact table.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Session\Management.cs" />
+    <Compile Include="Kernel\2 - Core library\Basic\Comparison.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -133,7 +126,7 @@
     <Folder Include="Kernel\5 - Unit tests\Factbase\" />
     <Folder Include="Kernel\3 - Interpreter\Parser\" />
     <Folder Include="Kernel\3 - Interpreter\Evaluator\" />
-    <Folder Include="Kernel\3 - Interpreter\Data\" />
+    <Folder Include="Kernel\3 - Interpreter\Session\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Kernel\4 - Factbase\Assumptions.cs" />

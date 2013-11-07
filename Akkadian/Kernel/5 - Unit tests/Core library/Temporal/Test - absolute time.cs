@@ -31,29 +31,29 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void IsAtOrAfter1 ()
 		{
-			Tbool afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
+			Tvar afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
 			Assert.AreEqual(true, afterY2K.AsOf(Date(2012,1,1)).Out);		
 		}
 		
 		[Test]
 		public void IsAtOrAfter2 ()
 		{
-			Tbool afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
+			Tvar afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
             Assert.AreEqual(false, afterY2K.AsOf(Date(1999,1,1)).Out);		
 		}
 		
 		[Test]
 		public void IsAtOrAfter3 ()
 		{
-			Tbool afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
+			Tvar afterY2K = Time.IsAtOrAfter(Date(2000,1,1));	
             Assert.AreEqual(true, afterY2K.AsOf(Date(2000,1,1)).Out);		
 		}
 		
         [Test]
         public void IsAtOrAfter4 ()
         {
-            Tdate d = new Tdate(Hstate.Uncertain);
-            Tbool afterY2K = Time.IsAtOrAfter(d);   
+            Tvar d = new Tvar(Hstate.Uncertain);
+            Tvar afterY2K = Time.IsAtOrAfter(d);   
             Assert.AreEqual("Uncertain", afterY2K.Out);        
         }
 
@@ -62,21 +62,21 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void IsBefore1 ()
 		{
-			Tbool beforeY2K = Time.IsBefore(Date(2000,1,1));	
+			Tvar beforeY2K = Time.IsBefore(Date(2000,1,1));	
             Assert.AreEqual(false, beforeY2K.AsOf(Date(2012,1,1)).Out);		
 		}
 		
 		[Test]
 		public void IsBefore2 ()
 		{
-			Tbool beforeY2K = Time.IsBefore(Date(2000,1,1));	
+			Tvar beforeY2K = Time.IsBefore(Date(2000,1,1));	
             Assert.AreEqual(true, beforeY2K.AsOf(Date(1999,1,1)).Out);		
 		}
 		
 		[Test]
 		public void IsBefore3 ()
 		{
-			Tbool beforeY2K = Time.IsBefore(Date(2000,1,1));	
+			Tvar beforeY2K = Time.IsBefore(Date(2000,1,1));	
             Assert.AreEqual(false, beforeY2K.AsOf(Date(2000,1,1)).Out);		
 		}
 		
@@ -85,50 +85,50 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void IsBetween0 ()
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual("{Dawn: false; 1/20/2001: true; 1/20/2009: false}", isDuringTheBushYears.Out);		
 		}
 		
 		[Test]
 		public void IsBetween1 ()
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual(false, isDuringTheBushYears.AsOf(Date(1999,1,1)).Out);		
 		}
 		
 		[Test]
 		public void IsBetween2 ()
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual(true, isDuringTheBushYears.AsOf(Date(2001,1,20)).Out);			
 		}
 		
 		[Test]
 		public void IsBetween3 ()
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual(true, isDuringTheBushYears.AsOf(Date(2008,1,1)).Out);			
 		}
 		
 		[Test]
 		public void IsBetween4 () 
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual(false, isDuringTheBushYears.AsOf(Date(2009,1,20)).Out);			
 		}
 		
 		[Test]
 		public void IsBetween5 ()
 		{
-			Tbool isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
+			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
             Assert.AreEqual(false, isDuringTheBushYears.AsOf(Date(2012,1,1)).Out);			
 		}
 		
         [Test]
         public void IsBetween6 ()
         {
-            Tdate d = new Tdate(Hstate.Uncertain);
-            Tbool isDuringTheBushYears = Time.IsBetween(d, Date(2009,1,20));   
+            Tvar d = new Tvar(Hstate.Uncertain);
+            Tvar isDuringTheBushYears = Time.IsBetween(d, Date(2009,1,20));   
             Assert.AreEqual("{Dawn: Uncertain; 1/20/2009: false}", isDuringTheBushYears.Out);           
         }
 
@@ -145,13 +145,13 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void TheYear2 ()
 		{
-			Tbool isAfterY2K = TheYear > 2000; 	
+			Tvar isAfterY2K = TheYear > 2000; 	
             Assert.AreEqual(true, isAfterY2K.AsOf(DateTime.Now).Out);		
 		}
 		
 		public void TheYear3 ()
 		{
-			Tbool isAfterY2K = TheYear > 2000; 	
+			Tvar isAfterY2K = TheYear > 2000; 	
             Assert.AreEqual(true, isAfterY2K.AsOf(Date(1999,12,31)).Out);		
 		}
 		
@@ -160,14 +160,14 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void TheQuarter1 ()
 		{
-			Tbool is4thQtr = TheQuarter == 4; 	
+			Tvar is4thQtr = TheQuarter == 4; 	
             Assert.AreEqual(true, is4thQtr.AsOf(Date(2015,11,15)).Out);		
 		}
 		
 		[Test]
 		public void TheQuarter2 ()
 		{
-			Tbool is4thQtr = TheQuarter == 4; 	
+			Tvar is4thQtr = TheQuarter == 4; 	
 			Assert.AreEqual(false, is4thQtr.AsOf(Date(2015,3,15)).Out);		
 		}
 		
@@ -175,7 +175,7 @@ namespace Akkadian.UnitTests
 		public void TheQuarter3 ()
 		{
 			// It should never be the 5th quarter
-			Tbool is5thQtr = TheQuarter == 5; 	
+			Tvar is5thQtr = TheQuarter == 5; 	
 			Assert.AreEqual(false, is5thQtr.IsEverTrue().Out);		
 		}
 		
@@ -183,7 +183,7 @@ namespace Akkadian.UnitTests
 		public void TheQuarter4 ()
 		{
 			// The quarter is numbered 0 outside of the default 20 year time span
-			Tbool is0thQtr = TheQuarter == 0; 	
+			Tvar is0thQtr = TheQuarter == 0; 	
 			Assert.AreEqual(true, is0thQtr.IsEverTrue().Out);		
 		}
 		
@@ -191,7 +191,7 @@ namespace Akkadian.UnitTests
 		public void TheQuarter5 ()
 		{
 			// It should be the 2nd quarter sometime
-			Tbool is2ndQtr = TheQuarter == 2; 	
+			Tvar is2ndQtr = TheQuarter == 2; 	
 			Assert.AreEqual(true, is2ndQtr.IsEverTrue().Out);		
 		}
 		
@@ -200,28 +200,28 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void TheMonth1 ()
 		{
-			Tbool isApril = TheMonth == 4; 	
+			Tvar isApril = TheMonth == 4; 	
 			Assert.AreEqual(false, isApril.AsOf(Date(2015,3,15)).Out);		
 		}
 		
 		[Test]
 		public void TheMonth2 ()
 		{
-			Tbool isApril = TheMonth == 4; 	
+			Tvar isApril = TheMonth == 4; 	
 			Assert.AreEqual(true, isApril.AsOf(Date(2015,4,15)).Out);		
 		}
 		
 		[Test]
 		public void TheMonth3 ()
 		{
-			Tbool isAfterJuly = TheMonth > 7; 	
+			Tvar isAfterJuly = TheMonth > 7; 	
 			Assert.AreEqual(false, isAfterJuly.AsOf(Date(2015,4,15)).Out);		
 		}
 		
 		[Test]
 		public void TheMonth4 ()
 		{
-			Tbool isAfterJuly = TheMonth > 7; 	
+			Tvar isAfterJuly = TheMonth > 7; 	
 			Assert.AreEqual(true, isAfterJuly.AsOf(Date(2015,8,15)).Out);		
 		}
 		
@@ -229,7 +229,7 @@ namespace Akkadian.UnitTests
 		public void TheMonth5 ()
 		{
 			// It should never be month 13
-			Tbool isMonth13 = TheMonth == 13; 	
+			Tvar isMonth13 = TheMonth == 13; 	
 			Assert.AreEqual(false, isMonth13.IsEverTrue().Out);		
 		}
 		
@@ -237,11 +237,11 @@ namespace Akkadian.UnitTests
 		public void TheMonth6 ()
 		{
 			// The month is numbered 0 outside of the default 10 year time span
-			Tbool isMonth0 = TheMonth == 0; 	
+			Tvar isMonth0 = TheMonth == 0; 	
 			Assert.AreEqual(true, isMonth0.IsEverTrue().Out);		
 		}
         
-		// Tnum.Max
+		// Tvar.Max
 		
 		[Test]
 		public void Max1 ()
@@ -255,7 +255,7 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(12, TheMonth.Max().Out);		
 		}
 		
-		// Tnum.Min
+		// Tvar.Min
 		
 		[Test]
 		public void Min1 ()

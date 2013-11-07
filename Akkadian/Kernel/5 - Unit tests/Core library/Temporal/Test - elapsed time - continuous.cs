@@ -31,13 +31,13 @@ namespace Akkadian.UnitTests
         [Test]
         public void ContinuousElapsedIntervals1 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1), true);
             tb.AddState(new DateTime(2015,3,1), false);
             tb.AddState(new DateTime(2015,5,1), true);
             tb.AddState(new DateTime(2015,6,1), false);
 
-            Tnum r = tb.ContinuousElapsedIntervals(TheMonth);
+            Tvar r = tb.ContinuousElapsedIntervals(TheMonth);
 
             Assert.AreEqual("{Dawn: 0; 2/1/2015: 1; 3/1/2015: 2; 4/1/2015: 0; 6/1/2015: 1; 7/1/2015: 0}", r.Out);    
         }
@@ -45,8 +45,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void ContinuousElapsedIntervals2 ()
         {
-            Tbool tb = new Tbool(false);
-            Tnum r = tb.ContinuousElapsedIntervals(TheMonth);
+            Tvar tb = new Tvar(false);
+            Tvar r = tb.ContinuousElapsedIntervals(TheMonth);
 
             Assert.AreEqual(0, r.Out);    
         }
@@ -54,11 +54,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void ContinuousElapsedIntervals3 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1), Hstate.Unstated);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tnum r = tb.ContinuousElapsedIntervals(TheDay);
+            Tvar r = tb.ContinuousElapsedIntervals(TheDay);
 
             Assert.AreEqual("Unstated", r.Out);    
         }
@@ -66,11 +66,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void ContinuousElapsedIntervals4 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1), Hstate.Stub);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tnum r = tb.ContinuousElapsedIntervals(TheDay);
+            Tvar r = tb.ContinuousElapsedIntervals(TheDay);
 
             Assert.AreEqual("Stub", r.Out);    
         }

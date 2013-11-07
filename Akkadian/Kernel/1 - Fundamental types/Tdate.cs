@@ -28,66 +28,37 @@ namespace Akkadian
     /// <summary>
     /// An object that represents DateTime values along a timeline.
     /// </summary>
-    public partial class Tdate : Tvar
-    {
-
+    public partial class Tvar
+    {       
         /// <summary>
-        /// Constructs an empty Tdate.
-        /// </summary>
-        public Tdate()
-        {
-        }
-        
-        /// <summary>
-        /// Constructs a Tdate that is eternally set to a specified DateTime
+        /// Constructs a Tvar that is eternally set to a specified DateTime
         /// value.
         /// </summary>    
-        public Tdate(DateTime val)
-        {
-            this.SetEternally(val);
-        }
-
-        public Tdate(Hstate state)
-        {
-            this.SetEternally(state);
-        }
-
-        public Tdate(Hval val)
+        public Tvar(DateTime val)
         {
             this.SetEternally(val);
         }
 
         /// <summary>
-        /// Implicitly converts DateTimes to Tdates.
+        /// Implicitly converts DateTimes to Tvars.
         /// </summary>
-        public static implicit operator Tdate(DateTime d) 
+        public static implicit operator Tvar(DateTime d) 
         {
-            return new Tdate(d);
+            return new Tvar(d);
         }
         
         /// <summary>
-        /// Constructs a Tdate that is eternally set to a specified year, 
+        /// Constructs a Tvar that is eternally set to a specified year, 
         /// month, and day.
         /// </summary>
-        public Tdate(int year, int month, int day)
+        public Tvar(int year, int month, int day)
         {
             this.SetEternally(new DateTime(year, month, day));
         }
-        
+                
         /// <summary>
-        /// Eliminates redundant intervals in the Tdate.
-        /// </summary>
-        public Tdate Lean
-        {
-            get
-            {
-                return this.LeanTvar<Tdate>();
-            }
-        }
-        
-        /// <summary>
-        /// Converts a Tdate to a nullable DateTime.
-        /// Returns null if the Tdate is unknown or if it's value changes over
+        /// Converts a Tvar to a nullable DateTime.
+        /// Returns null if the Tvar is unknown or if it's value changes over
         /// time (that is, if it's not eternal).
         /// </summary>
         public DateTime? ToNullDateTime
@@ -103,7 +74,7 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Converts a Tdate to a DateTime.  Is dangerous because it doesn't account
+        /// Converts a Tvar to a DateTime.  Is dangerous because it doesn't account
         /// for unknown or time-varying values.
         /// </summary>
         public DateTime ToDateTime
@@ -113,58 +84,27 @@ namespace Akkadian
                 return (Convert.ToDateTime(this.FirstValue.Val));
             }
         }
-        
-        /// <summary>
-        /// Returns the value of the Tdate at a specified point in time.
-        /// </summary>
-        public Tdate AsOf(Tdate dt)
-        {
-            return this.AsOf<Tdate>(dt);
-        }
-
-        /// <summary>
-        /// Returns a Tdate in which the values are shifted in time relative to
-        /// the dates.
-        /// </summary>
-        public Tdate Shift(int offset, Tnum temporalPeriod)
-        {
-            return this.Shift<Tdate>(offset, temporalPeriod);
-        }
-
-        /// <summary>
-        /// Returns a Tdate in which the last value in a time period is the
-        /// final value.
-        /// </summary>
-        public Tdate PeriodEndVal(Tnum temporalPeriod)
-        {
-            return this.PeriodEndVal<Tdate>(temporalPeriod).Lean;
-        }
-
+               
         /// <summary>
         /// Returns true in the period during which a given date falls
         /// Example: (2013-04-15).IsInPeriod(TheYear) is true for all of 2013, and otherwise false
         /// </summary>
-        public Tbool IsInPeriod(Tnum interval)
+        public Tvar IsInPeriod(Tvar interval)
         {
             // The event + 1 tick (temporal)
-            Tbool theEvent = Time.IsBetween(this, new Tdate(this.ToDateTime.AddTicks(1)));
+            Tvar theEvent = Time.IsBetween(this, new Tvar(this.ToDateTime.AddTicks(1)));
 
             // True during the interval when the event occurs
             return theEvent.EverPer(interval);
         }
 
-
-        // ********************************************************************
-        // AddTimeInterval
-        // ********************************************************************
-    
         /// <summary>
-        /// Adds a specified number of days to each DateTime in a Tdate.
+        /// Adds a specified number of days to each DateTime in a Tvar.
         /// Negative values are subtracted.
         /// </summary>    
-        public Tdate AddDays(Tnum days)
+        public Tvar AddDays(Tvar days)
         {
-            return ApplyFcnToTimeline<Tdate>(x => CoreAddDays(x), this, days);
+            return ApplyFcnToTimeline(x => CoreAddDays(x), this, days);
         }    
         private static Hval CoreAddDays(List<Hval> list)
         {
@@ -172,12 +112,12 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Adds a specified number of months to each DateTime in a Tdate.
+        /// Adds a specified number of months to each DateTime in a Tvar.
         /// Negative values are subtracted.
         /// </summary>
-        public Tdate AddMonths(Tnum days)
+        public Tvar AddMonths(Tvar days)
         {
-            return ApplyFcnToTimeline<Tdate>(x => CoreAddMonths(x), this, days);
+            return ApplyFcnToTimeline(x => CoreAddMonths(x), this, days);
         }    
         private static Hval CoreAddMonths(List<Hval> list)
         {
@@ -185,12 +125,12 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Adds a specified number of years to each DateTime in a Tdate.
+        /// Adds a specified number of years to each DateTime in a Tvar.
         /// Negative values are subtracted.
         /// </summary>
-        public Tdate AddYears(Tnum days)
+        public Tvar AddYears(Tvar days)
         {
-            return ApplyFcnToTimeline<Tdate>(x => CoreAddYears(x), this, days);
+            return ApplyFcnToTimeline(x => CoreAddYears(x), this, days);
         }    
         private static Hval CoreAddYears(List<Hval> list)
         {
@@ -198,13 +138,13 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Extracts the year from each value in a Tdate.
+        /// Extracts the year from each value in a Tvar.
         /// </summary>
-        public Tnum Year
+        public Tvar Year
         {       
             get
             {
-                return ApplyFcnToTimeline<Tnum>(x => GetYear(x), this);
+                return ApplyFcnToTimeline(x => GetYear(x), this);
             }
         }
         private static Hval GetYear(Hval h)
@@ -216,11 +156,11 @@ namespace Akkadian
         /// For a given date, determine what calendar quarter it's in.
         /// </summary>
         // TODO: Handle fiscal years that don't start in January.
-        public Tnum Quarter
+        public Tvar Quarter
         {       
             get
             {
-                return Switch<Tnum>(()=> this.Month <= 3, ()=> 1,
+                return Switch(()=> this.Month <= 3, ()=> 1,
                                     ()=> this.Month <= 6, ()=> 2,
                                     ()=> this.Month <= 9, ()=> 3,
                                     ()=> 4); 
@@ -228,13 +168,13 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Extracts the month from each value in a Tdate.
+        /// Extracts the month from each value in a Tvar.
         /// </summary>
-        public Tnum Month
+        public Tvar Month
         {       
             get
             {
-                return ApplyFcnToTimeline<Tnum>(x => GetMonth(x), this);
+                return ApplyFcnToTimeline(x => GetMonth(x), this);
             }
         }
         private static Hval GetMonth(Hval h)
@@ -243,13 +183,13 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Extracts the day from each value in a Tdate.
+        /// Extracts the day from each value in a Tvar.
         /// </summary>
-        public Tnum Day
+        public Tvar Day
         {       
             get
             {
-                return ApplyFcnToTimeline<Tnum>(x => GetDay(x), this);
+                return ApplyFcnToTimeline(x => GetDay(x), this);
             }
         }
         private static Hval GetDay(Hval h)
@@ -257,16 +197,12 @@ namespace Akkadian
             return Convert.ToDateTime(h.Val).Day;
         }
 
-        // ********************************************************************
-        // TimeDiff
-        // ********************************************************************
-        
         /// <summary>
-        /// Returns the number of days between the DateTimes in two Tdates.
+        /// Returns the number of days between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum DayDifference(Tdate td1, Tdate td2)
+        public static Tvar DayDifference(Tvar td1, Tvar td2)
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreDayDiff(x), td1, td2);
+            return ApplyFcnToTimeline(x => CoreDayDiff(x), td1, td2);
         }    
         private static Hval CoreDayDiff(List<Hval> list)
         {
@@ -277,9 +213,9 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the number of weeks between the DateTimes in two Tdates.
+        /// Returns the number of weeks between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum WeekDifference(Tdate td1, Tdate td2)
+        public static Tvar WeekDifference(Tvar td1, Tvar td2)
         {
             return (DayDifference(td1, td2) / 7).RoundToNearest(0.001);
         }
@@ -287,11 +223,11 @@ namespace Akkadian
         // TODO: Add MonthDiff and QuarterDiff functions
         
         /// <summary>
-        /// Returns the number of years between the DateTimes in two Tdates.
+        /// Returns the number of years between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum YearDifference(Tdate td1, Tdate td2)
+        public static Tvar YearDifference(Tvar td1, Tvar td2)
         {
-            return ApplyFcnToTimeline<Tnum>(x => YearDiffRec(x), td1, td2);;
+            return ApplyFcnToTimeline(x => YearDiffRec(x), td1, td2);;
         }
 
         /// <summary>

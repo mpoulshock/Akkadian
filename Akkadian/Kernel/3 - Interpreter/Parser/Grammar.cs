@@ -46,11 +46,11 @@ namespace Akkadian
 		// {Dawn: 42; 2011-01-01: 43}
 
 		// Function parts
-		protected const string akkType = "(Tbool|Tnum|Tstr|Tdate|Tset|Thing)";
+		protected const string akkType = "(Tvar|Tvar|Tvar|Tvar|Tvar|Thing)";
 		protected const string fcnVariable = letter + "[a-zA-Z0-9_]*";
 		protected const string fcnName = letter + "[a-zA-Z0-9_]*";
 		protected const string secondaryArgs = "([,"  + white + fcnVariable + white + "]*)?";
-		protected const string fcnSignature = fcnName + white + @"\["+ white + "(" + fcnVariable + ")?" + white + secondaryArgs + white + @"\]";
+		protected const string fcnSignature = fcnName + white + @"\["+ white + fcnVariable + white + secondaryArgs + white + @"\]";
 
 		// Switch
 		protected const string switchStatement = wildcard + "->" + wildcard + "," + wildcard;

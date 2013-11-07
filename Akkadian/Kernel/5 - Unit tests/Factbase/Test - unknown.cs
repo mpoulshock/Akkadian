@@ -28,15 +28,15 @@ namespace Akkadian.UnitTests
     public class Hstates : H
     {
         private static string eternallyUnstated = "Unstated";
-        private static Tbool tbt = new Tbool(true);
-        private static Tbool tbf = new Tbool(false);
-        private static Tbool tbu = new Tbool(Hstate.Unstated);
-        private static Tset theSet = new Tset(Hstate.Unstated);
-        private static Tnum n = new Tnum(Hstate.Unstated);
+        private static Tvar tbt = new Tvar(true);
+        private static Tvar tbf = new Tvar(false);
+        private static Tvar tbu = new Tvar(Hstate.Unstated);
+        private static Tvar theSet = new Tvar(Hstate.Unstated);
+        private static Tvar n = new Tvar(Hstate.Unstated);
 
-        private static Tnum tnv()
+        private static Tvar tnv()
         {
-            Tnum result = new Tnum(Hstate.Stub);
+            Tvar result = new Tvar(Hstate.Stub);
             result.AddState(Date(2001,1,1), Hstate.Uncertain);
             result.AddState(Date(2002,1,1), Hstate.Unstated);
             return result;
@@ -47,16 +47,16 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Add_1 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = n + n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = n + n2;
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Add_2 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = tnv() + n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = tnv() + n2;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -65,16 +65,16 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Subtract_1 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = n - n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = n - n2;
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Subtract_2 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = tnv() - n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = tnv() - n2;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -83,31 +83,31 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Mult_1 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = n * n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = n * n2;
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
         
         [Test]
         public void Unknown_Mult_2 ()
         {
-            Tnum n2 = new Tnum(0);
-            Tnum result = n * n2;
+            Tvar n2 = new Tvar(0);
+            Tvar result = n * n2;
             Assert.AreEqual(0, result.Out);        
         }
         
         [Test]
         public void Unknown_Mult_3 ()
         {
-            Tnum result = n * 0;
+            Tvar result = n * 0;
             Assert.AreEqual(0, result.Out);        
         }
 
         [Test]
         public void Unknown_Mult_4 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = tnv() * n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = tnv() * n2;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -116,8 +116,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Div_2 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = tnv() / n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = tnv() / n2;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -126,22 +126,22 @@ namespace Akkadian.UnitTests
         [Test]
         public void Modulo_1 ()
         {
-            Tnum result = 3 % 2;
+            Tvar result = 3 % 2;
             Assert.AreEqual(1, result.Out);        
         }
 
         [Test]
         public void Unknown_Modulo_1 ()
         {
-            Tnum result = n % 3;
+            Tvar result = n % 3;
             Assert.AreEqual("Unstated", result.Out);        
         }
 
         [Test]
         public void Unknown_Modulo_2 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = tnv() % n2;
+            Tvar n2 = new Tvar(4);
+            Tvar result = tnv() % n2;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -150,14 +150,14 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Abs_1 ()
         {
-            Tnum result = Abs(n);
+            Tvar result = Abs(n);
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Abs_2 ()
         {
-            Tnum result = Abs(tnv());
+            Tvar result = Abs(tnv());
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -166,27 +166,27 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Round_1 ()
         {
-            Tnum result = n.RoundUp(2);
+            Tvar result = n.RoundUp(2);
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Round_2 ()
         {
-            Tnum result = tnv().RoundToNearest(10);
+            Tvar result = tnv().RoundToNearest(10);
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
         [Test]
         public void Unknown_Round_3 ()
         {
-            Tnum result = tnv().RoundUp(10);
+            Tvar result = tnv().RoundUp(10);
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
         [Test]
         public void Unknown_Round_4 ()
         {
-            Tnum result = tnv().RoundDown(10);
+            Tvar result = tnv().RoundDown(10);
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -196,15 +196,15 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Min_1 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = Min(n, n2);
+            Tvar n2 = new Tvar(4);
+            Tvar result = Min(n, n2);
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Min_2 ()
         {
-            Tnum result = Min(tnv(),3);
+            Tvar result = Min(tnv(),3);
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -213,15 +213,15 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Max_1 ()
         {
-            Tnum n2 = new Tnum(4);
-            Tnum result = Max(n, n2);
+            Tvar n2 = new Tvar(4);
+            Tvar result = Max(n, n2);
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Max_2 ()
         {
-            Tnum result = Max(tnv(),3);
+            Tvar result = Max(tnv(),3);
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
         }
 
@@ -230,14 +230,14 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Lean_1 ()
         {
-            Tbool result = tbu.Lean;
+            Tvar result = tbu.Lean;
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
         [Test]
         public void Unknown_Lean_2 ()
         {
-            Tbool t = new Tbool(Hstate.Stub);
+            Tvar t = new Tvar(Hstate.Stub);
             t.AddState(DateTime.Now, Hstate.Stub);
             Assert.AreEqual("Stub", t.Lean.Out);        
         }
@@ -247,7 +247,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_AsOf_1 ()
         {
-            Tbool result = tbu.AsOf(DateTime.Now);
+            Tvar result = tbu.AsOf(DateTime.Now);
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
         
@@ -256,14 +256,14 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_IsAlways_1 ()
         {
-            Tbool result = tbu.IsAlwaysTrue();
+            Tvar result = tbu.IsAlwaysTrue();
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
         
         [Test]
         public void Unknown_IsEver_1 ()
         {
-            Tbool result = tbu.IsEverTrue();
+            Tvar result = tbu.IsEverTrue();
             Assert.AreEqual(eternallyUnstated, result.Out);        
         }
 
@@ -272,8 +272,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_Concat_1 ()
         {
-            Tstr ts2 = new Tstr(Hstate.Unstated);
-            Tstr ts3 = " x" + ts2;
+            Tvar ts2 = new Tvar(Hstate.Unstated);
+            Tvar ts3 = " x" + ts2;
             Assert.AreEqual(eternallyUnstated, ts3.Out);            
         }
 
@@ -292,7 +292,7 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tset s1 = new Tset(P1,P2);    
+            Tvar s1 = new Tvar(P1,P2);    
             Assert.AreEqual(eternallyUnstated, theSet.IsSubsetOf(s1).Out);        
         }
         
@@ -312,8 +312,8 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tset s1 = new Tset(P1,P2);
-            Tbool res = s1 == theSet;
+            Tvar s1 = new Tvar(P1,P2);
+            Tvar res = s1 == theSet;
             Assert.AreEqual(eternallyUnstated, res.Out);        
         }
         
@@ -322,8 +322,8 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tset s1 = new Tset(P1,P2);
-            Tbool res = s1 != theSet;
+            Tvar s1 = new Tvar(P1,P2);
+            Tvar res = s1 != theSet;
             Assert.AreEqual(eternallyUnstated, res.Out);        
         }
         
@@ -332,9 +332,9 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_IsAtOrBefore_1 ()
         {
-            Tdate td1 = new Tdate(2000,1,1);
-            Tdate td2 = new Tdate(Hstate.Unstated);
-            Tbool result = td2 <= td1;
+            Tvar td1 = new Tvar(2000,1,1);
+            Tvar td2 = new Tvar(Hstate.Unstated);
+            Tvar result = td2 <= td1;
             Assert.AreEqual(eternallyUnstated, result.Out);    
         }
 
@@ -343,35 +343,35 @@ namespace Akkadian.UnitTests
         [Test]
         public void Unknown_NumericComparison1 ()
         {
-            Tbool r = tnv() > 7;
+            Tvar r = tnv() > 7;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", r.Out);    
         }
 
         [Test]
         public void Unknown_NumericComparison2 ()
         {
-            Tbool r = tnv() == 7;
+            Tvar r = tnv() == 7;
             Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", r.Out);    
         }
 
         [Test]
         public void Unknown_NumericComparison3 ()
         {
-            Tbool r = new Tnum(Hstate.Uncertain) == new Tnum(Hstate.Unstated);
+            Tvar r = new Tvar(Hstate.Uncertain) == new Tvar(Hstate.Unstated);
             Assert.AreEqual("Uncertain", r.Out);    
         }
 
         [Test]
         public void Unknown_NumericComparison4 ()
         {
-            Tbool r = new Tnum(Hstate.Uncertain) == new Tnum(Hstate.Uncertain);
+            Tvar r = new Tvar(Hstate.Uncertain) == new Tvar(Hstate.Uncertain);
             Assert.AreEqual("Uncertain", r.Out);    
         }
 
         [Test]
         public void Unknown_NumericComparison5 ()
         {
-            Tbool r = new Tnum(Hstate.Stub) == new Tnum(Hstate.Uncertain);
+            Tvar r = new Tvar(Hstate.Stub) == new Tvar(Hstate.Uncertain);
             Assert.AreEqual("Stub", r.Out);    
         }
 
@@ -426,7 +426,7 @@ namespace Akkadian.UnitTests
         public void Unknown_EntInst7 ()
         {
             Thing p = new Thing("Jane");
-            Assert.AreEqual(Hstate.Known, EntityArgIsUnknown(p,new Tstr("")));    
+            Assert.AreEqual(Hstate.Known, EntityArgIsUnknown(p,new Tvar("")));    
         }
     }
 }

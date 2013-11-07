@@ -26,18 +26,18 @@ namespace Akkadian
 	public partial class Session
 	{
 		/// <summary>
-		/// Returns a Tvar when its associated Tbool is true.  
+		/// Returns a Tvar when its associated Tvar is true.  
 		/// </summary>
 		/// <remarks>
 		/// Similar in principle to a C# switch statement, just temporal.
-		/// Sample usage: Switch(Tbool1, Tvar1, Tbool2, Tvar2, ..., defaultTvar).  
-		/// Returns Tvar1 if Tbool2 is true, else Tvar2 if Tbool2 is true, etc., else defaultTvar. 
+		/// Sample usage: Switch(Tvar1, Tvar1, Tvar2, Tvar2, ..., defaultTvar).  
+		/// Returns Tvar1 if Tvar2 is true, else Tvar2 if Tvar2 is true, etc., else defaultTvar. 
 		/// </remarks>
-		public T Switch2<T>(Expr arguments, Expr args) where T : Tvar
+		public Tvar Switch2(Expr arguments, Expr args)
 		{
 			// Default result
 			Hval h = new Hval(null, Hstate.Null);
-			T result = (T)Akkadian.Util.ReturnProperTvar<T>(h);
+			Tvar result = new Tvar(h);
 
 			// Analyze each condition-value pair...and keep going
 			// until all intervals of the result Tvar are defined...
@@ -45,38 +45,38 @@ namespace Akkadian
 			for (int arg=0; arg < len-1; arg+=2)
 			{
 				// Get value of the condition
-				Tbool newCondition = (Tbool)eval(arguments.nodes[arg],args).obj;
+				Tvar newCondition = (Tvar)eval(arguments.nodes[arg],args).obj;
 
 				// Identify the intervals when the new condition is neither false nor true
 				// Falsehood causes it to fall through to next condition. Truth causes the
 				// result to assume the value during that interval.
-				Tbool newConditionIsUnknown = Util.HasUnknownState(newCondition);
+				Tvar newConditionIsUnknown = Util.HasUnknownState(newCondition);
 
 				// Merge these 'unknown' intervals in new condition into the result.
-				result = Util.MergeTvars<T>(result, Util.ConditionalAssignment<T>(newConditionIsUnknown, newCondition));
+				result = Util.MergeTvars(result, Util.ConditionalAssignment(newConditionIsUnknown, newCondition));
 
 				// Identify the intervals when the new condition is true.
 				// Ignore irrelevant periods when result is already determined.
 				// During these intervals, "result" takes on the value of its conclusion.
-				Tbool newConditionIsTrueAndResultIsNull = newCondition && Util.IsNull(result);
+				Tvar newConditionIsTrueAndResultIsNull = newCondition && Util.IsNull(result);
 
 				// If new true segments are found, accumulate the values during those intervals
 				if (newConditionIsTrueAndResultIsNull.IsEverTrue())
 				{
-					T val = (T)eval(arguments.nodes[arg+1],args).obj;
-					result = Util.MergeTvars<T>(result, Util.ConditionalAssignment<T>(newConditionIsTrueAndResultIsNull, val)); 
+					Tvar val = (Tvar)eval(arguments.nodes[arg+1],args).obj;
+					result = Util.MergeTvars(result, Util.ConditionalAssignment(newConditionIsTrueAndResultIsNull, val)); 
 				}
 
 				if (!Util.HasUndefinedIntervals(result))
 				{
-					return result.LeanTvar<T>();
+					return result.Lean;
 				}
 			}
 
-			T defaultVal = (T)eval(arguments.nodes[len-1],args).obj;
-			result = Util.MergeTvars<T>(result, defaultVal);
+			Tvar defaultVal = (Tvar)eval(arguments.nodes[len-1],args).obj;
+			result = Util.MergeTvars(result, defaultVal);
 
-			return result.LeanTvar<T>();
+			return result.Lean;
 		}
 	}
 }

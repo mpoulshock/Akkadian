@@ -26,18 +26,18 @@ namespace Akkadian
     public partial class H
     {		
         /// <summary>
-        /// Returns a Tvar when its associated Tbool is true.  
+        /// Returns a Tvar when its associated Tvar is true.  
         /// </summary>
         /// <remarks>
         /// Similar in principle to a C# switch statement, just temporal.
-        /// Sample usage: Switch(Tbool1, Tvar1, Tbool2, Tvar2, ..., defaultTvar).  
-        /// Returns Tvar1 if Tbool2 is true, else Tvar2 if Tbool2 is true, etc., else defaultTvar. 
+        /// Sample usage: Switch(Tvar1, Tvar1, Tvar2, Tvar2, ..., defaultTvar).  
+        /// Returns Tvar1 if Tvar2 is true, else Tvar2 if Tvar2 is true, etc., else defaultTvar. 
         /// </remarks>
-        public static T Switch<T>(params Func<Tvar>[] arguments) where T : Tvar
+        public static Tvar Switch(params Func<Tvar>[] arguments) 
         {
             // Default result
             Hval h = new Hval(null, Hstate.Null);
-            T result = (T)Util.ReturnProperTvar<T>(h);
+            Tvar result = new Tvar(h);
 
             // Analyze each condition-value pair...and keep going
             // until all intervals of the result Tvar are defined...
@@ -45,41 +45,39 @@ namespace Akkadian
             for (int arg=0; arg < len-1; arg+=2)
             {
                 // Get value of the condition
-                Tbool newCondition = Util.ConvertToTvar<Tbool>(arguments[arg].Invoke());
+				Tvar newCondition = new Tvar(arguments[arg].Invoke());
 
                 // Identify the intervals when the new condition is neither false nor true
                 // Falsehood causes it to fall through to next condition. Truth causes the
                 // result to assume the value during that interval.
-                Tbool newConditionIsUnknown = Util.HasUnknownState(newCondition);
+                Tvar newConditionIsUnknown = Util.HasUnknownState(newCondition);
 
                 // Merge these 'unknown' intervals in new condition into the result.
-                result = Util.MergeTvars<T>(result,
-                                       Util.ConditionalAssignment<T>(newConditionIsUnknown, newCondition));
+                result = Util.MergeTvars(result, Util.ConditionalAssignment(newConditionIsUnknown, newCondition));
 
                 // Identify the intervals when the new condition is true.
                 // Ignore irrelevant periods when result is already determined.
                 // During these intervals, "result" takes on the value of its conclusion.
-                Tbool newConditionIsTrueAndResultIsNull = newCondition && Util.IsNull(result);
+                Tvar newConditionIsTrueAndResultIsNull = newCondition && Util.IsNull(result);
 
                 // If new true segments are found, accumulate the values during those intervals
                 if (newConditionIsTrueAndResultIsNull.IsEverTrue())
                 {
-                    T val = (T)Util.ConvertToTvar<T>(arguments[arg+1].Invoke());
-                    result = Util.MergeTvars<T>(result,
-                                           Util.ConditionalAssignment<T>(newConditionIsTrueAndResultIsNull, val)); 
+                    Tvar val = new Tvar(arguments[arg+1].Invoke());
+                    result = Util.MergeTvars(result, Util.ConditionalAssignment(newConditionIsTrueAndResultIsNull, val)); 
                 }
 
                 if (!Util.HasUndefinedIntervals(result))
                 {
-                    return result.LeanTvar<T>();
+                    return result.Lean;
                 }
 
             }
 
-            T defaultVal = (T)Util.ConvertToTvar<T>(arguments[len-1].Invoke());
-            result = Util.MergeTvars<T>(result, defaultVal);
+            Tvar defaultVal = new Tvar(arguments[len-1].Invoke());
+            result = Util.MergeTvars(result, defaultVal);
 
-            return result.LeanTvar<T>();
+            return result.Lean;
         }
     }
 
@@ -89,7 +87,7 @@ namespace Akkadian
     public partial class Util
     {
         /// <summary>
-        /// When a Tbool (tb) is true, get the value of one Tvar (val) and assign it to 
+        /// When a Tvar (tb) is true, get the value of one Tvar (val) and assign it to 
         /// a second Tvar (result).
         /// </summary>
         /// <remarks>
@@ -97,9 +95,9 @@ namespace Akkadian
         ///                val = <--------------4--------------> 
         ///         CA(tb,val) = <--n--|--4--|--n--|--4--|--n-->  where n = Hstate.Null
         /// </remarks>
-        public static T ConditionalAssignment<T>(Tbool tb, Tvar val) where T : Tvar
+        public static Tvar ConditionalAssignment(Tvar tb, Tvar val) 
         {
-            T result = (T)Util.ReturnProperTvar<T>();
+            Tvar result = new Tvar();
 
             foreach (KeyValuePair<DateTime,List<Hval>> pair in H.TimePointValues(tb,val))
             {
@@ -113,7 +111,7 @@ namespace Akkadian
                 }
             }
 
-            return result.LeanTvar<T>();
+            return result.Lean;
         }
 
         /// <summary>
@@ -125,9 +123,9 @@ namespace Akkadian
         ///                tv2 = <--9--|--n--|--2--|--n--|--n--> 
         ///     Merge(tv1,tv2) = <--0--|--1--|--2--|--3--|--n-->  where n = Hstate.Null
         /// </remarks>
-        public static T MergeTvars<T>(T tv1, T tv2) where T : Tvar
+        public static Tvar MergeTvars(Tvar tv1, Tvar tv2)
         {
-            T result = (T)Util.ReturnProperTvar<T>();
+            Tvar result = new Tvar();
 
             foreach (KeyValuePair<DateTime,List<Hval>> pair in H.TimePointValues(tv1,tv2))
             {
@@ -145,15 +143,15 @@ namespace Akkadian
                 }
             }
 
-            return result.LeanTvar<T>();
+            return result.Lean;
         }
 
         /// <summary>
         /// Identifies intervals where a Tvar is Stub, Uncertain, or Unstated.
         /// </summary>
-        public static Tbool HasUnknownState(Tvar tvar) 
+        public static Tvar HasUnknownState(Tvar tvar) 
         {
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
             
             foreach (KeyValuePair<DateTime,Hval> slice in tvar.IntervalValues)
             {
@@ -166,9 +164,9 @@ namespace Akkadian
         /// <summary>
         /// Identifies intervals where a Tvar is Hstate.Null.
         /// </summary>
-        public static Tbool IsNull(Tvar tvar) 
+        public static Tvar IsNull(Tvar tvar) 
         {
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
             
             foreach (KeyValuePair<DateTime,Hval> slice in tvar.IntervalValues)
             {

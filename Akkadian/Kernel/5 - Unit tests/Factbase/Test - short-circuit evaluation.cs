@@ -32,20 +32,20 @@ namespace Akkadian.UnitTests
         private static string result = "";
         
         // Some functions to simulate "rules"
-        private static Tbool MethodF()
+        private static Tvar MethodF()
         {
             result += "F";
-            return new Tbool(false);
+            return new Tvar(false);
         }
-        private static Tbool MethodT()
+        private static Tvar MethodT()
         {
             result += "T";
-            return new Tbool(true);
+            return new Tvar(true);
         }
-        private static Tbool MethodU()
+        private static Tvar MethodU()
         {
             result += "U";
-            return new Tbool(Hstate.Unstated);
+            return new Tvar(Hstate.Unstated);
         }
         
         // Tests for correct IsTrue / IsFalse determinations
@@ -53,28 +53,28 @@ namespace Akkadian.UnitTests
         [Test]
         public void IsDefinitelyFalse1 ()
         {
-            Tbool t = new Tbool(true);
+            Tvar t = new Tvar(true);
             Assert.AreEqual(false, t.IsFalse);      
         }
         
         [Test]
         public void IsDefinitelyFalse2 ()
         {
-            Tbool t = new Tbool(Hstate.Unstated);
+            Tvar t = new Tvar(Hstate.Unstated);
             Assert.AreEqual(false, t.IsFalse);      
         }
         
         [Test]
         public void IsDefinitelyFalse3 ()
         {
-            Tbool t = new Tbool(false);
+            Tvar t = new Tvar(false);
             Assert.AreEqual(true, t.IsFalse);      
         }
         
         [Test]
         public void IsDefinitelyFalse4 ()
         {
-            Tbool t = new Tbool(true);
+            Tvar t = new Tvar(true);
             t.AddState(DateTime.Now, false);
             Assert.AreEqual(false, t.IsFalse);      
         }
@@ -82,28 +82,28 @@ namespace Akkadian.UnitTests
         [Test]
         public void IsDefinitelyTrue1 ()
         {
-            Tbool t = new Tbool(true);
+            Tvar t = new Tvar(true);
             Assert.AreEqual(true, t.IsTrue);      
         }
         
         [Test]
         public void IsDefinitelyTrue2 ()
         {
-            Tbool t = new Tbool(Hstate.Unstated);
+            Tvar t = new Tvar(Hstate.Unstated);
             Assert.AreEqual(false, t.IsTrue);      
         }
         
         [Test]
         public void IsDefinitelyTrue3 ()
         {
-            Tbool t = new Tbool(false);
+            Tvar t = new Tvar(false);
             Assert.AreEqual(false, t.IsTrue);      
         }
         
         [Test]
         public void IsDefinitelyTrue4 ()
         {
-            Tbool t = new Tbool(true);
+            Tvar t = new Tvar(true);
             t.AddState(DateTime.Now, false);
             Assert.AreEqual(false, t.IsTrue);      
         }
@@ -116,7 +116,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void And_TT_Result ()
         {
-            Tbool t = MethodT() && MethodT();
+            Tvar t = MethodT() && MethodT();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -124,14 +124,14 @@ namespace Akkadian.UnitTests
         public void And_TT_Order ()
         {
             result = "";
-            Tbool t = MethodT() && MethodT();
+            Tvar t = MethodT() && MethodT();
             Assert.AreEqual("TT", result);      
         }
         
         [Test]
         public void And_TF_Result ()
         {
-            Tbool t = MethodT() && MethodF();
+            Tvar t = MethodT() && MethodF();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -139,14 +139,14 @@ namespace Akkadian.UnitTests
         public void And_TF_Order ()
         {
             result = "";
-            Tbool t = MethodT() && MethodF();
+            Tvar t = MethodT() && MethodF();
             Assert.AreEqual("TF", result);      
         }
         
         [Test]
         public void And_TU_Result ()
         {
-            Tbool t = MethodT() && MethodU();
+            Tvar t = MethodT() && MethodU();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -154,14 +154,14 @@ namespace Akkadian.UnitTests
         public void And_TU_Order ()
         {
             result = "";
-            Tbool t = MethodT() && MethodU();
+            Tvar t = MethodT() && MethodU();
             Assert.AreEqual("TU", result);      
         }
         
         [Test]
         public void And_FT_Result ()
         {
-            Tbool t = MethodF() && MethodT();
+            Tvar t = MethodF() && MethodT();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -169,14 +169,14 @@ namespace Akkadian.UnitTests
         public void And_FT_Order ()
         {
             result = "";
-            Tbool t = MethodF() && MethodT();
+            Tvar t = MethodF() && MethodT();
             Assert.AreEqual("F", result);      
         }
         
         [Test]
         public void And_FF_Result ()
         {
-            Tbool t = MethodF() && MethodF();
+            Tvar t = MethodF() && MethodF();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -184,14 +184,14 @@ namespace Akkadian.UnitTests
         public void And_FF_Order ()
         {
             result = "";
-            Tbool t = MethodF() && MethodF();
+            Tvar t = MethodF() && MethodF();
             Assert.AreEqual("F", result);      
         }
         
         [Test]
         public void And_FU_Result ()
         {
-            Tbool t = MethodF() && MethodU();
+            Tvar t = MethodF() && MethodU();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -199,14 +199,14 @@ namespace Akkadian.UnitTests
         public void And_FU_Order ()
         {
             result = "";
-            Tbool t = MethodF() && MethodU();
+            Tvar t = MethodF() && MethodU();
             Assert.AreEqual("F", result);      
         }
         
         [Test]
         public void And_UT_Result ()
         {
-            Tbool t = MethodU() && MethodT();
+            Tvar t = MethodU() && MethodT();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -214,14 +214,14 @@ namespace Akkadian.UnitTests
         public void And_UT_Order ()
         {
             result = "";
-            Tbool t = MethodU() && MethodT();
+            Tvar t = MethodU() && MethodT();
             Assert.AreEqual("UT", result);      
         }
         
         [Test]
         public void And_UF_Result ()
         {
-            Tbool t = MethodU() && MethodF();
+            Tvar t = MethodU() && MethodF();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -229,14 +229,14 @@ namespace Akkadian.UnitTests
         public void And_UF_Order ()
         {
             result = "";
-            Tbool t = MethodU() && MethodF();
+            Tvar t = MethodU() && MethodF();
             Assert.AreEqual("UF", result);      
         }
         
         [Test]
         public void And_UU_Result ()
         {
-            Tbool t = MethodU() && MethodU();
+            Tvar t = MethodU() && MethodU();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -244,7 +244,7 @@ namespace Akkadian.UnitTests
         public void And_UU_Order ()
         {
             result = "";
-            Tbool t = MethodU() && MethodU();
+            Tvar t = MethodU() && MethodU();
             Assert.AreEqual("UU", result);      
         }
         
@@ -252,14 +252,14 @@ namespace Akkadian.UnitTests
         public void And_TFT_Order ()
         {
             result = "";
-            Tbool t = MethodT() && MethodF() && MethodT();
+            Tvar t = MethodT() && MethodF() && MethodT();
             Assert.AreEqual("TF", result);      
         }
         
         [Test]
         public void And_TFT_Result ()
         {
-            Tbool t = MethodT() && MethodF() && MethodT();
+            Tvar t = MethodT() && MethodF() && MethodT();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -267,14 +267,14 @@ namespace Akkadian.UnitTests
         public void And_FTT_Order ()
         {
             result = "";
-            Tbool t = MethodF() && MethodT() && MethodT();
+            Tvar t = MethodF() && MethodT() && MethodT();
             Assert.AreEqual("F", result);      
         }
         
         [Test]
         public void And_FTT_Result ()
         {
-            Tbool t = MethodF() && MethodT() && MethodT();
+            Tvar t = MethodF() && MethodT() && MethodT();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -283,7 +283,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void Or_TT_Result ()
         {
-            Tbool t = MethodT() || MethodT();
+            Tvar t = MethodT() || MethodT();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -291,14 +291,14 @@ namespace Akkadian.UnitTests
         public void Or_TT_Order ()
         {
             result = "";
-            Tbool t = MethodT() || MethodT();
+            Tvar t = MethodT() || MethodT();
             Assert.AreEqual("T", result);      
         }
         
         [Test]
         public void Or_TF_Result ()
         {
-            Tbool t = MethodT() || MethodF();
+            Tvar t = MethodT() || MethodF();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -306,14 +306,14 @@ namespace Akkadian.UnitTests
         public void Or_TF_Order ()
         {
             result = "";
-            Tbool t = MethodT() || MethodF();
+            Tvar t = MethodT() || MethodF();
             Assert.AreEqual("T", result);      
         }
         
         [Test]
         public void Or_TU_Result ()
         {
-            Tbool t = MethodT() || MethodU();
+            Tvar t = MethodT() || MethodU();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -321,14 +321,14 @@ namespace Akkadian.UnitTests
         public void Or_TU_Order ()
         {
             result = "";
-            Tbool t = MethodT() || MethodU();
+            Tvar t = MethodT() || MethodU();
             Assert.AreEqual("T", result);      
         }
         
         [Test]
         public void Or_FT_Result ()
         {
-            Tbool t = MethodF() || MethodT();
+            Tvar t = MethodF() || MethodT();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -336,14 +336,14 @@ namespace Akkadian.UnitTests
         public void Or_FT_Order ()
         {
             result = "";
-            Tbool t = MethodF() || MethodT();
+            Tvar t = MethodF() || MethodT();
             Assert.AreEqual("FT", result);      
         }
         
         [Test]
         public void Or_FF_Result ()
         {
-            Tbool t = MethodF() || MethodF();
+            Tvar t = MethodF() || MethodF();
             Assert.AreEqual(false , t.Out);      
         }
         
@@ -351,14 +351,14 @@ namespace Akkadian.UnitTests
         public void Or_FF_Order ()
         {
             result = "";
-            Tbool t = MethodF() || MethodF();
+            Tvar t = MethodF() || MethodF();
             Assert.AreEqual("FF", result);      
         }
         
         [Test]
         public void Or_FU_Result ()
         {
-            Tbool t = MethodF() || MethodU();
+            Tvar t = MethodF() || MethodU();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -366,14 +366,14 @@ namespace Akkadian.UnitTests
         public void Or_FU_Order ()
         {
             result = "";
-            Tbool t = MethodF() || MethodU();
+            Tvar t = MethodF() || MethodU();
             Assert.AreEqual("FU", result);      
         }
         
         [Test]
         public void Or_UT_Result ()
         {
-            Tbool t = MethodU() || MethodT();
+            Tvar t = MethodU() || MethodT();
             Assert.AreEqual(true , t.Out);      
         }
         
@@ -381,14 +381,14 @@ namespace Akkadian.UnitTests
         public void Or_UT_Order ()
         {
             result = "";
-            Tbool t = MethodU() || MethodT();
+            Tvar t = MethodU() || MethodT();
             Assert.AreEqual("UT", result);      
         }
         
         [Test]
         public void Or_UF_Result ()
         {
-            Tbool t = MethodU() || MethodF();
+            Tvar t = MethodU() || MethodF();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -396,14 +396,14 @@ namespace Akkadian.UnitTests
         public void Or_UF_Order ()
         {
             result = "";
-            Tbool t = MethodU() || MethodF();
+            Tvar t = MethodU() || MethodF();
             Assert.AreEqual("UF", result);      
         }
         
         [Test]
         public void Or_UU_Result ()
         {
-            Tbool t = MethodU() || MethodU();
+            Tvar t = MethodU() || MethodU();
             Assert.AreEqual("Unstated", t.Out);      
         }
         
@@ -411,7 +411,7 @@ namespace Akkadian.UnitTests
         public void Or_UU_Order ()
         {
             result = "";
-            Tbool t = MethodU() || MethodU();
+            Tvar t = MethodU() || MethodU();
             Assert.AreEqual("UU", result);      
         }
     }

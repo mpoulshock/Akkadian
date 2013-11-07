@@ -68,11 +68,11 @@ namespace REPL
 						Expr exp = Interpreter.StringToExpr(pr.ParserString);
 						object o = sess.eval(exp).obj;
 
-						if (o.GetType() == typeof(Tnum)) 		{ result = Convert.ToString(((Tnum)o).Out); }
-						else if (o.GetType() == typeof(Tbool)) 	{ result = Convert.ToString(((Tbool)o).Out); }
-						else if (o.GetType() == typeof(Tstr)) 	{ result = Convert.ToString(((Tstr)o).Out); }
-						else if (o.GetType() == typeof(Tdate)) 	{ result = Convert.ToString(((Tdate)o).Out); }
-						else if (o.GetType() == typeof(Tset)) 	{ result = Convert.ToString(((Tset)o).Out); }
+						if (o.GetType() == typeof(Tvar)) 		{ result = Convert.ToString(((Tvar)o).Out); }
+						else if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
+						else if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
+						else if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
+						else if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
 					}
 
 					// Print

@@ -68,11 +68,11 @@ namespace Akkadian
 					}
 					Expr newArgs = new Expr(newArgList);
 
-					result = n(Typ.Tnum,Switch2<Tnum>(newArgs, args));  // NEEDS TO BE TYPE-SENSITIVE
+					result = n(Typ.Tvar, Switch2(newArgs, args));
 				}
 				else if (opType == Op.Max || opType == Op.Min)
 				{
-					result = MultiTnumFcnEval(exp, args, opType);
+					result = MultiTvarFcnEval(exp, args, opType);
 				}
 //				else if (opType == "Exists")
 //				{
@@ -93,8 +93,8 @@ namespace Akkadian
 			{
 				// Get the info from the user / factbase
 				string s = Console.ReadLine();
-				// result = nTnum(Convert.ToDecimal(s)));
-				result = nTbool(Convert.ToBoolean(s));
+				// result = nTvar(Convert.ToDecimal(s)));
+				result = nTvar(Convert.ToBoolean(s));
 			}
 
 			return result;

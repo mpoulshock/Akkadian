@@ -24,36 +24,36 @@ using System.Collections.Generic;
 namespace Akkadian
 {
     /*
-     * The functions below analyze Tbools to assess the intervals (days, weeks, 
-     * months, years, etc.) in which the Tbool is true. 
+     * The functions below analyze Tvars to assess the intervals (days, weeks, 
+     * months, years, etc.) in which the Tvar is true. 
      * 
      * These functions answer questions like:
      * 
-     *  - Is the Tbool always or ever true during each interval?
-     *  - How much total time has elapsed during which the Tbool is true?
+     *  - Is the Tvar always or ever true during each interval?
+     *  - How much total time has elapsed during which the Tvar is true?
      *  - In how many subintervals, within a given (larger type of) interval, is
-     *    the Tbool true?
-     *  - In how many intervals before a given interval is the Tbool true?
-     *  - When is the Tbool true for a consecutive number of intervals?
+     *    the Tvar true?
+     *  - In how many intervals before a given interval is the Tvar true?
+     *  - When is the Tvar true for a consecutive number of intervals?
      * 
      */
 
-    public partial class Tbool : Tvar
+    public partial class Tvar
     {
         /// <summary>
-        /// Indicates, for each time interval in a given Tnum, whether the Tbool
+        /// Indicates, for each time interval in a given Tvar, whether the Tvar
         /// is ever true during that interval.
         /// </summary>
-        public Tbool EverPer(Tnum intervals)
+        public Tvar EverPer(Tvar intervals)
         {
-            // If the interval Tnum is eternally unknown, return unknown
+            // If the interval Tvar is eternally unknown, return unknown
             if (intervals.IntervalValues.Count == 1 &&
                 !intervals.FirstValue.IsKnown)
             {
-                return new Tbool(intervals.FirstValue);
+                return new Tvar(intervals.FirstValue);
             }
 
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
 
             IList<DateTime> tPoints = intervals.TimePoints();
 
@@ -72,19 +72,19 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Indicates, for each time interval in a given Tnum, whether the Tbool
+        /// Indicates, for each time interval in a given Tvar, whether the Tvar
         /// is always true during that interval.
         /// </summary>
-        public Tbool AlwaysPer(Tnum intervals)
+        public Tvar AlwaysPer(Tvar intervals)
         {
-            // If the interval Tnum is eternally unknown, return unknown
+            // If the interval Tvar is eternally unknown, return unknown
             if (intervals.IntervalValues.Count == 1 &&
                 !intervals.FirstValue.IsKnown)
             {
-                return new Tbool(intervals.FirstValue);
+                return new Tvar(intervals.FirstValue);
             }
 
-            Tbool result = new Tbool();
+            Tvar result = new Tvar();
 
             IList<DateTime> tPoints = intervals.TimePoints();
 
@@ -110,11 +110,11 @@ namespace Akkadian
         /// a person was employed.
         /// </remarks>
         // TODO: Add support for counting partial subintervals
-        public Tnum CountPer(Tnum intervals)
+        public Tvar CountPer(Tvar intervals)
         {
             // TODO: Handle unknowns...
             
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             
             SortedList<DateTime, Hval> big = intervals.IntervalValues;
             SortedList<DateTime, Hval> small = this.IntervalValues;
@@ -155,11 +155,11 @@ namespace Akkadian
         /// numbered 0, the second 1, etc.
         /// </remarks>
         // TODO: Fix broken test case for this function.
-        public Tnum RunningCountPer(Tnum intervals)
+        public Tvar RunningCountPer(Tvar intervals)
         {
             // TODO: Implement unknowns
             
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
             result.AddState(Time.DawnOf,0);
             
             int count = 0;
@@ -176,7 +176,7 @@ namespace Akkadian
                 if (big != prevBig) count = 0;
                 prevBig = big;
                 
-                // If the Tbool is true during the subinterval, increment
+                // If the Tvar is true during the subinterval, increment
                 // the subsequent subinterval
                 if (this.AsOf(dt).ToBool == true)
                 {
@@ -190,7 +190,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the number of intervals that the Tbool is true,
+        /// Returns the number of intervals that the Tvar is true,
         /// covering a range of intervals starting x intervals in the past
         /// and ending y intervals in the past (or, if y=0, in the present
         /// interval).
@@ -207,27 +207,27 @@ namespace Akkadian
         /// equals 2, the function would evaluate the current interval and the
         /// prior interval.
         /// </remarks>
-//        private Tnum CountPastNIntervals(Tnum intervals, Tnum rangeStart, Tnum rangeEnd)
+//        private Tvar CountPastNIntervals(Tvar intervals, Tvar rangeStart, Tvar rangeEnd)
 //        {
-//            // If base Tnum is ever unknown during the time period, return 
+//            // If base Tvar is ever unknown during the time period, return 
 //            // the state with the proper precedence
-//            Hstate tnumState = PrecedenceForMissingTimePeriods(this);
-//            if (tnumState != Hstate.Known) return new Tnum(tnumState);
+//            Hstate TvarState = PrecedenceForMissingTimePeriods(this);
+//            if (TvarState != Hstate.Known) return new Tvar(TvarState);
 //
 //            // Determine the nature of the range (the time window to analyze)
 //            int rangeStartInt = Convert.ToInt32(rangeStart.FirstValue.Val);
 //            int rangeEndInt = Convert.ToInt32(rangeEnd.FirstValue.Val);
 //            int rangeWidth = rangeStartInt - rangeEndInt + 1;
 //
-//            // Set up the result Tnum
-//            Tnum result = new Tnum();
+//            // Set up the result Tvar
+//            Tvar result = new Tvar();
 //            result.AddState(Time.DawnOf, 0);  // Probably not ideal, but good enough
 //
 //            // Tvars we'll be working with
 //            SortedList<DateTime, Hval> intrvl = intervals.IntervalValues;
-//            SortedList<DateTime, Hval> baseTbool = this.IntervalValues;
+//            SortedList<DateTime, Hval> baseTvar = this.IntervalValues;
 //
-//            // Time window start and end, and date Tbool next changes
+//            // Time window start and end, and date Tvar next changes
 //            DateTime windowStart = Time.DawnOf;
 //            DateTime windowEnd = Time.EndOf;
 //            DateTime nextChangeDate = Time.DawnOf;
@@ -240,7 +240,7 @@ namespace Akkadian
 //                if (b > rangeWidth) windowStart = intrvl.Keys[b - rangeWidth];
 //
 //                // Only analyze the window if its end passes the next change date
-//                // Otherwise, skip ahead until the next time the Tbool changes value
+//                // Otherwise, skip ahead until the next time the Tvar changes value
 //                // (for performance).
 //                if (windowEnd > nextChangeDate)
 //                {
@@ -279,23 +279,23 @@ namespace Akkadian
 //                        result.AddState(intrvl.Keys[b], count);
 //                    }
 //
-//                    // Determine when the Tbool next changes its value
-//                    // First, if the window has moved past the last Tbool change date,
+//                    // Determine when the Tvar next changes its value
+//                    // First, if the window has moved past the last Tvar change date,
 //                    // then we can jump ahead to the end of time.
-//                    if (windowStart > baseTbool.Keys[baseTbool.Count-1])
+//                    if (windowStart > baseTvar.Keys[baseTvar.Count-1])
 //                    {
 //                        nextChangeDate = Time.EndOf;
 //                    }
 //                    else
 //                    {
-//                        for (int j=0; j < baseTbool.Count; j++)
+//                        for (int j=0; j < baseTvar.Count; j++)
 //                        {
-//                            // If the window is subsumed by a single interval on the Tbool,
+//                            // If the window is subsumed by a single interval on the Tvar,
 //                            // then we can jump ahead to that point in time.
-//                            if (windowEnd < baseTbool.Keys[j] &&
-//                                windowStart > baseTbool.Keys[j-1])
+//                            if (windowEnd < baseTvar.Keys[j] &&
+//                                windowStart > baseTvar.Keys[j-1])
 //                            {
-//                                nextChangeDate = baseTbool.Keys[j];
+//                                nextChangeDate = baseTvar.Keys[j];
 //                                break;
 //                            }
 //                        }

@@ -27,15 +27,6 @@ namespace Akkadian
 	public partial class Session 
 	{
 		/// <summary>
-		/// Instantiates a new Session object.
-		/// </summary>
-		public Session()
-		{
-			Interpreter.InitializeOperatorRegistry();
-			ClearFunctions();
-		}
-
-		/// <summary>
 		/// Data structure in which user-defined functions are stored.
 		/// </summary>
 		private static ConcurrentDictionary<string,Expr> FunctionTable = new ConcurrentDictionary<string,Expr>();
@@ -96,26 +87,6 @@ namespace Akkadian
 				result += "    " + kvp.Key + ": " + kvp.Value.ToString() + "\r\n";
 			}
 			return result;
-		}
-
-		/// <summary>
-		/// Processes a user-input string in light of the session data.
-		/// </summary>
-		public object ProcessInput(string s)
-		{
-			Interpreter.ParserResponse pr = Interpreter.ParseInputLine(s);
-
-			if (pr.IsNewFunction)
-			{
-				Expr e = (Expr)StringToNode(pr.ParserString).obj;
-				AddFunction(pr.FunctionName, e);
-				return true;
-			}
-			else
-			{
-				Expr exp = Interpreter.StringToExpr(pr.ParserString);
-				return eval(exp).obj;
-			}
 		}
 	}
 }

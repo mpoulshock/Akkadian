@@ -178,13 +178,13 @@ namespace Akkadian
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
 			{
-				return "Tdate:" + s;
+				return "Tvar:" + s;
 			}
 
 			// Numeric literals - must be before subtraction due to negative numbers
 			if (IsExactMatch(s,decimalLiteral) || IsExactMatch(s,currencyLiteral))
 			{
-				return "Tnum:" + Convert.ToDecimal(s.Replace("$",""));
+				return "Tvar:" + Convert.ToDecimal(s.Replace("$",""));
 			}
 
 			// Infix operators
@@ -210,13 +210,13 @@ namespace Akkadian
 			}
 
 			// More literal values
-			if (IsExactMatch(s,boolLiteral))
+			if (IsExactMatch(s.ToLower(),boolLiteral))
 			{
-				return "Tbool:" + Convert.ToBoolean(s);
+				return "Tvar:" + Convert.ToBoolean(s);
 			}
 			if (IsExactMatch(s,stringLiteral))
 			{
-				return "Tstr:" + s.Trim('\'');
+				return "Tvar:" + s.Trim('\'');
 			}
 
 			// Constants (i.e. constant functions - those with no arguments)
@@ -372,8 +372,8 @@ namespace Akkadian
 		 * To deal with nested expressions, the function first looks for the
 		 * innermost {} first, replacing them with a delimiter.  For example:
 		 * 
-		 * {Op:Mult,{Op:Cos,Tnum:33},{Op:Sin,{Op:Abs,Tnum:9}}}
-		 * {Op:Mult,#0#,{Op:Sin,{Op:Abs,Tnum:9}}}
+		 * {Op:Mult,{Op:Cos,Tvar:33},{Op:Sin,{Op:Abs,Tvar:9}}}
+		 * {Op:Mult,#0#,{Op:Sin,{Op:Abs,Tvar:9}}}
 		 * {Op:Mult,#0#,{Op:Sin,#1#}}
 		 * {Op:Mult,#0#,#2#}
 		 * 
@@ -398,8 +398,7 @@ namespace Akkadian
 
 			// Return the node object...
 			if (typ == "Op") 		return n(Typ.Op, (Op)Enum.Parse(typeof(Op),val));
-			if (typ == "Tnum") 		return n(Typ.Tnum, (Tnum)Convert.ToDecimal(val));
-			if (typ == "Tbool") 	return n(Typ.Tbool, (Tbool)Convert.ToBoolean(val));
+			if (typ == "Tvar") 		return n(Typ.Tvar, ConvertToBestType(val));
 			if (typ == "Var") 		return n(Typ.Var, Convert.ToInt16(val));
 			if (typ == "Fcn")		return n(Typ.Fcn, val);
 
@@ -465,6 +464,17 @@ namespace Akkadian
 		{
 			Node n = StringToNode(s);
 			return new Expr(new List<Node>(){n});
+		}
+
+		/// <summary>
+		/// Converts the string to the most appropriate type of Tvar object.
+		/// </summary>
+		public static Tvar ConvertToBestType(string s)
+		{
+			if (IsExactMatch(s,decimalLiteral)) 		return new Tvar(Convert.ToDecimal(s));
+			if (IsExactMatch(s,dateLiteral)) 			return new Tvar(Convert.ToDateTime(s));
+			if (IsExactMatch(s.ToLower(),boolLiteral))	return new Tvar(Convert.ToBoolean(s));
+			return new Tvar(s);
 		}
 	}
 }

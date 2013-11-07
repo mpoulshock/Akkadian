@@ -29,17 +29,17 @@ namespace Akkadian
         /// <summary>
         /// Represents a nested if-then statement within in a boolean expression.
         /// </summary>
-        public static Tbool IfThen(Tbool tb1, Tbool tb2)
+        public static Tvar IfThen(Tvar tb1, Tvar tb2)
         {       
             return !tb1 || tb2;
         }
 
         /// <summary>
-        /// Counts the number of Tbools that are true.
+        /// Counts the number of Tvars that are true.
         /// </summary>
-        public static Tnum BoolCount(params Tbool[] list)
+        public static Tvar BoolCount(params Tvar[] list)
         {
-            return ApplyFcnToTimeline<Tnum>(x => CoreBoolCount(x), list);
+            return ApplyFcnToTimeline(x => CoreBoolCount(x), list);
         }
         private static Hval CoreBoolCount(List<Hval> list)
         {
@@ -47,21 +47,19 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the minimum value of the given inputs.  Accepts Tnums, ints,
-        /// doubles, and decimals.
+        /// Returns the minimum value of the given inputs.
         /// </summary>
-        public static Tnum Min(params Tnum[] list)
+        public static Tvar Min(params Tvar[] list)
         {
-            return ApplyFcnToTimeline<Tnum>(x => Util.Minimum(x), list);
+            return ApplyFcnToTimeline(x => Util.Minimum(x), list);
         }
         
         /// <summary>
-        /// Returns the maximum value of the given inputs.  Accepts Tnums, ints,
-        /// doubles, and decimals.
+        /// Returns the maximum value of the given inputs.
         /// </summary>
-        public static Tnum Max(params Tnum[] list)
+        public static Tvar Max(params Tvar[] list)
         {
-            return ApplyFcnToTimeline<Tnum>(x => Util.Maximum(x), list);
+            return ApplyFcnToTimeline(x => Util.Maximum(x), list);
         }
         
         /// <summary>
@@ -73,27 +71,27 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the number of days between the DateTimes in two Tdates.
+        /// Returns the number of days between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum DayDiff(Tdate td1, Tdate td2)
+        public static Tvar DayDiff(Tvar td1, Tvar td2)
         {
-            return Tdate.DayDifference(td1,td2);
+            return Tvar.DayDifference(td1,td2);
         }
         
         /// <summary>
-        /// Returns the number of weeks (accurate to three decimal places) between the DateTimes in two Tdates.
+        /// Returns the number of weeks (accurate to three decimal places) between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum WeekDiff(Tdate td1, Tdate td2)
+        public static Tvar WeekDiff(Tvar td1, Tvar td2)
         {
-            return Tdate.WeekDifference(td1,td2);
+            return Tvar.WeekDifference(td1,td2);
         }
 
         /// <summary>
-        /// Returns the number of years (accurate to three decimal places) between the DateTimes in two Tdates.
+        /// Returns the number of years (accurate to three decimal places) between the DateTimes in two Tvars.
         /// </summary>
-        public static Tnum YearDiff(Tdate td1, Tdate td2)
+        public static Tvar YearDiff(Tvar td1, Tvar td2)
         {
-            return Tdate.YearDifference(td1,td2);
+            return Tvar.YearDifference(td1,td2);
         }
 
         /// <summary>
@@ -118,25 +116,9 @@ namespace Akkadian
 //        /// <summary>
 //        /// Returns the set of all Things in the session.
 //        /// </summary>
-//        public static Tset people()
+//        public static Tvar people()
 //        {
 //            return Facts.AllKnownPeople();
-//        }
-//
-//        /// <summary>
-//        /// Returns the set of all Things in the session, except a specific Thing.
-//        /// </summary>
-//        public static Tset peopleBut(Thing p1)
-//        {
-//            return Facts.AllKnownPeople() - p1;
-//        }
-//
-//        /// <summary>
-//        /// Returns the set of all Things in the session, except two specific Things.
-//        /// </summary>
-//        public static Tset peopleBut(Thing p1, Thing p2)
-//        {
-//            return Facts.AllKnownPeople() - p1 - p2;
 //        }
     }
 }

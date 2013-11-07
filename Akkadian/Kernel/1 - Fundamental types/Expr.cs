@@ -65,30 +65,30 @@ namespace Akkadian
 
 	public partial class Interpreter
 	{
-		protected static Node nTbool(Tbool t)
+		protected static Node nTvar(Tvar t)
 		{
-			return new Node(Typ.Tbool,t);
+			return new Node(Typ.Tvar,t);
 		}
 
-		protected static Node nTnum(Tnum t)
-		{
-			return new Node(Typ.Tnum,t);
-		}
-
-		protected static Node nTstr(Tstr t)
-		{
-			return new Node(Typ.Tstr,t);
-		}
-
-		protected static Node nTset(Tset t)
-		{
-			return new Node(Typ.Tset,t);
-		}
-
-		protected static Node nTdate(Tdate t)
-		{
-			return new Node(Typ.Tdate,t);
-		}
+//		protected static Node nTvar(Tvar t)
+//		{
+//			return new Node(Typ.Tvar,t);
+//		}
+//
+//		protected static Node nTvar(Tvar t)
+//		{
+//			return new Node(Typ.Tvar,t);
+//		}
+//
+//		protected static Node nTvar(Tvar t)
+//		{
+//			return new Node(Typ.Tvar,t);
+//		}
+//
+//		protected static Node nTvar(Tvar t)
+//		{
+//			return new Node(Typ.Tvar,t);
+//		}
 
 		/// <summary>
 		/// Simple way to instantiate a new Node.

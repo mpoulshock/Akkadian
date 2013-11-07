@@ -31,13 +31,13 @@ namespace Akkadian.UnitTests
         [Test]
         public void RunningElapsedIntervals1 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,1,2),false);
             tb.AddState(new DateTime(2015,1,3),true);
             tb.AddState(new DateTime(2015,1,4),false);
 
-            Tnum r = tb.RunningElapsedIntervals(TheDay);
+            Tvar r = tb.RunningElapsedIntervals(TheDay);
 
             Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/4/2015: 2}", r.Out);    
         }
@@ -45,8 +45,8 @@ namespace Akkadian.UnitTests
         [Test]
         public void RunningElapsedIntervals2 ()
         {
-            Tbool tb = new Tbool(false);
-            Tnum r = tb.RunningElapsedIntervals(TheYear);
+            Tvar tb = new Tvar(false);
+            Tvar r = tb.RunningElapsedIntervals(TheYear);
 
             Assert.AreEqual(0, r.Out);    
         }
@@ -54,11 +54,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void RunningElapsedIntervals3 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2000,1,1), Hstate.Unstated);
             tb.AddState(new DateTime(2000,3,1), false);
 
-            Tnum r = tb.RunningElapsedIntervals(TheYear);
+            Tvar r = tb.RunningElapsedIntervals(TheYear);
 
             Assert.AreEqual("Unstated", r.Out);    
         }
@@ -66,11 +66,11 @@ namespace Akkadian.UnitTests
         [Test]
         public void RunningElapsedIntervals4 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2000,1,1), Hstate.Stub);
             tb.AddState(new DateTime(2000,3,1), false);
 
-            Tnum r = tb.RunningElapsedIntervals(TheYear);
+            Tvar r = tb.RunningElapsedIntervals(TheYear);
 
             Assert.AreEqual("Stub", r.Out);    
         }
@@ -78,13 +78,13 @@ namespace Akkadian.UnitTests
         [Test]
         public void RunningElapsedIntervals5 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,1,2),false);
             tb.AddState(new DateTime(2015,1,3),true);
             tb.AddState(new DateTime(2015,1,5),false);
 
-            Tnum r = tb.RunningElapsedIntervals(TheDay);
+            Tvar r = tb.RunningElapsedIntervals(TheDay);
 
             Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/4/2015: 2; 1/5/2015: 3}", r.Out);    
         }

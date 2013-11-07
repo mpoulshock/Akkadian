@@ -110,7 +110,7 @@ namespace Akkadian
                         Thing t2 = a2 >= 0 ? args[a2] : null;
                         Thing t3 = a3 >= 0 ? args[a3] : null;
 
-                        Facts.Assert(t1, p.RightHandPoint.Relationship, t2, t3, p.RightHandPoint.Value);
+//                        Facts.Assert(t1, p.RightHandPoint.Relationship, t2, t3, p.RightHandPoint.Value);
                     }
                 }
 
@@ -121,8 +121,8 @@ namespace Akkadian
                     if (Tvar.EqualTo(p.RightHandPoint.Value, val).IsFalse)
                     {
                         // If the left-hand side is a boolean (non-booleans can't be negated)...
-                        if (Tvar.EqualTo(p.LeftHandPoint.Value, new Tbool(true)) ||
-                            Tvar.EqualTo(p.LeftHandPoint.Value, new Tbool(false)))
+                        if (Tvar.EqualTo(p.LeftHandPoint.Value, new Tvar(true)) ||
+                            Tvar.EqualTo(p.LeftHandPoint.Value, new Tvar(false)))
                         {
                             // For each leftPoint.Arg number, get the corresponding Thing
                             int r1 = p.RightHandPoint.Arg1;
@@ -144,8 +144,8 @@ namespace Akkadian
                             else              t3 = e3;
 
                             // Assert -A
-                            Tbool leftVal = (Tbool)p.LeftHandPoint.Value;
-                            Facts.Assert(t1, p.LeftHandPoint.Relationship, t2, t3, !leftVal);
+                            Tvar leftVal = (Tvar)p.LeftHandPoint.Value;
+//                            Facts.Assert(t1, p.LeftHandPoint.Relationship, t2, t3, !leftVal);
                         }
                     }
                 }
@@ -175,8 +175,8 @@ namespace Akkadian
 
                     // Investigates all assumptions
                     // TODO: Does not short circuit
-                    Facts.Fact f = new Facts.Fact(p.RightHandPoint.Relationship, t1.Id, t2.Id, t3.Id);
-                    f.Value();
+//                    Facts.Fact f = new Facts.Fact(p.RightHandPoint.Relationship, t1.Id, t2.Id, t3.Id);
+//                    f.Value();
                 }
             }
         }

@@ -22,24 +22,24 @@ using System;
 
 namespace Akkadian
 {    
-    public partial class Tnum
+    public partial class Tvar
     {
         /// <summary>
-        /// Finds the total of a Tnum, summed over the given intervals between two 
+        /// Finds the total of a Tvar, summed over the given intervals between two 
         /// dates (start and end).
         /// </summary>
         /// <example>
         ///   AnnualIncome2014 = MonthlyIncome.TotalSummedIntervals(TheMonth, 2014-01-01, 2014-12-31)
         /// </example>
-        public Tnum TotalSummedIntervals(Tnum interval, Tdate start, Tdate end)  
+        public Tvar TotalSummedIntervals(Tvar interval, Tvar start, Tvar end)  
         {
-            Tnum rsi = RunningSummedIntervals(interval);
+            Tvar rsi = RunningSummedIntervals(interval);
 
             return rsi.AsOf(end) - rsi.AsOf(start);
         }
 
         /// <summary>
-        /// Takes a Tnum representing some value per unit time, and sums or 
+        /// Takes a Tvar representing some value per unit time, and sums or 
         /// accumulates it over a given type of time interval to obtain a 
         /// running total.
         /// </summary>
@@ -50,21 +50,21 @@ namespace Akkadian
         /// 
         /// The time units cancel: [$/year] * [year] yields [$].
         /// </example>
-        public Tnum RunningSummedIntervals(Tnum interval)  
+        public Tvar RunningSummedIntervals(Tvar interval)  
         {
             // TODO: Review how uncertainty is handled here:
 
             // Handle unknowns
             Hstate top = PrecedingState(this.FirstValue, interval.FirstValue);
-            if (top != Hstate.Known) return new Tnum(new Hval(null,top));
+            if (top != Hstate.Known) return new Tvar(new Hval(null,top));
 
-            // If base Tnum is ever unknown during the time period, return 
+            // If base Tvar is ever unknown during the time period, return 
             // the state with the proper precedence
             Hstate baseState = PrecedenceForMissingTimePeriods(this);
-            if (baseState != Hstate.Known) return new Tnum(baseState);
+            if (baseState != Hstate.Known) return new Tvar(baseState);
 
             // Start accumulating...
-            Tnum result = new Tnum(0);
+            Tvar result = new Tvar(0);
             decimal total = 0;
             decimal previousVal = 0;
 
@@ -87,7 +87,7 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Takes a Tnum representing some value per unit time, and accumulates it
+        /// Takes a Tvar representing some value per unit time, and accumulates it
         /// over a given number of successive time intervals.
         /// </summary>
         /// <example>
@@ -98,18 +98,18 @@ namespace Akkadian
         /// 
         /// The time units cancel: [$/mo.] * [mo.] yields [$].
         /// </example>
-        public Tnum SlidingSummedIntervals(Tnum interval, Tnum windowSize)  
+        public Tvar SlidingSummedIntervals(Tvar interval, Tvar windowSize)  
         {
             // TODO: Review how uncertainty is handled here:
 
             // Handle unknowns
             Hstate top = PrecedingState(this.FirstValue, interval.FirstValue, windowSize.FirstValue);
-            if (top != Hstate.Known) return new Tnum(new Hval(null,top));
+            if (top != Hstate.Known) return new Tvar(new Hval(null,top));
 
-            // If base Tnum is ever unknown during the time period, return 
+            // If base Tvar is ever unknown during the time period, return 
             // the state with the proper precedence
             Hstate baseState = PrecedenceForMissingTimePeriods(this);
-            if (baseState != Hstate.Known) return new Tnum(baseState);
+            if (baseState != Hstate.Known) return new Tvar(baseState);
 
             // Handle eternal values
             if (this.IsEternal)
@@ -130,7 +130,7 @@ namespace Akkadian
                     firstVal += this.AsOf(interval.TimeLine.Keys [j]).ToHardDecimal;
                 }
             }
-            Tnum result = new Tnum(firstVal);
+            Tvar result = new Tvar(firstVal);
 
             // Iterate through the subsequent intervals
             decimal previousVal = firstVal;

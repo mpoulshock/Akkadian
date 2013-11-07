@@ -22,23 +22,23 @@ using System;
 
 namespace Akkadian
 {    
-    public partial class Tbool
+    public partial class Tvar
     {
         /// <summary>
         /// Returns the total elapsed days that a Tvar has a given value,
         /// for each of a given set of intervals.
         /// Example: meetsAnnualTest = var.ElapsedDaysPerInterval(theYear) > 183;
         /// </summary>
-        public Tnum TotalElapsedDaysPer(Tnum period)
+        public Tvar TotalElapsedDaysPer(Tvar period)
         {
-            // If base Tnum is ever unknown during the time period, return 
+            // If base Tvar is ever unknown during the time period, return 
             // the state with the proper precedence
             Hstate baseState = PrecedenceForMissingTimePeriods(this);
             Hstate periodState = PrecedenceForMissingTimePeriods(period);
             Hstate top = PrecedingState(baseState, periodState);
-            if (top != Hstate.Known) return new Tnum(top);
+            if (top != Hstate.Known) return new Tvar(top);
 
-            Tnum result = new Tnum();
+            Tvar result = new Tvar();
 
             int count = period.IntervalValues.Count;
             for (int i=0; i < count; i++)
@@ -63,7 +63,7 @@ namespace Akkadian
 
         /// <summary>
         /// Returns the total elapsed time, between two given DateTimes, during
-        /// which a Tbool is true.
+        /// which a Tvar is true.
         /// </summary>
         private TimeSpan TotalElapsedTime(DateTime start, DateTime end)
         {

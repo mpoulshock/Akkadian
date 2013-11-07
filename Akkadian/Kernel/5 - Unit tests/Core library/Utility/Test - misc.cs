@@ -46,7 +46,7 @@ namespace Akkadian.UnitTests
             Assert.AreEqual(1, Fibonacci(1).Out);    
         }
         
-        private static Tnum Fibonacci(Tnum x)
+        private static Tvar Fibonacci(Tvar x)
         {
            if (x <= 1)      // only works for values that do not change over time
                return 1;
@@ -76,15 +76,15 @@ namespace Akkadian.UnitTests
         [Test]
         public void Misc_TemporalRecursion4 ()
         {
-            Tnum x = new Tnum();
+            Tvar x = new Tvar();
             x.AddState(Time.DawnOf, 10);
             x.AddState(new DateTime(2000,1,1), 1);
             Assert.AreEqual("{Dawn: 89; 1/1/2000: 1}", TemporalFibonacci(x).Out);    
         }
         
-        private static Tnum TemporalFibonacci(Tnum x)
+        private static Tvar TemporalFibonacci(Tvar x)
         {
-            return Switch<Tnum>(()=> x <= 1, ()=> new Tnum(1), 
+            return Switch(()=> x <= 1, ()=> new Tvar(1), 
                           ()=> TemporalFibonacci(x - 1) + TemporalFibonacci(x - 2));
         }
     }

@@ -31,7 +31,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void NextChangeDate1 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -44,7 +44,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void NextChangeDate2 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -57,7 +57,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void NextChangeDate3 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -70,7 +70,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void NextChangeDate4 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -83,7 +83,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void NextChangeDate5 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -98,7 +98,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void DateNextTrue1 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -111,7 +111,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void DateNextTrue2 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -124,7 +124,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void DateNextTrue3 ()
         {
-            Tbool tb = new Tbool(false);
+            Tvar tb = new Tvar(false);
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,2,1),false);
             tb.AddState(new DateTime(2015,3,1),true);
@@ -157,31 +157,31 @@ namespace Akkadian.UnitTests
         [Test]
         public void Minimum_4()
         {
-            Assert.AreEqual("Unstated", Min(100, new Tnum(Hstate.Unstated)).Out);
+            Assert.AreEqual("Unstated", Min(100, new Tvar(Hstate.Unstated)).Out);
         }
 
         [Test]
         public void Minimum_5()
         {
-            Assert.AreEqual("Uncertain", Min(100, new Tnum(Hstate.Uncertain)).Out);
+            Assert.AreEqual("Uncertain", Min(100, new Tvar(Hstate.Uncertain)).Out);
         }
 
         [Test]
         public void Minimum_6()
         {
-            Assert.AreEqual("Uncertain", Min(new Tnum(Hstate.Unstated), new Tnum(Hstate.Uncertain)).Out);
+            Assert.AreEqual("Uncertain", Min(new Tvar(Hstate.Unstated), new Tvar(Hstate.Uncertain)).Out);
         }
 
         [Test]
         public void Minimum_7()
         {
-            Assert.AreEqual("Stub", Min(0, new Tnum(Hstate.Stub)).Out);
+            Assert.AreEqual("Stub", Min(0, new Tvar(Hstate.Stub)).Out);
         }
 
         [Test]
         public void Minimum_8()
         {
-            Assert.AreEqual("Stub", Min(new Tnum(Hstate.Unstated), new Tnum(Hstate.Uncertain), new Tnum(Hstate.Stub)).Out);
+            Assert.AreEqual("Stub", Min(new Tvar(Hstate.Unstated), new Tvar(Hstate.Uncertain), new Tvar(Hstate.Stub)).Out);
         }
 
         [Test]
@@ -213,31 +213,31 @@ namespace Akkadian.UnitTests
         [Test]
         public void Maximum_4()
         {
-            Assert.AreEqual("Unstated", Max(100, new Tnum(Hstate.Unstated)).Out);
+            Assert.AreEqual("Unstated", Max(100, new Tvar(Hstate.Unstated)).Out);
         }
 
         [Test]
         public void Maximum_5()
         {
-            Assert.AreEqual("Uncertain", Max(100, new Tnum(Hstate.Uncertain)).Out);
+            Assert.AreEqual("Uncertain", Max(100, new Tvar(Hstate.Uncertain)).Out);
         }
 
         [Test]
         public void Maximum_6()
         {
-            Assert.AreEqual("Uncertain", Max(new Tnum(Hstate.Unstated), new Tnum(Hstate.Uncertain)).Out);
+            Assert.AreEqual("Uncertain", Max(new Tvar(Hstate.Unstated), new Tvar(Hstate.Uncertain)).Out);
         }
 
         [Test]
         public void Maximum_7()
         {
-            Assert.AreEqual("Stub", Max(0, new Tnum(Hstate.Stub)).Out);
+            Assert.AreEqual("Stub", Max(0, new Tvar(Hstate.Stub)).Out);
         }
 
         [Test]
         public void Maximum_8()
         {
-            Assert.AreEqual("Stub", Max(new Tnum(Hstate.Unstated), new Tnum(Hstate.Uncertain), new Tnum(Hstate.Stub)).Out);
+            Assert.AreEqual("Stub", Max(new Tvar(Hstate.Unstated), new Tvar(Hstate.Uncertain), new Tvar(Hstate.Stub)).Out);
         }
 
         [Test]

@@ -36,35 +36,35 @@ namespace Akkadian
 			if (op == Op.And) 	// And
 			{
 				// See if first argument is eternally false
-				if (((Tbool)n1.obj).IsFalse) return nTbool(false);
+				if (((Tvar)n1.obj).IsFalse) return nTvar(false);
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTbool((Tbool)n1.obj && (Tbool)n2.obj); 
+				return nTvar((Tvar)n1.obj && (Tvar)n2.obj); 
 			}
 
 			if (op == Op.Or) 	// Or
 			{
 				// See if first argument is eternally true
-				if (((Tbool)n1.obj).IsTrue) return nTbool(true);
+				if (((Tvar)n1.obj).IsTrue) return nTvar(true);
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTbool((Tbool)n1.obj || (Tbool)n2.obj); 
+				return nTvar((Tvar)n1.obj || (Tvar)n2.obj); 
 			}
 
 			if (op == Op.Mult) 	// Multiplication
 			{
 				// See if first argument is zero
-				Tnum tn1 = ((Tnum)n1.obj);
+				Tvar tn1 = ((Tvar)n1.obj);
 				//				if (tn1.IsEternal && (int)tn1.FirstValue.Val == 0) 
 				//				{
-				//					return nTnum(0);
+				//					return nTvar(0);
 				//				}
 
 				// Else, eval the second argument
 				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTnum((Tnum)n1.obj * (Tnum)n2.obj); 
+				return nTvar((Tvar)n1.obj * (Tvar)n2.obj); 
 			}
 
 			return n(Typ.Null,null);
@@ -81,73 +81,61 @@ namespace Akkadian
 			object ob1 = n1.obj;
 			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 
-			if (op == Op.Plus) { return nTnum((Tnum)ob1 + (Tnum)ob2); }
-			if (op == Op.Minus) { return nTnum((Tnum)ob1 - (Tnum)ob2); }
-			if (op == Op.Div) { return nTnum((Tnum)ob1 / (Tnum)ob2); }
+			if (op == Op.Plus) { return nTvar((Tvar)ob1 + (Tvar)ob2); }
+			if (op == Op.Minus) { return nTvar((Tvar)ob1 - (Tvar)ob2); }
+			if (op == Op.Div) { return nTvar((Tvar)ob1 / (Tvar)ob2); }
 
 			if (op == Op.Eq) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 == (Tnum)ob2); 
-				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 == (Tstr)ob2);
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 == (Tdate)ob2);
-				if (tp == Typ.Tset)  return nTbool((Tset)ob1 == (Tset)ob2);
-				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 == (Tbool)ob2);
+				return nTvar(Tvar.EqualTo((Tvar)ob1, (Tvar)ob2));
 			}
 
 			if (op == Op.Neq) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 != (Tnum)ob2); 
-				if (tp == Typ.Tstr)  return nTbool((Tstr)ob1 != (Tstr)ob2);
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 != (Tdate)ob2);
-				if (tp == Typ.Tset)  return nTbool((Tset)ob1 != (Tset)ob2);
-				if (tp == Typ.Tbool) return nTbool((Tbool)ob1 != (Tbool)ob2);
+				return nTvar(Tvar.NotEqualTo((Tvar)ob1, (Tvar)ob2));
 			}
 
 			if (op == Op.GrTh) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 > (Tnum)ob2); 
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 > (Tdate)ob2);
+				return nTvar((Tvar)ob1 > (Tvar)ob2); 
 			}
 			if (op == Op.GrEq) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 >= (Tnum)ob2); 
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 >= (Tdate)ob2);
+				return nTvar((Tvar)ob1 >= (Tvar)ob2); 
 			}
 			if (op == Op.LsTh) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 < (Tnum)ob2); 
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 < (Tdate)ob2);
+				return nTvar((Tvar)ob1 < (Tvar)ob2); 
 			}
 			if (op == Op.LsEq) 
 			{ 
-				if (tp == Typ.Tnum)  return nTbool((Tnum)ob1 <= (Tnum)ob2); 
-				if (tp == Typ.Tdate) return nTbool((Tdate)ob1 <= (Tdate)ob2);
+				return nTvar((Tvar)ob1 <= (Tvar)ob2); 
 			}
 
 			// Set operators
-			if (op == Op.Subset) 	{ return nTbool(((Tset)ob1).IsSubsetOf((Tset)ob2)); }
-			if (op == Op.Contains) 	{ return n(Typ.Tbool, ((Tset)ob1).Contains((Thing)ob2)); }
-			if (op == Op.Union) 	{ return nTset((Tset)ob1 | (Tset)ob2); }
-			if (op == Op.Intersect) { return nTset((Tset)ob1 & (Tset)ob2); }
-			if (op == Op.RelComp) 	{ return nTset((Tset)ob1 - (Tset)ob2); }
+			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob1).IsSubsetOf((Tvar)ob2)); }
+			if (op == Op.Contains) 	{ return n(Typ.Tvar, ((Tvar)ob1).Contains((Thing)ob2)); }
+			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.RelComp) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob1,(Tvar)ob2))); }
 
 			// Date
-			if (op == Op.AddDays) 	{ return nTdate(((Tdate)ob1).AddDays((Tnum)ob2)); }
-			if (op == Op.AddMos) 	{ return nTdate(((Tdate)ob1).AddMonths((Tnum)ob2)); }
-			if (op == Op.AddYrs) 	{ return nTdate(((Tdate)ob1).AddYears((Tnum)ob2)); }
-			if (op == Op.DayDiff) 	{ return nTnum(H.DayDiff((Tdate)ob1, (Tdate)ob2)); }
-			if (op == Op.WeekDiff) 	{ return nTnum(H.WeekDiff((Tdate)ob1, (Tdate)ob2)); }
-			if (op == Op.YearDiff) 	{ return nTnum(H.YearDiff((Tdate)ob1, (Tdate)ob2)); }
+			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
+			if (op == Op.AddMos) 	{ return nTvar(((Tvar)ob1).AddMonths((Tvar)ob2)); }
+			if (op == Op.AddYrs) 	{ return nTvar(((Tvar)ob1).AddYears((Tvar)ob2)); }
+			if (op == Op.DayDiff) 	{ return nTvar(H.DayDiff((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.WeekDiff) 	{ return nTvar(H.WeekDiff((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.YearDiff) 	{ return nTvar(H.YearDiff((Tvar)ob1, (Tvar)ob2)); }
 
 			// Math and rounding
-			if (op == Op.RndUp) 	{ return nTnum(((Tnum)ob1).RoundUp((Tnum)ob2)); }
-			if (op == Op.RndDn) 	{ return nTnum(((Tnum)ob1).RoundDown((Tnum)ob2)); }
-			if (op == Op.RndNrUp) 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2)); }
-			if (op == Op.RndNrDn) 	{ return nTnum(((Tnum)ob1).RoundToNearest((Tnum)ob2, true)); }
-			if (op == Op.Concat) 	{ return nTstr((Tstr)ob1 + (Tstr)ob2); }
-			if (op == Op.Mod) 		{ return nTnum((Tnum)ob1 % (Tnum)ob2); }
-			if (op == Op.Pow) 		{ return nTnum(Tnum.Pow((Tnum)ob1, (Tnum)ob2)); }
-			if (op == Op.Log) 		{ return nTnum(Tnum.Log((Tnum)ob1, (Tnum)ob2)); }
+			if (op == Op.RndUp) 	{ return nTvar(((Tvar)ob1).RoundUp((Tvar)ob2)); }
+			if (op == Op.RndDn) 	{ return nTvar(((Tvar)ob1).RoundDown((Tvar)ob2)); }
+			if (op == Op.RndNrUp) 	{ return nTvar(((Tvar)ob1).RoundToNearest((Tvar)ob2)); }
+			if (op == Op.RndNrDn) 	{ return nTvar(((Tvar)ob1).RoundToNearest((Tvar)ob2, true)); }
+			if (op == Op.Concat) 	{ return nTvar(Tvar.Concat((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Mod) 		{ return nTvar((Tvar)ob1 % (Tvar)ob2); }
+			if (op == Op.Pow) 		{ return nTvar(Tvar.Pow((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.Log) 		{ return nTvar(Tvar.Log((Tvar)ob1, (Tvar)ob2)); }
 
 			return n(Typ.Null,null);
 		}
@@ -159,28 +147,28 @@ namespace Akkadian
 		{
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
-			if (op == Op.Not)    	{ return nTbool(!(Tbool)ob1); }
-			if (op == Op.USD)   	{ return nTstr(((Tnum)ob1).ToUSD); }
+			if (op == Op.Not)    	{ return nTvar(!(Tvar)ob1); }
+			if (op == Op.USD)   	{ return nTvar(((Tvar)ob1).ToUSD); }
 
-			if (op == Op.Count)   	{ return nTnum(((Tset)ob1).Count); }
-			if (op == Op.Empty)   	{ return nTbool(((Tset)ob1).IsEmpty); }
-			if (op == Op.Rev)   	{ return nTset(((Tset)ob1).Reverse); }
-			if (op == Op.ToThing)   { return n(Typ.Thing, ((Tset)ob1).ToThing); }
+			if (op == Op.Count)   	{ return nTvar(((Tvar)ob1).Count); }
+			if (op == Op.Empty)   	{ return nTvar(((Tvar)ob1).IsEmpty); }
+			if (op == Op.Rev)   	{ return nTvar(((Tvar)ob1).Reverse); }
+			if (op == Op.ToThing)   { return n(Typ.Thing, ((Tvar)ob1).ToThing); }
 
-			if (op == Op.Day)   	{ return nTnum(((Tdate)ob1).Day); }
-			if (op == Op.Month)		{ return nTnum(((Tdate)ob1).Month); }
-			if (op == Op.Quarter)   { return nTnum(((Tdate)ob1).Quarter); }
-			if (op == Op.Year)   	{ return nTnum(((Tdate)ob1).Year); }
+			if (op == Op.Day)   	{ return nTvar(((Tvar)ob1).Day); }
+			if (op == Op.Month)		{ return nTvar(((Tvar)ob1).Month); }
+			if (op == Op.Quarter)   { return nTvar(((Tvar)ob1).Quarter); }
+			if (op == Op.Year)   	{ return nTvar(((Tvar)ob1).Year); }
 
-			if (op == Op.Abs)   	{ return nTnum(Tnum.Abs((Tnum)ob1)); }
-			if (op == Op.Sqrt)  	{ return nTnum(Tnum.Sqrt((Tnum)ob1)); }
-			if (op == Op.Nlog)   	{ return nTnum(Tnum.Log((Tnum)ob1)); }
-			if (op == Op.Sin)   	{ return nTnum(Tnum.Sin((Tnum)ob1)); }
-			if (op == Op.Cos)   	{ return nTnum(Tnum.Cos((Tnum)ob1)); }
-			if (op == Op.Tan)   	{ return nTnum(Tnum.Tan((Tnum)ob1)); }
-			if (op == Op.Asin)  	{ return nTnum(Tnum.ArcSin((Tnum)ob1)); }
-			if (op == Op.Acos) 		{ return nTnum(Tnum.ArcCos((Tnum)ob1)); }
-			if (op == Op.Atan)  	{ return nTnum(Tnum.ArcTan((Tnum)ob1)); }
+			if (op == Op.Abs)   	{ return nTvar(Tvar.Abs((Tvar)ob1)); }
+			if (op == Op.Sqrt)  	{ return nTvar(Tvar.Sqrt((Tvar)ob1)); }
+			if (op == Op.Nlog)   	{ return nTvar(Tvar.Log((Tvar)ob1)); }
+			if (op == Op.Sin)   	{ return nTvar(Tvar.Sin((Tvar)ob1)); }
+			if (op == Op.Cos)   	{ return nTvar(Tvar.Cos((Tvar)ob1)); }
+			if (op == Op.Tan)   	{ return nTvar(Tvar.Tan((Tvar)ob1)); }
+			if (op == Op.Asin)  	{ return nTvar(Tvar.ArcSin((Tvar)ob1)); }
+			if (op == Op.Acos) 		{ return nTvar(Tvar.ArcCos((Tvar)ob1)); }
+			if (op == Op.Atan)  	{ return nTvar(Tvar.ArcTan((Tvar)ob1)); }
 
 			return n(Typ.Null,null);
 		}
@@ -188,17 +176,17 @@ namespace Akkadian
 		/// <summary>
 		/// Evaluates expressions with three or more arguments.
 		/// </summary>
-		private Node MultiTnumFcnEval(Expr exp, Expr args, Op op)
+		private Node MultiTvarFcnEval(Expr exp, Expr args, Op op)
 		{
 			// TODO: Parallelize
-			Tnum[] list = new Tnum[exp.nodes.Count-1];
+			Tvar[] list = new Tvar[exp.nodes.Count-1];
 			for (int i=1; i<exp.nodes.Count; i++)
 			{
-				list[i-1] = (Tnum)eval(expr(exp.nodes[i]), args).obj;
+				list[i-1] = (Tvar)eval(expr(exp.nodes[i]), args).obj;
 			}
 
-			if (op == Op.Max) { return nTnum(Tnum.Max(list)); }
-			if (op == Op.Min) { return nTnum(Tnum.Min(list)); }
+			if (op == Op.Max) { return nTvar(Tvar.Max(list)); }
+			if (op == Op.Min) { return nTvar(Tvar.Min(list)); }
 
 			return n(Typ.Null,null);
 		}
@@ -206,13 +194,13 @@ namespace Akkadian
 		//		private static Node EvalExists(Expr exp, Expr args, string op)
 		//		{
 		//			Node argFcnNode = n(Typ.Null,null);
-		//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-		//			Tset result = ApplyFcnToTset<Tset>(theSet, argFcnNode, y => CoreFilter(y));
+		//			Tvar theSet  = (Tvar)eval(expr(exp.nodes [1]), args).obj;
+		//			Tvar result = ApplyFcnToTvar<Tvar>(theSet, argFcnNode, y => CoreFilter(y));
 		//
-		//			//			Tset theSet  = (Tset)eval(expr(exp.nodes [1]), args).obj;
-		//			//			Func<Thing,Tbool> theFunc = (Func<Thing,Tbool>)eval(expr(exp.nodes [2]), args).obj;
+		//			//			Tvar theSet  = (Tvar)eval(expr(exp.nodes [1]), args).obj;
+		//			//			Func<Thing,Tvar> theFunc = (Func<Thing,Tvar>)eval(expr(exp.nodes [2]), args).obj;
 		//
-		//			return n("Tset", result);  
+		//			return n("Tvar", result);  
 		//		}
 	}
 }
