@@ -496,6 +496,13 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Parse_61 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Op:Abs,Tvar:9.1}", ParseFcn("Abs[9.1]"));                
+		}
+
+		[Test]
 		public void StringToNode_1 ()
 		{
 			InitializeParseTest();

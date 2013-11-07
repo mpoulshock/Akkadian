@@ -122,7 +122,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/> " + delimiter + @"]*\]");
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/>\. " + delimiter + @"]*\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
