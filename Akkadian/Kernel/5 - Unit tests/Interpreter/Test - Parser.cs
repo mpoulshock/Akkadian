@@ -519,8 +519,8 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Parse_64 ()
 		{
-			InitializeParseTest();
-			Assert.AreEqual("Expr:{Op:Pipe,Tvar:9,Tvar:99}", ParseFcn("9 |> 99"));                
+			ParserResponse pr = ParseInputLine("Test[x] = Over9Employees[x] |> EverPer[TheYear]");
+			Assert.AreEqual("Expr:{Op:Pipe,Expr:{Fcn:Over9Employees,Var:0},Expr:{Fcn:EverPer,Fcn:TheYear}}", pr.ParserString);              
 		}
 
 		[Test]

@@ -121,6 +121,16 @@ namespace Akkadian
 				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
 			}
 
+			// Pipelined functions |>
+			Regex pipeRegex = new Regex(parens(wildcard) + white + @"\|>" + white + parens(@"EverPer\[" + wildcard + @"\]"));
+			var pipeMatch = pipeRegex.Match(s);
+			if (pipeMatch.Success)
+			{
+				string stuffBeforePipe = pipeMatch.Groups[1].Value;
+				string stuffAfterPipe = pipeMatch.Groups[2].Value;
+				return "Expr:{Op:Pipe," + ParseFcn(stuffBeforePipe,subExprs,argNames) + "," + ParseFcn(stuffAfterPipe,subExprs,argNames) + "}";
+			}
+
 			// Function calls (innermost functions first)
 			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/>\.' " + delimiter + @"]*\]");
 			var m1 = rx1.Match(s);
