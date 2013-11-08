@@ -26,51 +26,6 @@ namespace Akkadian
 	public partial class Session
 	{
 		/// <summary>
-		/// Evaluates expressions in which a short-circuit may be required.
-		/// </summary>
-		private Node EvalShortCircuitFcns(Expr exp, Expr args, Op op)
-		{
-			// TODO: Forget short-circuits and instead paralellize?
-			Node n1 = eval(expr(exp.nodes [1]), args);
-
-			if (op == Op.And) 	// And
-			{
-				// See if first argument is eternally false
-				if (((Tvar)n1.obj).IsFalse) return nTvar(false);
-
-				// Else, eval the second argument
-				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTvar((Tvar)n1.obj && (Tvar)n2.obj); 
-			}
-
-			if (op == Op.Or) 	// Or
-			{
-				// See if first argument is eternally true
-				if (((Tvar)n1.obj).IsTrue) return nTvar(true);
-
-				// Else, eval the second argument
-				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTvar((Tvar)n1.obj || (Tvar)n2.obj); 
-			}
-
-			if (op == Op.Mult) 	// Multiplication
-			{
-				// See if first argument is zero
-				Tvar tn1 = ((Tvar)n1.obj);
-				//				if (tn1.IsEternal && (int)tn1.FirstValue.Val == 0) 
-				//				{
-				//					return nTvar(0);
-				//				}
-
-				// Else, eval the second argument
-				Node n2 = eval(expr(exp.nodes [2]), args);
-				return nTvar((Tvar)n1.obj * (Tvar)n2.obj); 
-			}
-
-			return n(Typ.Null,null);
-		}
-
-		/// <summary>
 		/// Evaluates expressions with two arguments.
 		/// </summary>
 		private Node BinaryFcnEval(Expr exp, Expr args, Op op)
@@ -81,43 +36,26 @@ namespace Akkadian
 			object ob1 = n1.obj;
 			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 
-			if (op == Op.Plus) { return nTvar((Tvar)ob1 + (Tvar)ob2); }
-			if (op == Op.Minus) { return nTvar((Tvar)ob1 - (Tvar)ob2); }
-			if (op == Op.Div) { return nTvar((Tvar)ob1 / (Tvar)ob2); }
+			// And, Or
+			if (op == Op.And) 		{ return nTvar((Tvar)ob1 && (Tvar)ob2); }
+			if (op == Op.Or) 		{ return nTvar((Tvar)ob1 || (Tvar)ob2); }
 
-			if (op == Op.Eq) 
-			{ 
-				return nTvar(Tvar.EqualTo((Tvar)ob1, (Tvar)ob2));
-			}
+			// Arithmetic
+			if (op == Op.Plus) 		{ return nTvar((Tvar)ob1 + (Tvar)ob2); }
+			if (op == Op.Minus) 	{ return nTvar((Tvar)ob1 - (Tvar)ob2); }
+			if (op == Op.Mult) 		{ return nTvar((Tvar)ob1 * (Tvar)ob2); }
+			if (op == Op.Div) 		{ return nTvar((Tvar)ob1 / (Tvar)ob2); }
 
-			if (op == Op.Neq) 
-			{ 
-				return nTvar(Tvar.NotEqualTo((Tvar)ob1, (Tvar)ob2));
-			}
+			// Comparison
+			if (op == Op.Eq) 		{ return nTvar(Tvar.EqualTo((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.Neq) 		{ return nTvar(Tvar.NotEqualTo((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.GrTh) 		{ return nTvar((Tvar)ob1 > (Tvar)ob2); }
+			if (op == Op.GrEq) 		{ return nTvar((Tvar)ob1 >= (Tvar)ob2); }
+			if (op == Op.LsTh) 		{ return nTvar((Tvar)ob1 < (Tvar)ob2); }
+			if (op == Op.LsEq) 		{ return nTvar((Tvar)ob1 <= (Tvar)ob2); }
 
-			if (op == Op.GrTh) 
-			{ 
-				return nTvar((Tvar)ob1 > (Tvar)ob2); 
-			}
-			if (op == Op.GrEq) 
-			{ 
-				return nTvar((Tvar)ob1 >= (Tvar)ob2); 
-			}
-			if (op == Op.LsTh) 
-			{ 
-				return nTvar((Tvar)ob1 < (Tvar)ob2); 
-			}
-			if (op == Op.LsEq) 
-			{ 
-				return nTvar((Tvar)ob1 <= (Tvar)ob2); 
-			}
-
-			// Set operators
-			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob1).IsSubsetOf((Tvar)ob2)); }
-			if (op == Op.Contains) 	{ return n(Typ.Tvar, ((Tvar)ob1).Contains((Thing)ob2)); }
-			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.RelComp) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob1,(Tvar)ob2))); }
+			// Pipeline operators
+//			if (op == Op.Pipe) 		{ return nTvar(Tvar.EqualTo((Tvar)ob1, (Tvar)ob2)); }
 
 			// Date
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
@@ -126,6 +64,13 @@ namespace Akkadian
 			if (op == Op.DayDiff) 	{ return nTvar(H.DayDiff((Tvar)ob1, (Tvar)ob2)); }
 			if (op == Op.WeekDiff) 	{ return nTvar(H.WeekDiff((Tvar)ob1, (Tvar)ob2)); }
 			if (op == Op.YearDiff) 	{ return nTvar(H.YearDiff((Tvar)ob1, (Tvar)ob2)); }
+
+			// Set operators
+			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob1).IsSubsetOf((Tvar)ob2)); }
+			if (op == Op.Contains) 	{ return n(Typ.Tvar, ((Tvar)ob1).Contains((Thing)ob2)); }
+			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.RelComp) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob1,(Tvar)ob2))); }
 
 			// Math and rounding
 			if (op == Op.RndUp) 	{ return nTvar(((Tvar)ob1).RoundUp((Tvar)ob2)); }

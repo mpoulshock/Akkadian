@@ -80,6 +80,7 @@ namespace Akkadian
 		DayDiff = 35, 
 		WeekDiff = 36,
 		YearDiff = 37,
+		Pipe = 38,		// Pipeline |>
 
 		// Unary operators
 		Not = 100,
@@ -116,7 +117,7 @@ namespace Akkadian
 	public partial class Interpreter
 	{
 		// Infix operators - order is important here (boolean, comparison, arithmetic) for parsing
-		public static string[] infixOps = {"&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
+		public static string[] infixOps = {@"\|>","&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
 
 		// Dot operators - needed for parsing
 		public static string[] dotOps = {""};
@@ -144,6 +145,7 @@ namespace Akkadian
 			OperatorRegistry.Add(@"\*",Op.Mult);
 
 			// Binary operators
+			OperatorRegistry.Add(@"\|>",Op.Pipe);
 			OperatorRegistry.Add(@"\+",Op.Plus);
 			OperatorRegistry.Add("-",Op.Minus);
 			OperatorRegistry.Add("/",Op.Div);

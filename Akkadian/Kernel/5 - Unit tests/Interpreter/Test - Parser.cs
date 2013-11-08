@@ -506,7 +506,21 @@ namespace Akkadian.UnitTests
 		public void Parse_62 ()
 		{
 			InitializeParseTest();
-			Assert.AreEqual("Expr:{Fcn:Age,xxx:martha}", ParseFcn("Age[martha]"));                
+			Assert.AreEqual("Expr:{Fcn:Age,Fcn:martha}", ParseFcn("Age[martha]"));                
+		}
+
+		[Test]
+		public void Parse_63 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Fcn:Age,Tvar:martha}", ParseFcn("Age['martha']"));                
+		}
+
+		[Test]
+		public void Parse_64 ()
+		{
+			InitializeParseTest();
+			Assert.AreEqual("Expr:{Op:Pipe,Tvar:9,Tvar:99}", ParseFcn("9 |> 99"));                
 		}
 
 		[Test]

@@ -46,11 +46,7 @@ namespace Akkadian
 				Op opType = (Op)ob;
 				int opID = Convert.ToInt16(opType);
 
-				if (opID < 10)
-				{
-					result = EvalShortCircuitFcns(exp, args, opType);
-				}
-				else if (opID < 100)
+				if (opID < 100)
 				{
 					result = BinaryFcnEval(exp, args, opType);
 				}
@@ -94,11 +90,23 @@ namespace Akkadian
 				}
 				else
 				{
-					Console.Write("  " + fcnName + "? ");
-					string s = Console.ReadLine();
-					result = nTvar(s);
+					// Make a list of the arguments
+					string argString = "";
+					for (int i=0; i < exp.nodes.Count; i++)
+					{
+						if (i>0) 
+						{
+							Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
+							argString += argTv.ToString() + ",";
+						}
+					}
 
-//					result = nTvar(new Tvar(Hstate.Unstated));
+					// Pose the leaf node as a question
+//					Console.Write("  -" + fcnName + "[" + argString.TrimEnd(',') + "]? ");
+//					string s = Console.ReadLine();
+//					result = nTvar(s);
+
+					result = nTvar(new Tvar(Hstate.Unstated));
 				}
 			}
 
