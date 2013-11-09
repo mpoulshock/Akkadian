@@ -57,6 +57,10 @@ namespace Akkadian
 				{
 					return UnaryFcnEval(exp, args, opType);
 				}
+				else if (opID > 400)
+				{
+					return ConstantEval(opType);
+				}
 				else if (opType == Op.Switch)
 				{
 					// Get arguments to the switch function
@@ -186,8 +190,6 @@ namespace Akkadian
 				}
 			}
 			dePipedNodes.Add(exp.nodes[1]);
-
-			Console.WriteLine((new Expr(dePipedNodes)).ToString());
 
 			return eval(new Expr(dePipedNodes), args);
 		}

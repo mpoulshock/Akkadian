@@ -520,7 +520,7 @@ namespace Akkadian.UnitTests
 		public void Parse_64 ()
 		{
 			ParserResponse pr = ParseInputLine("Test[x] = Over9Employees[x] |> EverPer[TheYear]");
-			Assert.AreEqual("Expr:{Op:Pipe,Expr:{Fcn:Over9Employees,Var:0},Expr:{Fcn:EverPer,Fcn:TheYear}}", pr.ParserString);              
+			Assert.AreEqual("Expr:{Op:Pipe,Expr:{Fcn:Over9Employees,Var:0},Expr:{Op:EverPer,Op:TheYear}}", pr.ParserString);              
 		}
 
 		[Test]

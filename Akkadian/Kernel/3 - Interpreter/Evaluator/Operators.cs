@@ -80,6 +80,14 @@ namespace Akkadian
 		DayDiff = 35, 
 		WeekDiff = 36,
 		YearDiff = 37,
+		AsOf = 38,
+		EverPer = 39,
+		AlwaysPer = 40,
+		CountPer = 41,
+		RunningCountPer = 42,
+		TotalElapsedDaysPer = 43,
+		PeriodEndVal = 44,
+		IsInPeriod = 45,
 
 		// Unary operators
 		Not = 100,
@@ -101,6 +109,11 @@ namespace Akkadian
 		Month = 116,
 		Quarter = 117,
 		Year = 118,
+		DateFirstTrue = 119,
+		DateLastTrue = 120,
+		DaysToYears = 121,
+		DaysToMonths = 122,
+		DaysToWeeks = 123,
 
 		// Ternary functions
 
@@ -110,6 +123,27 @@ namespace Akkadian
 		Min = 302,
 		Pipe = 303,		// Pipeline |>
 
+		// Constants
+		Unstated = 400,
+		Uncertain = 401,
+		Stub = 402,
+		TheYear = 403,
+		TheQuarter = 404,
+		TheMonth = 405,
+		TheWeek = 406,
+		TheDay = 407,
+		DaysInYear = 408,
+		DaysInQuarter = 409,
+		DaysInMonth = 410,
+		IsLeapYear = 411,
+		ConstPi = 420,
+		ConstE = 421,
+		DawnOfTime = 430,
+		EndOfTime = 431,
+		Dawn = 432,
+		End = 433,
+		Now = 434,
+
 		// Meaningless
 		Null = 999
 	}
@@ -118,14 +152,6 @@ namespace Akkadian
 	{
 		// Infix operators - order is important here (boolean, comparison, arithmetic) for parsing
 		public static string[] infixOps = {@"\|>","&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
-
-		// Dot operators - needed for parsing
-		public static string[] dotOps = {""};
-
-		// Constants
-		public static string[] akkConstants = {"Unstated","Uncertain","Stub","DawnOfTime","EndOfTime",
-			"TheYear","TheQuarter","TheMonth","TheWeek","TheDay","DaysPerYear","DaysPerQuarter","DaysPerMonth","IsLeapYear",
-			"ConstPi","ConstE"};
 
 		/// <summary>
 		/// Maps operators, as used in Akkadian, to their op code (above).
@@ -174,6 +200,14 @@ namespace Akkadian
 			OperatorRegistry.Add("DayDiff",Op.DayDiff);
 			OperatorRegistry.Add("WeekDiff",Op.WeekDiff);
 			OperatorRegistry.Add("YearDiff",Op.YearDiff);
+			OperatorRegistry.Add("AsOf",Op.AsOf);
+			OperatorRegistry.Add("EverPer",Op.EverPer);
+			OperatorRegistry.Add("AlwaysPer",Op.AlwaysPer);
+			OperatorRegistry.Add("CountPer",Op.CountPer);
+			OperatorRegistry.Add("RunningCountPer",Op.RunningCountPer);
+			OperatorRegistry.Add("TotalElapsedDaysPer",Op.TotalElapsedDaysPer);
+			OperatorRegistry.Add("PeriodEndVal",Op.PeriodEndVal);
+			OperatorRegistry.Add("IsInPeriod",Op.IsInPeriod);
 
 			// Unary operators
 			OperatorRegistry.Add("!",Op.Not);
@@ -195,11 +229,37 @@ namespace Akkadian
 			OperatorRegistry.Add("Month",Op.Month);
 			OperatorRegistry.Add("Quarter",Op.Quarter);
 			OperatorRegistry.Add("Year",Op.Year);
+			OperatorRegistry.Add("DateFirstTrue",Op.DateFirstTrue);
+			OperatorRegistry.Add("DateLastTrue",Op.DateLastTrue);
+			OperatorRegistry.Add("DaysToYears",Op.DaysToYears);
+			OperatorRegistry.Add("DaysToMonths",Op.DaysToMonths);
+			OperatorRegistry.Add("DaysToWeeks",Op.DaysToWeeks);
 
 			// Other
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
+
+			// Constants
+			OperatorRegistry.Add("Unstated",Op.Unstated);
+			OperatorRegistry.Add("Uncertain",Op.Uncertain);
+			OperatorRegistry.Add("Stub",Op.Stub);
+			OperatorRegistry.Add("TheYear",Op.TheYear);
+			OperatorRegistry.Add("TheQuarter",Op.TheQuarter);
+			OperatorRegistry.Add("TheMonth",Op.TheMonth);
+			OperatorRegistry.Add("TheWeek",Op.TheWeek);
+			OperatorRegistry.Add("TheDay",Op.TheDay);
+			OperatorRegistry.Add("DaysInYear",Op.DaysInYear);
+			OperatorRegistry.Add("DaysInQuarter",Op.DaysInQuarter);
+			OperatorRegistry.Add("DaysInMonth",Op.DaysInMonth);
+			OperatorRegistry.Add("IsLeapYear",Op.IsLeapYear);
+			OperatorRegistry.Add("ConstPi",Op.ConstPi);
+			OperatorRegistry.Add("ConstE",Op.ConstE);
+			OperatorRegistry.Add("DawnOfTime",Op.DawnOfTime);
+			OperatorRegistry.Add("EndOfTime",Op.EndOfTime);
+			OperatorRegistry.Add("Dawn",Op.Dawn);
+			OperatorRegistry.Add("End",Op.End);
+			OperatorRegistry.Add("Now",Op.Now);
 		}
 	}
 }

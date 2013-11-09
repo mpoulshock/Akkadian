@@ -54,8 +54,23 @@ namespace Akkadian
 			if (op == Op.LsTh) 		{ return nTvar((Tvar)ob1 < (Tvar)ob2); }
 			if (op == Op.LsEq) 		{ return nTvar((Tvar)ob1 <= (Tvar)ob2); }
 
-			// Pipeline operators
-//			if (op == Op.Pipe) 		{ return nTvar(Tvar.EqualTo((Tvar)ob1, (Tvar)ob2)); }
+			// Temporal
+			if (op == Op.AsOf) 					{ return nTvar(((Tvar)ob2).AsOf((Tvar)ob1)); }
+			if (op == Op.EverPer) 				{ return nTvar(((Tvar)ob2).EverPer((Tvar)ob1)); }
+			if (op == Op.AlwaysPer) 			{ return nTvar(((Tvar)ob2).AlwaysPer((Tvar)ob1)); }
+			if (op == Op.CountPer) 				{ return nTvar(((Tvar)ob2).CountPer((Tvar)ob1)); }
+			if (op == Op.RunningCountPer) 		{ return nTvar(((Tvar)ob2).RunningCountPer((Tvar)ob1)); }
+			if (op == Op.TotalElapsedDaysPer) 	{ return nTvar(((Tvar)ob2).TotalElapsedDaysPer((Tvar)ob1)); }
+			if (op == Op.PeriodEndVal) 			{ return nTvar(((Tvar)ob2).PeriodEndVal((Tvar)ob1)); }
+			if (op == Op.IsInPeriod) 			{ return nTvar(((Tvar)ob2).IsInPeriod((Tvar)ob1)); }
+
+//			OperatorRegistry.Add("EverPer",Op.EverPer);
+//			OperatorRegistry.Add("AlwaysPer",Op.AlwaysPer);
+//			OperatorRegistry.Add("CountPer",Op.CountPer);
+//			OperatorRegistry.Add("RunningCountPer",Op.RunningCountPer);
+//			OperatorRegistry.Add("TotalElapsedDaysPer",Op.TotalElapsedDaysPer);
+//			OperatorRegistry.Add("PeriodEndVal",Op.PeriodEndVal);
+//			OperatorRegistry.Add("IsInPeriod",Op.IsInPeriod);
 
 			// Date
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
@@ -92,28 +107,34 @@ namespace Akkadian
 		{
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
-			if (op == Op.Not)    	{ return nTvar(!(Tvar)ob1); }
-			if (op == Op.USD)   	{ return nTvar(((Tvar)ob1).ToUSD); }
+			if (op == Op.Not)    			{ return nTvar(!(Tvar)ob1); }
+			if (op == Op.USD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
 
-			if (op == Op.Count)   	{ return nTvar(((Tvar)ob1).Count); }
-			if (op == Op.Empty)   	{ return nTvar(((Tvar)ob1).IsEmpty); }
-			if (op == Op.Rev)   	{ return nTvar(((Tvar)ob1).Reverse); }
-			if (op == Op.ToThing)   { return n(Typ.Thing, ((Tvar)ob1).ToThing); }
+			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
+			if (op == Op.Empty)   			{ return nTvar(((Tvar)ob1).IsEmpty); }
+			if (op == Op.Rev)   			{ return nTvar(((Tvar)ob1).Reverse); }
+			if (op == Op.ToThing)   		{ return n(Typ.Thing, ((Tvar)ob1).ToThing); }
 
-			if (op == Op.Day)   	{ return nTvar(((Tvar)ob1).Day); }
-			if (op == Op.Month)		{ return nTvar(((Tvar)ob1).Month); }
-			if (op == Op.Quarter)   { return nTvar(((Tvar)ob1).Quarter); }
-			if (op == Op.Year)   	{ return nTvar(((Tvar)ob1).Year); }
+			if (op == Op.Day)   			{ return nTvar(((Tvar)ob1).Day); }
+			if (op == Op.Month)				{ return nTvar(((Tvar)ob1).Month); }
+			if (op == Op.Quarter)   		{ return nTvar(((Tvar)ob1).Quarter); }
+			if (op == Op.Year)   			{ return nTvar(((Tvar)ob1).Year); }
 
-			if (op == Op.Abs)   	{ return nTvar(Tvar.Abs((Tvar)ob1)); }
-			if (op == Op.Sqrt)  	{ return nTvar(Tvar.Sqrt((Tvar)ob1)); }
-			if (op == Op.Nlog)   	{ return nTvar(Tvar.Log((Tvar)ob1)); }
-			if (op == Op.Sin)   	{ return nTvar(Tvar.Sin((Tvar)ob1)); }
-			if (op == Op.Cos)   	{ return nTvar(Tvar.Cos((Tvar)ob1)); }
-			if (op == Op.Tan)   	{ return nTvar(Tvar.Tan((Tvar)ob1)); }
-			if (op == Op.Asin)  	{ return nTvar(Tvar.ArcSin((Tvar)ob1)); }
-			if (op == Op.Acos) 		{ return nTvar(Tvar.ArcCos((Tvar)ob1)); }
-			if (op == Op.Atan)  	{ return nTvar(Tvar.ArcTan((Tvar)ob1)); }
+			if (op == Op.DateFirstTrue)   	{ return nTvar(((Tvar)ob1).DateFirstTrue); }
+			if (op == Op.DateLastTrue)   	{ return nTvar(((Tvar)ob1).DateLastTrue); }
+			if (op == Op.DaysToYears)   	{ return nTvar(((Tvar)ob1).DaysToYears); }
+			if (op == Op.DaysToMonths)   	{ return nTvar(((Tvar)ob1).DaysToMonths); }
+			if (op == Op.DaysToWeeks)   	{ return nTvar(((Tvar)ob1).DaysToWeeks); }
+
+			if (op == Op.Abs)   			{ return nTvar(Tvar.Abs((Tvar)ob1)); }
+			if (op == Op.Sqrt)  			{ return nTvar(Tvar.Sqrt((Tvar)ob1)); }
+			if (op == Op.Nlog)   			{ return nTvar(Tvar.Log((Tvar)ob1)); }
+			if (op == Op.Sin)   			{ return nTvar(Tvar.Sin((Tvar)ob1)); }
+			if (op == Op.Cos)   			{ return nTvar(Tvar.Cos((Tvar)ob1)); }
+			if (op == Op.Tan)   			{ return nTvar(Tvar.Tan((Tvar)ob1)); }
+			if (op == Op.Asin)  			{ return nTvar(Tvar.ArcSin((Tvar)ob1)); }
+			if (op == Op.Acos) 				{ return nTvar(Tvar.ArcCos((Tvar)ob1)); }
+			if (op == Op.Atan)  			{ return nTvar(Tvar.ArcTan((Tvar)ob1)); }
 
 			return n(Typ.Null,null);
 		}
@@ -132,6 +153,38 @@ namespace Akkadian
 
 			if (op == Op.Max) { return nTvar(Tvar.Max(list)); }
 			if (op == Op.Min) { return nTvar(Tvar.Min(list)); }
+
+			return n(Typ.Null,null);
+		}
+
+		/// <summary>
+		/// Evaluates built-in constants.
+		/// </summary>
+		private Node ConstantEval(Op op)
+		{
+			if (op == Op.Unstated) 			{ return nTvar(new Tvar(Hstate.Unstated)); }
+			if (op == Op.Uncertain) 		{ return nTvar(new Tvar(Hstate.Uncertain)); }
+			if (op == Op.Stub) 				{ return nTvar(new Tvar(Hstate.Stub)); }
+
+			if (op == Op.DawnOfTime) 		{ return nTvar(Time.DawnOf); }
+			if (op == Op.Dawn) 				{ return nTvar(Time.DawnOf); }
+			if (op == Op.EndOfTime) 		{ return nTvar(Time.EndOf); }
+			if (op == Op.End) 				{ return nTvar(Time.EndOf); }
+			if (op == Op.Now) 				{ return nTvar(new Tvar(DateTime.Now)); }
+
+			if (op == Op.TheYear) 			{ return nTvar(H.TheYear); }
+			if (op == Op.TheQuarter) 		{ return nTvar(H.TheQuarter); }
+			if (op == Op.TheMonth) 			{ return nTvar(H.TheMonth); }
+			if (op == Op.TheWeek) 			{ return nTvar(H.TheCalendarWeek); }
+			if (op == Op.TheDay) 			{ return nTvar(H.TheDay); }
+
+			if (op == Op.DaysInYear) 		{ return nTvar(Time.DaysInYear()); }
+			if (op == Op.DaysInQuarter) 	{ return nTvar(Time.DaysInQuarter()); }
+			if (op == Op.DaysInMonth) 		{ return nTvar(Time.DaysInMonth()); }
+			if (op == Op.IsLeapYear) 		{ return nTvar(Time.IsLeapYear()); }
+
+			if (op == Op.ConstPi) 			{ return nTvar(Tvar.ConstPi); }
+			if (op == Op.ConstE) 			{ return nTvar(Tvar.ConstE); }
 
 			return n(Typ.Null,null);
 		}
