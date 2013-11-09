@@ -229,6 +229,12 @@ namespace Akkadian
 				return "Tvar:" + s.Trim('\'');
 			}
 
+			// References to operator names (such as "Abs")
+			if (OperatorRegistry.ContainsKey(s))
+			{
+				return "Op:" + s;
+			}
+
 			// Constants (i.e. constant functions - those with no arguments)
 			if (IsExactMatch(s,fcnName))
 			{

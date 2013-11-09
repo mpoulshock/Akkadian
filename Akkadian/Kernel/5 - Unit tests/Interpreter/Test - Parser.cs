@@ -524,6 +524,41 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Parse_65 ()
+		{
+			ParserResponse pr = ParseInputLine("-9.1 |> Abs");
+			Assert.AreEqual("Expr:{Op:Pipe,Tvar:-9.1,Op:Abs}", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_66 ()
+		{
+			ParserResponse pr = ParseInputLine("33 |> F[2]");
+			Assert.AreEqual("Expr:{Op:Pipe,Tvar:33,Expr:{Fcn:F,Tvar:2}}", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_67 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x,y] = x * y");
+			Assert.AreEqual("Expr:{Op:Mult,Var:0,Var:1}", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_68 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x,y,z] = x * y + z");
+			Assert.AreEqual("Expr:{Op:Plus,Expr:{Op:Mult,Var:0,Var:1},Var:2}", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_69 ()
+		{
+			ParserResponse pr = ParseInputLine("F[x,y,z] = x * y * z");
+			Assert.AreEqual("Expr:{Op:Mult,Expr:{Op:Mult,Var:0,Var:1},Var:2}", pr.ParserString);              
+		}
+
+		[Test]
 		public void StringToNode_1 ()
 		{
 			InitializeParseTest();

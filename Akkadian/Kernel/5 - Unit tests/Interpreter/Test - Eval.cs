@@ -541,6 +541,40 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Pipes_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("-9.1 |> Abs");
+			Assert.AreEqual(9.1, r.Out);                
+		}
+
+		[Test]
+		public void Pipes_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x * y");
+			Tvar r = (Tvar)sess.ProcessInput("33 |> F[2]");
+			Assert.AreEqual(66, r.Out);                
+		}
+
+		[Test]
+		public void Pipes_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y,z] = x * y * z");
+			Tvar r = (Tvar)sess.ProcessInput("30 |> F[2,2]");
+			Assert.AreEqual(120, r.Out);                
+		}
+
+		[Test]
+		public void Pipes_4 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("8 |> Pow[2]");
+			Assert.AreEqual(256, r.Out);                
+		}
+
+		[Test]
 		public void Recursion_1 ()
 		{
 			// f(x) = if x = 0 -> 0, else f(x-1) + 3
@@ -579,8 +613,8 @@ namespace Akkadian.UnitTests
 			// f7(450) = 1350
 			Session sess = new Session();
 			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-			Tvar r = (Tvar)sess.ProcessInput("F[450]");
-			Assert.AreEqual(1350, r.Out);                 
+			Tvar r = (Tvar)sess.ProcessInput("F[400]");
+			Assert.AreEqual(1200, r.Out);                 
 		}
 
 		[Test]

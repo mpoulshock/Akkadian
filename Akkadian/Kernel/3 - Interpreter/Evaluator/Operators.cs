@@ -80,7 +80,6 @@ namespace Akkadian
 		DayDiff = 35, 
 		WeekDiff = 36,
 		YearDiff = 37,
-		Pipe = 38,		// Pipeline |>
 
 		// Unary operators
 		Not = 100,
@@ -109,6 +108,7 @@ namespace Akkadian
 		Switch = 300,
 		Max = 301,
 		Min = 302,
+		Pipe = 303,		// Pipeline |>
 
 		// Meaningless
 		Null = 999

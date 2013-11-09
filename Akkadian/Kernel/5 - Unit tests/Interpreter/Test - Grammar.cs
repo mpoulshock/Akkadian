@@ -187,26 +187,19 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Regex_FcnSig_6 ()
 		{
-
 			Assert.IsTrue(IsExactMatch("f2[A]",fcnSignature));
 		}
 
 		[Test]
-		public void Regex_SecondaryArgs_1 ()
+		public void Regex_FcnSig_7 ()
 		{
-			Assert.IsTrue(IsExactMatch("",secondaryArgs));
+			Assert.IsTrue(IsExactMatch("F[x,y,z]",fcnSignature));
 		}
 
 		[Test]
-		public void Regex_SecondaryArgs_2 ()
+		public void Regex_FcnVar_1 ()
 		{
-			Assert.IsTrue(IsExactMatch(", A",secondaryArgs));
-		}
-
-		[Test]
-		public void Regex_SecondaryArgs_3 ()
-		{
-			Assert.IsTrue(IsExactMatch(",X2",secondaryArgs));
+			Assert.IsTrue(IsExactMatch("z",fcnVariable));
 		}
 
 		[Test]

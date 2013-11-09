@@ -31,7 +31,6 @@ namespace Akkadian
 		/// </summary>
 		public Node eval(Expr exp, Expr args)
 		{
-			Node result = exp.nodes[0];
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
@@ -39,7 +38,11 @@ namespace Akkadian
 
 			if (typ == Typ.Var)
 			{
-				result = EvaluateVariableReferences(exp, args);
+				return EvaluateVariableReferences(exp, args);
+			}
+			else if (typ == Typ.Expr)
+			{
+				return eval((Expr)ob, args);
 			}
 			else if (typ == Typ.Op)
 			{
@@ -48,11 +51,11 @@ namespace Akkadian
 
 				if (opID < 100)
 				{
-					result = BinaryFcnEval(exp, args, opType);
+					return BinaryFcnEval(exp, args, opType);
 				}
 				else if (opID < 200)
 				{
-					result = UnaryFcnEval(exp, args, opType);
+					return UnaryFcnEval(exp, args, opType);
 				}
 				else if (opType == Op.Switch)
 				{
@@ -64,20 +67,16 @@ namespace Akkadian
 					}
 					Expr newArgs = new Expr(newArgList);
 
-					result = n(Typ.Tvar, Switch2(newArgs, args));
+					return n(Typ.Tvar, Switch2(newArgs, args));
 				}
 				else if (opType == Op.Max || opType == Op.Min)
 				{
-					result = MultiTvarFcnEval(exp, args, opType);
+					return MultiTvarFcnEval(exp, args, opType);
 				}
-//				else if (opType == "Exists")
-//				{
-//					result = EvalExists(exp, args, opType);
-//				}
-			}
-			else if (typ == Typ.Expr)
-			{
-				result = eval((Expr)ob, args);
+				else if (opType == Op.Pipe)
+				{
+					return EvaluatePipelinedExpression(exp, args);
+				}
 			}
 			else if (typ == Typ.Fcn)
 			{
@@ -86,7 +85,7 @@ namespace Akkadian
 				{
 					// Call the function with the given name
 					Expr ex1 = GetFunction(fcnName);
-					result = MixAndMatch(exp, args, ex1);
+					return MixAndMatch(exp, args, ex1);
 				}
 				else
 				{
@@ -106,13 +105,13 @@ namespace Akkadian
 //					string s = Console.ReadLine();
 //					result = nTvar(s);
 
-					result = nTvar(new Tvar(Hstate.Unstated));
+					return nTvar(new Tvar(Hstate.Unstated));
 				}
 			}
 
-			return result;
+			return exp.nodes[0];
 		}
-
+		
 		public Node eval(Node node, Expr args)
 		{
 			return eval(expr(node), args);
@@ -158,6 +157,39 @@ namespace Akkadian
 			Expr newArgs = new Expr(newArgList);
 
 			return eval(newExp, newArgs);
+		}
+
+		/// <summary>
+		/// Evaluates an expression with a pipeline operator (|>)
+		/// </summary>
+		private Node EvaluatePipelinedExpression(Expr exp, Expr args)
+		{
+			// Get rid of pipe node, put new first node as last node, then eval 
+			// For example, -9.1 |> Abs becomes Abs[-9.1]
+			// Expr:{Op:Pipe,Tvar:-9.1,Op:Abs} becomes Expr:{Op:Abs,Tvar:-9.1}
+
+			List<Node> dePipedNodes = new List<Node>();
+
+			// E.g. Expr:{Op:Pipe,Tvar:-9.1,Op:Abs}
+			if (exp.nodes[2].objType == Typ.Op || exp.nodes[2].objType == Typ.Fcn)
+			{
+				dePipedNodes.Add(exp.nodes[2]);
+			}
+			// E.g. Expr:{Op:Pipe,Tvar:33,Expr:{Fcn:F,Tvar:2}}
+			else
+			{
+				Expr deepExpr = (Expr)exp.nodes[2].obj;
+				List<Node> exprList = (List<Node>)deepExpr.nodes;
+				for (int i=0; i < exprList.Count; i++)
+				{
+					dePipedNodes.Add(exprList[i]);
+				}
+			}
+			dePipedNodes.Add(exp.nodes[1]);
+
+			Console.WriteLine((new Expr(dePipedNodes)).ToString());
+
+			return eval(new Expr(dePipedNodes), args);
 		}
 	}
 }
