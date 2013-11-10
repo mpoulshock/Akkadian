@@ -55,15 +55,18 @@ namespace Akkadian
 			if (op == Op.LsEq) 		{ return nTvar((Tvar)ob1 <= (Tvar)ob2); }
 
 			// Temporal
-			if (op == Op.AsOf) 					{ return nTvar(((Tvar)ob2).AsOf((Tvar)ob1)); }
-			if (op == Op.EverPer) 				{ return nTvar(((Tvar)ob2).EverPer((Tvar)ob1)); }
-			if (op == Op.AlwaysPer) 			{ return nTvar(((Tvar)ob2).AlwaysPer((Tvar)ob1)); }
-			if (op == Op.CountPer) 				{ return nTvar(((Tvar)ob2).CountPer((Tvar)ob1)); }
-			if (op == Op.RunningCountPer) 		{ return nTvar(((Tvar)ob2).RunningCountPer((Tvar)ob1)); }
-			if (op == Op.TotalElapsedDaysPer) 	{ return nTvar(((Tvar)ob2).TotalElapsedDaysPer((Tvar)ob1)); }
-			if (op == Op.PeriodEndVal) 			{ return nTvar(((Tvar)ob2).PeriodEndVal((Tvar)ob1)); }
-			if (op == Op.IsInPeriod) 			{ return nTvar(((Tvar)ob2).IsInPeriod((Tvar)ob1)); }
-			if (op == Op.IsBetween) 			{ return nTvar(Time.IsBetween((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.AsOf) 						{ return nTvar(((Tvar)ob2).AsOf((Tvar)ob1)); }
+			if (op == Op.EverPer) 					{ return nTvar(((Tvar)ob2).EverPer((Tvar)ob1)); }
+			if (op == Op.AlwaysPer) 				{ return nTvar(((Tvar)ob2).AlwaysPer((Tvar)ob1)); }
+			if (op == Op.CountPer) 					{ return nTvar(((Tvar)ob2).CountPer((Tvar)ob1)); }
+			if (op == Op.RunningCountPer) 			{ return nTvar(((Tvar)ob2).RunningCountPer((Tvar)ob1)); }
+			if (op == Op.TotalElapsedDaysPer) 		{ return nTvar(((Tvar)ob2).TotalElapsedDaysPer((Tvar)ob1)); }
+			if (op == Op.PeriodEndVal) 				{ return nTvar(((Tvar)ob2).PeriodEndVal((Tvar)ob1)); }
+			if (op == Op.IsInPeriod) 				{ return nTvar(((Tvar)ob2).IsInPeriod((Tvar)ob1)); }
+			if (op == Op.IsBetween) 				{ return nTvar(Time.IsBetween((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.RunningElapsedIntervals)	{ return nTvar(((Tvar)ob2).RunningElapsedIntervals((Tvar)ob1)); }
+			if (op == Op.ContinuousElapsedIntervals){ return nTvar(((Tvar)ob2).ContinuousElapsedIntervals((Tvar)ob1)); }
+			if (op == Op.RunningSummedIntervals)	{ return nTvar(((Tvar)ob2).RunningSummedIntervals((Tvar)ob1)); }
 
 			// Date
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
@@ -145,7 +148,26 @@ namespace Akkadian
 			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 			object ob3 = eval(expr(exp.nodes [3]), args).obj;
 
-			if (op == Op.ComposeDate) 		{ return nTvar( Tvar.ComposeDate((Tvar)ob1,(Tvar)ob2,(Tvar)ob3) ); }
+			if (op == Op.ComposeDate) 				{ return nTvar( Tvar.ComposeDate((Tvar)ob1,(Tvar)ob2,(Tvar)ob3) ); }
+			if (op == Op.SlidingElapsedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingElapsedIntervals((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.SlidingSummedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingSummedIntervals((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Shift) 					{ return nTvar(((Tvar)ob3).Shift((Tvar)ob1,(Tvar)ob2)); }
+
+			return n(Typ.Null,null);
+		}
+
+		/// <summary>
+		/// Evaluates expressions with four arguments.
+		/// </summary>
+		private Node FourArgFcnEval(Expr exp, Expr args, Op op)
+		{
+			object ob1 = eval(expr(exp.nodes [1]), args).obj;
+			object ob2 = eval(expr(exp.nodes [2]), args).obj;
+			object ob3 = eval(expr(exp.nodes [3]), args).obj;
+			object ob4 = eval(expr(exp.nodes [4]), args).obj;
+
+			if (op == Op.TotalSummedIntervals) 	{ return nTvar(((Tvar)ob4).TotalSummedIntervals((Tvar)ob1,(Tvar)ob2,(Tvar)ob3)); }
+			if (op == Op.TotalElapsedIntervals) { return nTvar(((Tvar)ob4).TotalElapsedIntervals((Tvar)ob1,(Tvar)ob2,(Tvar)ob3)); }
 
 			return n(Typ.Null,null);
 		}
@@ -162,8 +184,9 @@ namespace Akkadian
 				list[i-1] = (Tvar)eval(expr(exp.nodes[i]), args).obj;
 			}
 
-			if (op == Op.Max) { return nTvar(Tvar.Max(list)); }
-			if (op == Op.Min) { return nTvar(Tvar.Min(list)); }
+			if (op == Op.Max) 			{ return nTvar(Tvar.Max(list)); }
+			if (op == Op.Min) 			{ return nTvar(Tvar.Min(list)); }
+			if (op == Op.BoolCount) 	{ return nTvar(H.BoolCount(list)); }
 
 			return n(Typ.Null,null);
 		}

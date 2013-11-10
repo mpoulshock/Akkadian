@@ -89,6 +89,9 @@ namespace Akkadian
 		PeriodEndVal = 44,
 		IsInPeriod = 45,
 		IsBetween = 46,
+		RunningElapsedIntervals = 47,
+		ContinuousElapsedIntervals = 48,
+		RunningSummedIntervals = 49,
 
 		// Unary operators
 		Not = 100,
@@ -122,12 +125,20 @@ namespace Akkadian
 
 		// Three arguments
 		ComposeDate = 200,
+		SlidingElapsedIntervals = 201,
+		SlidingSummedIntervals = 202,
+		Shift = 203,
+
+		// Four arguments
+		TotalSummedIntervals = 250,
+		TotalElapsedIntervals = 251,
 
 		// Special
 		Switch = 300,
 		Max = 301,
 		Min = 302,
-		Pipe = 303,		// Pipeline |>
+		BoolCount = 303,
+		Pipe = 304,		// Pipeline |>
 
 		// Constants
 		Unstated = 400,
@@ -215,6 +226,9 @@ namespace Akkadian
 			OperatorRegistry.Add("PeriodEndVal",Op.PeriodEndVal);
 			OperatorRegistry.Add("IsInPeriod",Op.IsInPeriod);
 			OperatorRegistry.Add("IsBetween",Op.IsBetween);
+			OperatorRegistry.Add("RunningElapsedIntervals",Op.RunningElapsedIntervals);
+			OperatorRegistry.Add("ContinuousElapsedIntervals",Op.ContinuousElapsedIntervals);
+			OperatorRegistry.Add("RunningSummedIntervals",Op.RunningSummedIntervals);
 
 			// Unary operators
 			OperatorRegistry.Add("!",Op.Not);
@@ -248,11 +262,19 @@ namespace Akkadian
 
 			// Three arguments
 			OperatorRegistry.Add("Date",Op.ComposeDate);
+			OperatorRegistry.Add("SlidingElapsedIntervals",Op.SlidingElapsedIntervals);
+			OperatorRegistry.Add("SlidingSummedIntervals",Op.SlidingSummedIntervals);
+			OperatorRegistry.Add("Shift",Op.Shift);
+
+			// Four arguments
+			OperatorRegistry.Add("TotalSummedIntervals",Op.TotalSummedIntervals);
+			OperatorRegistry.Add("TotalElapsedIntervals",Op.TotalElapsedIntervals);
 
 			// Special
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
+			OperatorRegistry.Add("BoolCount",Op.BoolCount);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);

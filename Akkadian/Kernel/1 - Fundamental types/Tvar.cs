@@ -382,15 +382,22 @@ namespace Akkadian
         ///              Year =  <-2010-|-2011-|-2012-|-2013-|-2014->
         ///  N.Shift(-2,Year) =  <---------33---------|--44--|--55--|--66--|--77-->
         /// </example>
-		public Tvar Shift(int offset, Tvar temporalPeriod)
+		public Tvar Shift(Tvar offset, Tvar temporalPeriod)
 		{
-			// TODO: Make "offset" a Tvar instead of an int
-
 			Tvar result = new Tvar();
-			result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
 
+			// Handle uncertainty in offset
 			// No need to handle uncertainty b/c this method just reuses the values in
 			// the base Tvar.
+			Hstate top1 = PrecedingState(offset.FirstValue);
+			if (top1 != Hstate.Known)
+			{
+				result.AddState(Time.DawnOf, new Hval(null, top1));
+				return result;
+			}
+
+			// Set initial state of Tvar
+			result.AddState(this.TimeLine.Keys[0], this.TimeLine.Values[0]);
 
 			// Iterate through pairs in the base Tvar
 			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
@@ -411,7 +418,8 @@ namespace Akkadian
 						if (testDate == origDate)
 						{
 							// Then get the date offset from the original date
-							int offsetIndex = i + (offset * -1);
+							int offsetInt = Convert.ToInt16(offset.FirstValue.Val);
+							int offsetIndex = i + (offsetInt * -1);
 
 							// Don't overrun the temporalPeriod list
 							if (offsetIndex < temporalPeriod.TimeLine.Count &&
@@ -431,7 +439,7 @@ namespace Akkadian
 				}
 			}
 
-			return result;
+			return result.Lean;		// TODO: Implement LeanTset for Tsets
 		}
 
         /// <summary>

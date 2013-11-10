@@ -882,6 +882,14 @@ namespace Akkadian.UnitTests
             Assert.AreEqual("Unstated", t.Shift(0, TheYear).Out);      
         }
 
+		[Test]
+		public void FT_Shift_uncertain4 ()
+		{
+			Tvar t1 = new Tvar(6);
+			Tvar t2 = new Tvar(Hstate.Unstated);
+			Assert.AreEqual("Unstated", t1.Shift(t2, TheYear).Out);      
+		}
+
         // DateIsInPeriod
 
         [Test]

@@ -36,14 +36,9 @@ namespace Akkadian
 
 //			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
-			if (typ == Typ.Var)
-			{
-				return EvaluateVariableReferences(exp, args);
-			}
-			else if (typ == Typ.Expr)
-			{
-				return eval((Expr)ob, args);
-			}
+			if (typ == Typ.Var) 		{ return EvaluateVariableReferences(exp, args); }
+			else if (typ == Typ.Expr) 	{ return eval((Expr)ob, args); }
+
 			else if (typ == Typ.Op)
 			{
 				Op opType = (Op)ob;
@@ -51,7 +46,8 @@ namespace Akkadian
 
 				if (opID < 100) 			{ return BinaryFcnEval(exp, args, opType); }
 				else if (opID < 200) 		{ return UnaryFcnEval(exp, args, opType); }
-				else if (opID < 300) 		{ return ThreeArgFcnEval(exp, args, opType); }
+				else if (opID < 250) 		{ return ThreeArgFcnEval(exp, args, opType); }
+				else if (opID < 300) 		{ return FourArgFcnEval(exp, args, opType); }
 				else if (opID > 400) 		{ return ConstantEval(opType); }
 				else if (opType == Op.Pipe) { return EvaluatePipelinedExpression(exp, args); }
 
@@ -67,7 +63,7 @@ namespace Akkadian
 
 					return n(Typ.Tvar, Switch2(newArgs, args));
 				}
-				else if (opType == Op.Max || opType == Op.Min)
+				else if (opType == Op.Max || opType == Op.Min || opType == Op.BoolCount)
 				{
 					return MultiTvarFcnEval(exp, args, opType);
 				}
