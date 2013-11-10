@@ -55,7 +55,23 @@ namespace Akkadian
         {
             this.SetEternally(new DateTime(year, month, day));
         }
-                
+        
+		/// <summary>
+		/// Constructs a Tvar that is eternally set to a specified year, 
+		/// month, and day.
+		/// </summary>
+		public static Tvar ComposeDate(Tvar year, Tvar month, Tvar day)
+		{
+			return ApplyFcnToTimeline(x => CoreComposeDate(x), year, month, day);
+		}
+		private static Hval CoreComposeDate(List<Hval> list)
+		{
+			int y = Convert.ToInt16(list[0].Val);
+			int m = Convert.ToInt16(list[1].Val);
+			int d = Convert.ToInt16(list[2].Val);
+			return Date(y,m,d);
+		}
+
         /// <summary>
         /// Converts a Tvar to a nullable DateTime.
         /// Returns null if the Tvar is unknown or if it's value changes over

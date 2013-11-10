@@ -63,14 +63,7 @@ namespace Akkadian
 			if (op == Op.TotalElapsedDaysPer) 	{ return nTvar(((Tvar)ob2).TotalElapsedDaysPer((Tvar)ob1)); }
 			if (op == Op.PeriodEndVal) 			{ return nTvar(((Tvar)ob2).PeriodEndVal((Tvar)ob1)); }
 			if (op == Op.IsInPeriod) 			{ return nTvar(((Tvar)ob2).IsInPeriod((Tvar)ob1)); }
-
-//			OperatorRegistry.Add("EverPer",Op.EverPer);
-//			OperatorRegistry.Add("AlwaysPer",Op.AlwaysPer);
-//			OperatorRegistry.Add("CountPer",Op.CountPer);
-//			OperatorRegistry.Add("RunningCountPer",Op.RunningCountPer);
-//			OperatorRegistry.Add("TotalElapsedDaysPer",Op.TotalElapsedDaysPer);
-//			OperatorRegistry.Add("PeriodEndVal",Op.PeriodEndVal);
-//			OperatorRegistry.Add("IsInPeriod",Op.IsInPeriod);
+			if (op == Op.IsBetween) 			{ return nTvar(Time.IsBetween((Tvar)ob1,(Tvar)ob2)); }
 
 			// Date
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
@@ -119,7 +112,11 @@ namespace Akkadian
 			if (op == Op.Month)				{ return nTvar(((Tvar)ob1).Month); }
 			if (op == Op.Quarter)   		{ return nTvar(((Tvar)ob1).Quarter); }
 			if (op == Op.Year)   			{ return nTvar(((Tvar)ob1).Year); }
-
+			if (op == Op.Year)   			{ return nTvar(((Tvar)ob1).Year); }
+			if (op == Op.IsAtOrAfter)   	{ return nTvar( Time.IsAtOrAfter((Tvar)ob1)); }
+			if (op == Op.IsBefore)   		{ return nTvar( Time.IsBefore((Tvar)ob1)); }
+			if (op == Op.TemporalMin)   	{ return nTvar(((Tvar)ob1).Min()); }
+			if (op == Op.TemporalMax)   	{ return nTvar(((Tvar)ob1).Max()); }
 			if (op == Op.DateFirstTrue)   	{ return nTvar(((Tvar)ob1).DateFirstTrue); }
 			if (op == Op.DateLastTrue)   	{ return nTvar(((Tvar)ob1).DateLastTrue); }
 			if (op == Op.DaysToYears)   	{ return nTvar(((Tvar)ob1).DaysToYears); }
@@ -135,6 +132,20 @@ namespace Akkadian
 			if (op == Op.Asin)  			{ return nTvar(Tvar.ArcSin((Tvar)ob1)); }
 			if (op == Op.Acos) 				{ return nTvar(Tvar.ArcCos((Tvar)ob1)); }
 			if (op == Op.Atan)  			{ return nTvar(Tvar.ArcTan((Tvar)ob1)); }
+
+			return n(Typ.Null,null);
+		}
+
+		/// <summary>
+		/// Evaluates expressions with three arguments.
+		/// </summary>
+		private Node ThreeArgFcnEval(Expr exp, Expr args, Op op)
+		{
+			object ob1 = eval(expr(exp.nodes [1]), args).obj;
+			object ob2 = eval(expr(exp.nodes [2]), args).obj;
+			object ob3 = eval(expr(exp.nodes [3]), args).obj;
+
+			if (op == Op.ComposeDate) 		{ return nTvar( Tvar.ComposeDate((Tvar)ob1,(Tvar)ob2,(Tvar)ob3) ); }
 
 			return n(Typ.Null,null);
 		}

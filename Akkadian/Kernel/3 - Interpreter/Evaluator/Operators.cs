@@ -88,6 +88,7 @@ namespace Akkadian
 		TotalElapsedDaysPer = 43,
 		PeriodEndVal = 44,
 		IsInPeriod = 45,
+		IsBetween = 46,
 
 		// Unary operators
 		Not = 100,
@@ -114,10 +115,15 @@ namespace Akkadian
 		DaysToYears = 121,
 		DaysToMonths = 122,
 		DaysToWeeks = 123,
+		IsAtOrAfter = 124,
+		IsBefore = 125,
+		TemporalMin = 126,
+		TemporalMax = 127,
 
-		// Ternary functions
+		// Three arguments
+		ComposeDate = 200,
 
-		// Other
+		// Special
 		Switch = 300,
 		Max = 301,
 		Min = 302,
@@ -208,6 +214,7 @@ namespace Akkadian
 			OperatorRegistry.Add("TotalElapsedDaysPer",Op.TotalElapsedDaysPer);
 			OperatorRegistry.Add("PeriodEndVal",Op.PeriodEndVal);
 			OperatorRegistry.Add("IsInPeriod",Op.IsInPeriod);
+			OperatorRegistry.Add("IsBetween",Op.IsBetween);
 
 			// Unary operators
 			OperatorRegistry.Add("!",Op.Not);
@@ -234,8 +241,15 @@ namespace Akkadian
 			OperatorRegistry.Add("DaysToYears",Op.DaysToYears);
 			OperatorRegistry.Add("DaysToMonths",Op.DaysToMonths);
 			OperatorRegistry.Add("DaysToWeeks",Op.DaysToWeeks);
+			OperatorRegistry.Add("IsAtOrAfter",Op.IsAtOrAfter);
+			OperatorRegistry.Add("IsBefore",Op.IsBefore);
+			OperatorRegistry.Add("TemporalMin",Op.TemporalMin);
+			OperatorRegistry.Add("TemporalMax",Op.TemporalMax);
 
-			// Other
+			// Three arguments
+			OperatorRegistry.Add("Date",Op.ComposeDate);
+
+			// Special
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);

@@ -49,18 +49,12 @@ namespace Akkadian
 				Op opType = (Op)ob;
 				int opID = Convert.ToInt16(opType);
 
-				if (opID < 100)
-				{
-					return BinaryFcnEval(exp, args, opType);
-				}
-				else if (opID < 200)
-				{
-					return UnaryFcnEval(exp, args, opType);
-				}
-				else if (opID > 400)
-				{
-					return ConstantEval(opType);
-				}
+				if (opID < 100) 			{ return BinaryFcnEval(exp, args, opType); }
+				else if (opID < 200) 		{ return UnaryFcnEval(exp, args, opType); }
+				else if (opID < 300) 		{ return ThreeArgFcnEval(exp, args, opType); }
+				else if (opID > 400) 		{ return ConstantEval(opType); }
+				else if (opType == Op.Pipe) { return EvaluatePipelinedExpression(exp, args); }
+
 				else if (opType == Op.Switch)
 				{
 					// Get arguments to the switch function
@@ -76,10 +70,6 @@ namespace Akkadian
 				else if (opType == Op.Max || opType == Op.Min)
 				{
 					return MultiTvarFcnEval(exp, args, opType);
-				}
-				else if (opType == Op.Pipe)
-				{
-					return EvaluatePipelinedExpression(exp, args);
 				}
 			}
 			else if (typ == Typ.Fcn)
