@@ -124,10 +124,12 @@ namespace Akkadian
 		TemporalMax = 127,
 
 		// Three arguments
-		ComposeDate = 200,
-		SlidingElapsedIntervals = 201,
-		SlidingSummedIntervals = 202,
-		Shift = 203,
+		Shift = 200,
+		ComposeDate = 201,
+		SlidingElapsedIntervals = 202,
+		SlidingSummedIntervals = 203,
+		IsAlwaysTrue = 204,
+		IsEverTrue = 205,
 
 		// Four arguments
 		TotalSummedIntervals = 250,
@@ -261,10 +263,12 @@ namespace Akkadian
 			OperatorRegistry.Add("TemporalMax",Op.TemporalMax);
 
 			// Three arguments
+			OperatorRegistry.Add("Shift",Op.Shift);
 			OperatorRegistry.Add("Date",Op.ComposeDate);
 			OperatorRegistry.Add("SlidingElapsedIntervals",Op.SlidingElapsedIntervals);
 			OperatorRegistry.Add("SlidingSummedIntervals",Op.SlidingSummedIntervals);
-			OperatorRegistry.Add("Shift",Op.Shift);
+			OperatorRegistry.Add("IsAlwaysTrue",Op.IsAlwaysTrue);
+			OperatorRegistry.Add("IsEverTrue",Op.IsEverTrue);
 
 			// Four arguments
 			OperatorRegistry.Add("TotalSummedIntervals",Op.TotalSummedIntervals);

@@ -148,10 +148,12 @@ namespace Akkadian
 			object ob2 = eval(expr(exp.nodes [2]), args).obj;
 			object ob3 = eval(expr(exp.nodes [3]), args).obj;
 
+			if (op == Op.Shift) 					{ return nTvar(((Tvar)ob3).Shift((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.ComposeDate) 				{ return nTvar( Tvar.ComposeDate((Tvar)ob1,(Tvar)ob2,(Tvar)ob3) ); }
 			if (op == Op.SlidingElapsedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingElapsedIntervals((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.SlidingSummedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingSummedIntervals((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.Shift) 					{ return nTvar(((Tvar)ob3).Shift((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.IsAlwaysTrue) 				{ return nTvar(((Tvar)ob3).IsAlwaysTrue((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.IsEverTrue) 				{ return nTvar(((Tvar)ob3).IsEverTrue((Tvar)ob1,(Tvar)ob2)); }
 
 			return n(Typ.Null,null);
 		}
@@ -173,7 +175,7 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Evaluates expressions with three or more arguments.
+		/// Evaluates expressions with a dynamic number of arguments.
 		/// </summary>
 		private Node MultiTvarFcnEval(Expr exp, Expr args, Op op)
 		{
