@@ -98,6 +98,9 @@ namespace Akkadian
 					return nTvar(new Tvar(Hstate.Unstated));
 				}
 			}
+			else if (typ == Typ.Series)
+			{
+			}
 
 			return exp.nodes[0];
 		}

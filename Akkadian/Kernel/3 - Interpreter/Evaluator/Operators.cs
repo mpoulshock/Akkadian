@@ -38,6 +38,7 @@ namespace Akkadian
 		Fcn,		// Function call
 		Op,			// Built-in operator
 		Var,		// Variable
+		Series,		// Time series literal
 		Null		// Meaningless
 	}
 

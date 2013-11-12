@@ -30,14 +30,9 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Abs_1 ()
 		{
-
 			Session sess = new Session();
-//			Tvar r = (Tvar)sess.ProcessInput("Abs[-66]");
-//			Assert.AreEqual(66, r.Out);  
-
-			Expr exp = expr(n(Typ.Op,Op.Abs),nTvar(41));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(41, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("Abs[-66]");
+			Assert.AreEqual(66, r.Out);             
 		}
 
 		[Test]
@@ -792,6 +787,15 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void TimeSeries_1 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("FedMinWage = {1800-01-01:3.00,2009-07-24:7.25}");
+			Tvar r = (Tvar)sess.ProcessInput("FedMinWage |> Max");
+			Assert.AreEqual(7.25, r.Out);                
+		}
+
+		[Test]
 		public void Tset_1 ()
 		{
 			Session sess = new Session();
@@ -814,17 +818,6 @@ namespace Akkadian.UnitTests
 			Expr exp = expr(n(Typ.Op,Op.ToUSD), nTvar(42.224));
 			Tvar r = (Tvar)sess.eval(exp).obj;
 			Assert.AreEqual("$42.22", r.Out);               
-		}
-
-		[Test]
-		public void Union ()
-		{
-//			Session sess = new Session();
-//			Thing A = new Thing ("A");
-//			Thing B = new Thing ("B");
-//			Expr exp = expr(n(Typ.Op,Op.Union), nTvar(A), nTvar(B));
-//			Tvar r = (Tvar)sess.eval(exp).obj;
-//			Assert.AreEqual("A,B", r.Out);               
 		}
 
 		[Test]

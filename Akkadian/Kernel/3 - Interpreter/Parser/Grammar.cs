@@ -52,9 +52,6 @@ namespace Akkadian
 		// Switch
 		protected const string switchStatement = wildcard + "->" + wildcard + "," + wildcard;
 
-		// Binary operators
-		protected const string binaryOp = @"(&|\|)";
-
 		/// <summary>
 		/// Determines if the input string matches the regex exactly.
 		/// </summary>

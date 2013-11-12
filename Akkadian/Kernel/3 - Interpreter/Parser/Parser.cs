@@ -121,7 +121,24 @@ namespace Akkadian
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
 				string newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
-				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, fcnName, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+			}
+
+			// Set and time-series literals
+			if (s.StartsWith("{") && s.EndsWith("}"))
+			{
+				// Sets
+				if (IsExactMatch(s,setLiteral))
+				{
+					// TODO: Handle nested Tsets
+					s = Util.RemoveParens(s).Replace(",","+");
+					if (s == "") s = "*";	// Empty sets represented as *
+					return "Tvar:" + s;
+				}
+				// Time serieses
+				// {Dawn: Stub, 2009-07-24: $7.25}
+				// Series:{Tvar:1800-01-01,Tvar:Stub,Tvar:2009-07-24,Tnum:7.25}
+				return "Series:{" + Util.RemoveParens(s).Replace(":",",") + "}";
 			}
 
 			// Pipelined functions |>
@@ -167,7 +184,7 @@ namespace Akkadian
 				}
 				newStr += "}";
 
-				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, fcnName, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, argNames);
 			}
 
 			// Switch
@@ -222,7 +239,7 @@ namespace Akkadian
 				}
 			}
 
-			// More literal values
+			// Boolean and string literal values
 			if (IsExactMatch(s.ToLower(),boolLiteral))
 			{
 				return "Tvar:" + Convert.ToBoolean(s);
@@ -230,13 +247,6 @@ namespace Akkadian
 			if (IsExactMatch(s,stringLiteral))
 			{
 				return "Tvar:" + s.Trim('\'');
-			}
-			if (IsExactMatch(s,setLiteral))
-			{
-				// TODO: Handle nested Tsets
-				s = Util.RemoveParens(s).Replace(",","+");
-				if (s == "") s = "*";	// Empty sets represented as *
-				return "Tvar:" + s;
 			}
 
 			// References to operator names (such as "Abs")
@@ -292,7 +302,7 @@ namespace Akkadian
 		/// <summary>
 		/// Adds a string to the sub-expression list and parses the main string
 		/// </summary>
-		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs, string fcnName, string[] argNames)
+		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs, string[] argNames)
 		{
 			List<string> newSubExprs;
 			if (s.Contains(delimiter))
@@ -422,6 +432,23 @@ namespace Akkadian
 
 				return new Node(Typ.Expr,new Expr(nodes));
 			}
+//			if (typ == "Series")
+//			{
+//				// Series:{Dawn,Stub,2009-07-24,$7.25}
+//				Console.WriteLine(s);
+//				string[] intervals = Util.RemoveParens(val).Split(',');
+//				Tvar ts = new Tvar();
+//				for (int j=0; j<intervals.Length-1; j=j+2)
+//				{
+//					Console.WriteLine(intervals[j] + " - " + intervals[j+1]);
+//					string dt = intervals[j];
+//					if (dt.Trim() == "Dawn") dt = "1800-01-01";
+//					DateTime date = DateTime.Parse(dt);
+//					string intVal = Convert.ToString(intervals[j+1]);
+//					ts.AddState(date,intVal);
+//				}
+//				return nTvar(ts);
+//			}
 
 			// Should not get here
 			return n(Typ.Null,null);

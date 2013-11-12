@@ -13,6 +13,10 @@ namespace REPL
 
 			Session sess = new Session();
 
+//			sess.ProcessInput("FedMinWage = {1800-01-01:3.00,2009-07-24:7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("FedMinWage |> Max");
+//			Console.WriteLine(r.Out);  
+
 			// Loop
 			while (true)
 			{

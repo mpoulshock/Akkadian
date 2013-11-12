@@ -587,6 +587,13 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Parse_74 ()
+		{
+			ParserResponse pr = ParseInputLine("FedMinWage = {Dawn:Stub,2009-07-24:$7.25}");
+			Assert.AreEqual("Expr:{Series:,Dawn,Stub,2009-07-24,$7.25}", pr.ParserString);              
+		}
+
+		[Test]
 		public void StringToNode_1 ()
 		{
 			InitializeParseTest();
