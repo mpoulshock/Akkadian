@@ -251,6 +251,36 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Regex_TimeSeriesLiteral_1 ()
+		{
+			Assert.IsTrue(IsExactMatch("Dawn: 42, 2011-01-01: 43;",timeSeriesLiteral));
+		}
+
+		[Test]
+		public void Regex_TimeSeriesLiteral_2 ()
+		{
+			Assert.IsFalse(IsExactMatch("DawnOfTime: 42, 2011-01-01: 43",timeSeriesLiteral));
+		}
+
+		[Test]
+		public void Regex_TimeSeriesLiteral_3 ()
+		{
+			Assert.IsTrue(IsExactMatch("2010-01-02: '42', 2011-01-01: '43';",timeSeriesLiteral));
+		}
+
+		[Test]
+		public void Regex_TimeSeriesLiteral_4 ()
+		{
+			Assert.IsTrue(IsExactMatch("2020-01-02: {1,2,3};",timeSeriesLiteral));
+		}
+
+		[Test]
+		public void Regex_TimeSeriesLiteral_5 ()
+		{
+			Assert.IsTrue(IsExactMatch("Dawn: F[34], 2011-01-01: Abs[-9.1];",timeSeriesLiteral));
+		}
+
+		[Test]
 		public void Regex_Whitespace_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("",white));

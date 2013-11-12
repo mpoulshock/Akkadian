@@ -40,16 +40,15 @@ namespace Akkadian
 		protected const string dateLiteral = @"(1|2)[0-9]{3}\-(0[1-9]|1[0-2])\-(0[1-9]|[1-2][0-9]|30|31)";		// yyyy-mm-dd
 		protected const string setLiteral = @"{[a-zA-Z0-9,\.{}' ]*}";
 
-		// Time-varying literal values
-		// {Dawn: 42; 2011-01-01: 43}
+		// Time-varying literal values like "Dawn: 42, 2011-01-01: 43;"
+		protected const string timeSeriesLiteral = "(Dawn|DawnOfTime|" + dateLiteral + @"):[-a-zA-Z0-9,\.{}': ]+;";
 
 		// Function parts
-		protected const string akkType = "(Tvar|Tvar|Tvar|Tvar|Tvar|Thing)";
 		protected const string fcnVariable = letter + "[a-zA-Z0-9_]*";
 		protected const string fcnName = letter + "[a-zA-Z0-9_]*";
 		protected const string bracketInnards = "[a-zA-Z0-9_, ]*";
 		protected const string fcnSignature = fcnName + white + @"\["+ white + bracketInnards + white + @"\]";
-		
+
 		// Switch
 		protected const string switchStatement = wildcard + "->" + wildcard + "," + wildcard;
 

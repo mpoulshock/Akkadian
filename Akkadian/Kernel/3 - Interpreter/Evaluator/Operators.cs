@@ -120,8 +120,8 @@ namespace Akkadian
 		DaysToWeeks = 123,
 		IsAtOrAfter = 124,
 		IsBefore = 125,
-		TemporalMin = 126,
-		TemporalMax = 127,
+		Low = 126,
+		High = 127,
 
 		// Three arguments
 		Shift = 200,
@@ -259,8 +259,8 @@ namespace Akkadian
 			OperatorRegistry.Add("DaysToWeeks",Op.DaysToWeeks);
 			OperatorRegistry.Add("IsAtOrAfter",Op.IsAtOrAfter);
 			OperatorRegistry.Add("IsBefore",Op.IsBefore);
-			OperatorRegistry.Add("TemporalMin",Op.TemporalMin);
-			OperatorRegistry.Add("TemporalMax",Op.TemporalMax);
+			OperatorRegistry.Add("Low",Op.Low);
+			OperatorRegistry.Add("High",Op.High);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);

@@ -118,8 +118,8 @@ namespace Akkadian
 			if (op == Op.Year)   			{ return nTvar(((Tvar)ob1).Year); }
 			if (op == Op.IsAtOrAfter)   	{ return nTvar( Time.IsAtOrAfter((Tvar)ob1)); }
 			if (op == Op.IsBefore)   		{ return nTvar( Time.IsBefore((Tvar)ob1)); }
-			if (op == Op.TemporalMin)   	{ return nTvar(((Tvar)ob1).Min()); }
-			if (op == Op.TemporalMax)   	{ return nTvar(((Tvar)ob1).Max()); }
+			if (op == Op.Low)   	{ return nTvar(((Tvar)ob1).Min()); }
+			if (op == Op.High)   	{ return nTvar(((Tvar)ob1).Max()); }
 			if (op == Op.DateFirstTrue)   	{ return nTvar(((Tvar)ob1).DateFirstTrue); }
 			if (op == Op.DateLastTrue)   	{ return nTvar(((Tvar)ob1).DateLastTrue); }
 			if (op == Op.DaysToYears)   	{ return nTvar(((Tvar)ob1).DaysToYears); }
