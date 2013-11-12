@@ -66,10 +66,10 @@ namespace Akkadian
 //        /// <summary>
 //        /// Implicitly converts a legal entity into a Tvar
 //        /// </summary>
-//        public static implicit operator Tvar(Thing e) 
-//        {
-//            return new Tvar(e);
-//        }
+        public static implicit operator Tvar(Thing e) 
+        {
+            return new Tvar(e);
+        }
         
         /// <summary>
         /// Indicates whether a (non-unknown) value has been determined for the Tvar 

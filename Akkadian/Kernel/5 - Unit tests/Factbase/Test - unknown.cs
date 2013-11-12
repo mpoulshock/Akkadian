@@ -25,7 +25,7 @@ using System.Collections.Generic;
 namespace Akkadian.UnitTests
 {
     [TestFixture]
-    public class Hstates : H
+	public class Hstates : Tvar
     {
         private static string eternallyUnstated = "Unstated";
         private static Tvar tbt = new Tvar(true);
@@ -292,7 +292,7 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tvar s1 = new Tvar(P1,P2);    
+			Tvar s1 = MakeTset(P1,P2);    
             Assert.AreEqual(eternallyUnstated, theSet.IsSubsetOf(s1).Out);        
         }
         
@@ -312,7 +312,7 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tvar s1 = new Tvar(P1,P2);
+			Tvar s1 = MakeTset(P1,P2);
             Tvar res = s1 == theSet;
             Assert.AreEqual(eternallyUnstated, res.Out);        
         }
@@ -322,7 +322,7 @@ namespace Akkadian.UnitTests
         {
             Thing P1 = new Thing("P1");
             Thing P2 = new Thing("P2");
-            Tvar s1 = new Tvar(P1,P2);
+			Tvar s1 = MakeTset(P1,P2);
             Tvar res = s1 != theSet;
             Assert.AreEqual(eternallyUnstated, res.Out);        
         }

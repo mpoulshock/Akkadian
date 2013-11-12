@@ -33,21 +33,33 @@ namespace Akkadian
     /// </summary>
     public partial class Tvar
     {
-        /// <summary>
-        /// Constructs a Tvar consisting eternally of a list of members. 
-        /// </summary>
-        public Tvar(params Thing[] list)
-        {
-            this.SetEternally(list);
-        }
-        
-        /// <summary>
-        /// Constructs a Tvar consisting eternally of a list of members. 
-        /// </summary>
-        public Tvar(List<Thing> list)
-        {
-            this.SetEternally(new Hval(list));
-        }
+		/// <summary>
+		/// Constructs an empty Tset.
+		/// </summary>
+		public static Tvar MakeTset()
+		{
+			return MakeTset(new List<object>(){});
+		}
+
+		/// <summary>
+		/// Constructs a Tvar consisting eternally of a list of members. 
+		/// </summary>
+		public static Tvar MakeTset(params object[] list)
+		{
+			Tvar t = new Tvar();
+			t.SetEternally(list);
+			return t;
+		}
+
+		/// <summary>
+		/// Constructs a Tvar consisting eternally of a list of members. 
+		/// </summary>
+		public static Tvar MakeTset(List<object> list)
+		{
+			Tvar t = new Tvar();
+			t.SetEternally(new Hval(list));
+			return t;
+		}
   
         /// <summary>
         /// Constructs a Tvar from an existing Tvar. 
@@ -61,21 +73,13 @@ namespace Akkadian
         }
         
         /// <summary>
-        /// Implicitly converts a legal entity into a Tvar
-        /// </summary>
-        public static implicit operator Tvar(Thing e) 
-        {
-            return new Tvar(e);
-        }
-        
-        /// <summary>
         /// Adds a time interval and list of set members to the timeline. 
         /// </summary>
-        public void AddState(DateTime dt, params Thing[] list)
+        public void AddState(DateTime dt, params object[] list)
         {
-            List<Thing> entities = new List<Thing>();
+            List<object> entities = new List<object>();
             
-            foreach (Thing le in list)
+            foreach (object le in list)
                 entities.Add(le);
 
             TimeLine.Add(dt, new Hval(entities));    
@@ -84,7 +88,7 @@ namespace Akkadian
         /// <summary>
         /// Sets the Tvar to eternally have a given member. 
         /// </summary>
-        public void SetEternally(Thing val)
+        public void SetEternally(object val)
         {
             TimeLine.Add(Time.DawnOf, new Hval(val));    
         }
@@ -92,19 +96,19 @@ namespace Akkadian
         /// <summary>
         /// Sets the Tvar to eternally have a list of members. 
         /// </summary>
-        public void SetEternally(params Thing[] list)
+        public void SetEternally(params object[] list)
         {
-            AddState(Time.DawnOf,list);
+			AddState(Time.DawnOf,list);
         }
         
         /// <summary>
         /// Determines whether two lists of legal entities are equivalent (ignoring order)
         /// </summary>
-        public static bool AreEquivalentSets(List<Thing> L1, List<Thing> L2)
+        public static bool AreEquivalentSets(List<object> L1, List<object> L2)
         {
             if (L1.Count != L2.Count) return false;
             
-            foreach(Thing i in L1)
+            foreach(object i in L1)
             {
                 if (!L2.Contains(i)) return false;
             }
@@ -117,15 +121,15 @@ namespace Akkadian
         /// LegalEntity.  Returns null if the Tvar is unknown, if it's 
         /// value changes over time, or if it has more than one member.
         /// </summary>
-        public Thing ToThing
+		public object ToObject
         {
             // TODO: Handle exceptions...(e.g. empty and uncertain sets)
             get
             {
-                if (this.FirstValue.IsUnstated) { return new Thing(""); }
+//                if (this.FirstValue.IsUnstated) { return new object(""); }
 
-                List<Thing> list = (List<Thing>)this.TimeLine.Values[0].Obj;
-                return (Thing)list[0];
+                List<object> list = (List<object>)this.TimeLine.Values[0].Obj;
+                return (object)list[0];
             }
 		}
 
@@ -141,7 +145,7 @@ namespace Akkadian
         }
         private static Hval CoreTvarCount(Hval h)
         {
-            return ((List<Thing>)h.Val).Count;
+            return ((List<object>)h.Val).Count;
         }
 
         /// <summary>
@@ -164,17 +168,17 @@ namespace Akkadian
         }
         private static Hval CoreSubset(List<Hval> list)
         {
-            List<Thing> s1 = (List<Thing>)list[0].Val;
-            List<Thing> s2 = (List<Thing>)list[1].Val;
+            List<object> s1 = (List<object>)list[0].Val;
+            List<object> s2 = (List<object>)list[1].Val;
             return new Hval(!s1.Except(s2).Any());
         }
 
         /// <summary>
         /// Returns true when the Tvar contains a given legal entity. 
         /// </summary>
-        public Tvar Contains(Thing e)
+        public Tvar Contains(object e)
         {
-            return ApplyFcnToTimeline(x => CoreSubset(x), new Tvar(e), this);
+			return ApplyFcnToTimeline(x => CoreSubset(x), MakeTset(e), this);
         }
 
         /// <summary>
@@ -203,8 +207,8 @@ namespace Akkadian
         }
         private static Hval CoreTvarUnion(List<Hval> list)
         {
-            List<Thing> s1 = (List<Thing>)list[0].Val;
-            List<Thing> s2 = (List<Thing>)list[1].Val;
+            List<object> s1 = (List<object>)list[0].Val;
+            List<object> s2 = (List<object>)list[1].Val;
             return new Hval(s1.Union(s2).ToList());
         }
 
@@ -218,8 +222,8 @@ namespace Akkadian
         }
         private static Hval CoreTvarIntersection(List<Hval> list)
         {
-            List<Thing> s1 = (List<Thing>)list[0].Val;
-            List<Thing> s2 = (List<Thing>)list[1].Val;
+            List<object> s1 = (List<object>)list[0].Val;
+            List<object> s2 = (List<object>)list[1].Val;
             return new Hval(s1.Intersect(s2).ToList());
         }
         
@@ -235,8 +239,8 @@ namespace Akkadian
         }
         private static Hval CoreTvarRC(List<Hval> list)
         {
-            List<Thing> s1 = (List<Thing>)list[0].Val;
-            List<Thing> s2 = (List<Thing>)list[1].Val;
+            List<object> s1 = (List<object>)list[0].Val;
+            List<object> s2 = (List<object>)list[1].Val;
             return new Hval(s1.Except(s2).ToList());
         }
 
@@ -256,7 +260,7 @@ namespace Akkadian
 				{
 					for (int i=0; i < TimeLine.Count-1; i++ ) 
 					{
-						if (AreEquivalentSets((List<Thing>)TimeLine.Values[i+1].Val,(List<Thing>)TimeLine.Values[i].Val))
+						if (AreEquivalentSets((List<object>)TimeLine.Values[i+1].Val,(List<object>)TimeLine.Values[i].Val))
 						{
 							dupes.Add(TimeLine.Keys[i+1]);
 						}
@@ -290,7 +294,7 @@ namespace Akkadian
         }
         private static Hval CoreReverse(Hval h)
         {
-            List<Thing> list = (List<Thing>)h.Val;
+            List<object> list = (List<object>)h.Val;
             list.Reverse();
             return new Hval(list);
         }

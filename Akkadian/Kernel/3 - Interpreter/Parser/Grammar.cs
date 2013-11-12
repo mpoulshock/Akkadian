@@ -29,10 +29,8 @@ namespace Akkadian
 		protected const string white = "[ ]*";
 		protected const string wildcard = ".*";
 		protected const string letter = "[a-zA-Z]";
-		protected const string letters = "["+letter+"]+";
 		protected const string digit = "[0-9]";
 		protected const string integer = "[0-9]+";
-		protected const string alphadecimals = "["+letter+"|"+digit+"]+";
 
 		// Literal values
 		protected const string boolLiteral = "(true|false)";
@@ -40,8 +38,7 @@ namespace Akkadian
 		protected const string currencyLiteral = @"\$[0-9\.,]+";
 		protected const string stringLiteral = @"'" + wildcard + "'";	// TODO: Change to double quotes
 		protected const string dateLiteral = @"(1|2)[0-9]{3}\-(0[1-9]|1[0-2])\-(0[1-9]|[1-2][0-9]|30|31)";		// yyyy-mm-dd
-		protected const string setLiteral = "{ }";
-		protected const string stubLiteral = "Stub";
+		protected const string setLiteral = @"{[a-zA-Z0-9,\.{}' ]*}";
 
 		// Time-varying literal values
 		// {Dawn: 42; 2011-01-01: 43}

@@ -203,6 +203,54 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Regex_SetLiteral_1 ()
+		{
+			Assert.IsTrue(IsExactMatch("{}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_2 ()
+		{
+			Assert.IsTrue(IsExactMatch("{A}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_3 ()
+		{
+			Assert.IsTrue(IsExactMatch("{A,B}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_4 ()
+		{
+			Assert.IsTrue(IsExactMatch("{5,3.14159}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_5 ()
+		{
+			Assert.IsTrue(IsExactMatch("{0...9}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_6 ()
+		{
+			Assert.IsFalse(IsExactMatch("{0,",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_7 ()
+		{
+			Assert.IsTrue(IsExactMatch("{A,B,{C,D}}",setLiteral));
+		}
+
+		[Test]
+		public void Regex_SetLiteral_8 ()
+		{
+			Assert.IsTrue(IsExactMatch("{'A','B','C'}",setLiteral));
+		}
+
+		[Test]
 		public void Regex_Whitespace_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("",white));

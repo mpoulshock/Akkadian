@@ -73,7 +73,7 @@ namespace Akkadian
 		Contains = 28, 
 		Union = 29, 
 		Intersect = 30, 
-		RelComp = 31,
+		Remove = 31,
 		AddDays = 32, 
 		AddMos = 33, 
 		AddYrs = 34, 
@@ -95,7 +95,7 @@ namespace Akkadian
 
 		// Unary operators
 		Not = 100,
-		USD = 101,
+		ToUSD = 101,
 		Abs = 102,
 		Sqrt = 103,
 		Log = 104,
@@ -106,8 +106,8 @@ namespace Akkadian
 		Acos = 109,
 		Atan = 110,
 		Count = 111,
-		Empty = 112,
-		Rev = 113,
+		IsEmpty = 112,
+		Reverse = 113,
 		ToThing = 114,
 		Day = 115,
 		Month = 116,
@@ -170,7 +170,7 @@ namespace Akkadian
 	public partial class Interpreter
 	{
 		// Infix operators - order is important here (boolean, comparison, arithmetic) for parsing
-		public static string[] infixOps = {@"\|>","&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/"};
+		public static string[] infixOps = {@"\|>","&",@"\|","==","<>",">=","<=",">","<",@"\+","-",@"\*","/",@"\^"};
 
 		/// <summary>
 		/// Maps operators, as used in Akkadian, to their op code (above).
@@ -202,7 +202,7 @@ namespace Akkadian
 			OperatorRegistry.Add("<",Op.LsTh);
 			OperatorRegistry.Add("Mod",Op.Mod);
 			OperatorRegistry.Add("Ln",Op.Nlog);
-			OperatorRegistry.Add("Pow",Op.Pow);
+			OperatorRegistry.Add(@"\^",Op.Pow);
 			OperatorRegistry.Add("RoundUp",Op.RndUp);
 			OperatorRegistry.Add("RoundDown",Op.RndDn);
 			OperatorRegistry.Add("RoundNearUp",Op.RndNrUp);
@@ -212,7 +212,7 @@ namespace Akkadian
 			OperatorRegistry.Add("Contains",Op.Contains);
 			OperatorRegistry.Add("Union",Op.Union);
 			OperatorRegistry.Add("Intersection",Op.Intersect);
-			OperatorRegistry.Add("RelativeComplement",Op.RelComp);
+			OperatorRegistry.Add("Remove",Op.Remove);
 			OperatorRegistry.Add("AddDays",Op.AddDays);
 			OperatorRegistry.Add("AddMonths",Op.AddMos);
 			OperatorRegistry.Add("AddYears",Op.AddYrs);
@@ -234,7 +234,7 @@ namespace Akkadian
 
 			// Unary operators
 			OperatorRegistry.Add("!",Op.Not);
-			OperatorRegistry.Add("ToUSD",Op.USD);
+			OperatorRegistry.Add("ToUSD",Op.ToUSD);
 			OperatorRegistry.Add("Abs",Op.Abs);
 			OperatorRegistry.Add("Sqrt",Op.Sqrt);
 			OperatorRegistry.Add("Log",Op.Log);
@@ -245,8 +245,8 @@ namespace Akkadian
 			OperatorRegistry.Add("Acos",Op.Acos);
 			OperatorRegistry.Add("Atan",Op.Atan);
 			OperatorRegistry.Add("Count",Op.Count);
-			OperatorRegistry.Add("IsEmpty",Op.Empty);
-			OperatorRegistry.Add("Reverse",Op.Rev);
+			OperatorRegistry.Add("IsEmpty",Op.IsEmpty);
+			OperatorRegistry.Add("Reverse",Op.Reverse);
 			OperatorRegistry.Add("ToThing",Op.ToThing);
 			OperatorRegistry.Add("Day",Op.Day);
 			OperatorRegistry.Add("Month",Op.Month);

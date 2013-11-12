@@ -157,14 +157,14 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Serializes a set of Things.
+		/// Displays a set of objects as a comma-separated list.
         /// </summary>
         public string ToSerializedSet()
         {
             string result = "";
-            foreach(Thing t in (List<Thing>)this.Obj)
+			foreach(object t in (List<object>)this.Obj)
             {
-                result += t.Id + ", ";
+				result += t.ToString() + ",";
             }
             return result.TrimEnd(',',' ');
         }
@@ -174,7 +174,7 @@ namespace Akkadian
         /// </summary>
         public bool IsSet()
         {
-            return  this.Obj.GetType() == (new List<Thing>()).GetType();
+			return  this.Obj.GetType() == (new List<object>()).GetType();
         }
 
         /// <summary>

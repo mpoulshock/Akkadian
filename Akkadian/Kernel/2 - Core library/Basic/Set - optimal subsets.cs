@@ -64,7 +64,7 @@ namespace Akkadian
                 else
                 {
                     // Date parameters and set members of that time interval
-                    List<Thing> mems = (List<Thing>)thisSetVal.Val;
+					List<object> mems = (List<object>)thisSetVal.Val;
                     DateTime end = Time.EndOf; 
                     try {end = theSet.IntervalValues.Keys[i+1];} catch {}
 
@@ -129,7 +129,7 @@ namespace Akkadian
         /// <summary>
         /// Given a list of Things, returns a list of all possible Tvar combinations.
         /// </summary>
-        private static List<Tvar> Combos(List<Thing> thingList)
+		private static List<Tvar> Combos(List<object> thingList)
         {
             List<Tvar> result = new List<Tvar>();
 
@@ -142,7 +142,7 @@ namespace Akkadian
                 BitArray bits = new BitArray(new int[] { i });
 
                 // Convert the bit array into a Tvar combo
-                List<Thing> tsetVal = new List<Thing>();
+                List<object> tsetVal = new List<object>();
                 for(int b=0; b < bits.Count; b++)
                 {
                     if (bits[b]) tsetVal.Add(thingList[b]);
@@ -151,11 +151,11 @@ namespace Akkadian
                 // Create a new Tvar out of the combo and add it to the output list
                 if (tsetVal.Count > 0)  // TODO: Consider not omitting null sets?
                 {
-                    result.Add(new Tvar(tsetVal));
+					result.Add(MakeTset(tsetVal));
                 }
             }
 
-            return result;
+			return (List<Tvar>)result;
         }
     }
 }

@@ -541,6 +541,22 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Exponents_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("2^4");
+			Assert.AreEqual(16, r.Out);                
+		}
+
+		[Test]
+		public void Exponents_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("10 * 2^4");
+			Assert.AreEqual(160, r.Out);                
+		}
+
+		[Test]
 		public void Pipes_1 ()
 		{
 			Session sess = new Session();
@@ -570,8 +586,8 @@ namespace Akkadian.UnitTests
 		public void Pipes_4 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("8 |> Pow[2]");
-			Assert.AreEqual(256, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("8.455 |> RoundUp[0.01]");
+			Assert.AreEqual(8.46, r.Out);                
 		}
 
 		[Test]
@@ -623,9 +639,9 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			Thing A = new Thing ("A");
 			Thing B = new Thing ("B");
-			Expr exp = expr(n(Typ.Op,Op.Rev), n(Typ.Tvar,new Tvar(A,B)));
+			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
 			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("B, A", r.Out);               
+			Assert.AreEqual("B,A", r.Out);               
 		}
 
 		[Test]
@@ -776,10 +792,26 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Tset_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{A,B,C}");
+			Assert.AreEqual("A,B,C", r.Out);                
+		}
+
+		[Test]
+		public void Tset_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Union[{A,B,C},{D,E}]");
+			Assert.AreEqual("A,B,C,D,E", r.Out);                
+		}
+
+		[Test]
 		public void ToUSD ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.USD), nTvar(42.224));
+			Expr exp = expr(n(Typ.Op,Op.ToUSD), nTvar(42.224));
 			Tvar r = (Tvar)sess.eval(exp).obj;
 			Assert.AreEqual("$42.22", r.Out);               
 		}
@@ -787,12 +819,12 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Union ()
 		{
-			Session sess = new Session();
-			Thing A = new Thing ("A");
-			Thing B = new Thing ("B");
-			Expr exp = expr(n(Typ.Op,Op.Union), nTvar(A), nTvar(B));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("A, B", r.Out);               
+//			Session sess = new Session();
+//			Thing A = new Thing ("A");
+//			Thing B = new Thing ("B");
+//			Expr exp = expr(n(Typ.Op,Op.Union), nTvar(A), nTvar(B));
+//			Tvar r = (Tvar)sess.eval(exp).obj;
+//			Assert.AreEqual("A,B", r.Out);               
 		}
 
 		[Test]

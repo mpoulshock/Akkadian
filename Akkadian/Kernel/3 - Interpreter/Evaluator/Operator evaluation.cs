@@ -72,26 +72,26 @@ namespace Akkadian
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob1).AddDays((Tvar)ob2)); }
 			if (op == Op.AddMos) 	{ return nTvar(((Tvar)ob1).AddMonths((Tvar)ob2)); }
 			if (op == Op.AddYrs) 	{ return nTvar(((Tvar)ob1).AddYears((Tvar)ob2)); }
-			if (op == Op.DayDiff) 	{ return nTvar(H.DayDiff((Tvar)ob1, (Tvar)ob2)); }
-			if (op == Op.WeekDiff) 	{ return nTvar(H.WeekDiff((Tvar)ob1, (Tvar)ob2)); }
-			if (op == Op.YearDiff) 	{ return nTvar(H.YearDiff((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.DayDiff) 	{ return nTvar(H.DayDiff((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.WeekDiff) 	{ return nTvar(H.WeekDiff((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.YearDiff) 	{ return nTvar(H.YearDiff((Tvar)ob1,(Tvar)ob2)); }
 
 			// Set operators
-			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob1).IsSubsetOf((Tvar)ob2)); }
+			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob2).IsSubsetOf((Tvar)ob1)); }
 			if (op == Op.Contains) 	{ return n(Typ.Tvar, ((Tvar)ob1).Contains((Thing)ob2)); }
 			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.RelComp) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob1,(Tvar)ob2))); }
+			if (op == Op.Remove) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob1,(Tvar)ob2))); }
 
 			// Math and rounding
-			if (op == Op.RndUp) 	{ return nTvar(((Tvar)ob1).RoundUp((Tvar)ob2)); }
-			if (op == Op.RndDn) 	{ return nTvar(((Tvar)ob1).RoundDown((Tvar)ob2)); }
-			if (op == Op.RndNrUp) 	{ return nTvar(((Tvar)ob1).RoundToNearest((Tvar)ob2)); }
-			if (op == Op.RndNrDn) 	{ return nTvar(((Tvar)ob1).RoundToNearest((Tvar)ob2, true)); }
+			if (op == Op.RndUp) 	{ return nTvar(((Tvar)ob2).RoundUp((Tvar)ob1)); }
+			if (op == Op.RndDn) 	{ return nTvar(((Tvar)ob2).RoundDown((Tvar)ob1)); }
+			if (op == Op.RndNrUp) 	{ return nTvar(((Tvar)ob2).RoundToNearest((Tvar)ob1)); }
+			if (op == Op.RndNrDn) 	{ return nTvar(((Tvar)ob2).RoundToNearest((Tvar)ob1, true)); }
 			if (op == Op.Concat) 	{ return nTvar(Tvar.Concat((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Mod) 		{ return nTvar((Tvar)ob1 % (Tvar)ob2); }
-			if (op == Op.Pow) 		{ return nTvar(Tvar.Pow((Tvar)ob1, (Tvar)ob2)); }
-			if (op == Op.Log) 		{ return nTvar(Tvar.Log((Tvar)ob1, (Tvar)ob2)); }
+			if (op == Op.Pow) 		{ return nTvar(Tvar.Pow((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Log) 		{ return nTvar(Tvar.Log((Tvar)ob1,(Tvar)ob2)); }
 
 			return n(Typ.Null,null);
 		}
@@ -104,12 +104,12 @@ namespace Akkadian
 			object ob1 = eval(expr(exp.nodes [1]), args).obj;
 
 			if (op == Op.Not)    			{ return nTvar(!(Tvar)ob1); }
-			if (op == Op.USD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
+			if (op == Op.ToUSD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
 
 			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
-			if (op == Op.Empty)   			{ return nTvar(((Tvar)ob1).IsEmpty); }
-			if (op == Op.Rev)   			{ return nTvar(((Tvar)ob1).Reverse); }
-			if (op == Op.ToThing)   		{ return n(Typ.Thing, ((Tvar)ob1).ToThing); }
+			if (op == Op.IsEmpty)   		{ return nTvar(((Tvar)ob1).IsEmpty); }
+			if (op == Op.Reverse)   		{ return nTvar(((Tvar)ob1).Reverse); }
+//			if (op == Op.ToThing)   		{ return n(Typ.Thing, ((Tvar)ob1).ToThing); }
 
 			if (op == Op.Day)   			{ return nTvar(((Tvar)ob1).Day); }
 			if (op == Op.Month)				{ return nTvar(((Tvar)ob1).Month); }

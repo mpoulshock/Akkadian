@@ -317,7 +317,7 @@ namespace Akkadian.UnitTests
 		public void Parse_35 ()
 		{
 			ParserResponse pr = ParseInputLine("F[x] = ToUSD[x]");
-			Assert.AreEqual("Expr:{Op:USD,Var:0}", pr.ParserString);                             
+			Assert.AreEqual("Expr:{Op:ToUSD,Var:0}", pr.ParserString);                             
 		}
 
 		[Test]
@@ -556,6 +556,34 @@ namespace Akkadian.UnitTests
 		{
 			ParserResponse pr = ParseInputLine("F[x,y,z] = x * y * z");
 			Assert.AreEqual("Expr:{Op:Mult,Expr:{Op:Mult,Var:0,Var:1},Var:2}", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_70 ()
+		{
+			ParserResponse pr = ParseInputLine("{A,B,C}");
+			Assert.AreEqual("Tvar:A+B+C", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_71 ()
+		{
+			ParserResponse pr = ParseInputLine("{A}");
+			Assert.AreEqual("Tvar:A", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_72 ()
+		{
+			ParserResponse pr = ParseInputLine("{}");
+			Assert.AreEqual("Tvar:*", pr.ParserString);              
+		}
+
+		[Test]
+		public void Parse_73 ()
+		{
+			ParserResponse pr = ParseInputLine("SomeSet = {A,B,C}");
+			Assert.AreEqual("Expr:{Tvar:A+B+C}", pr.ParserString);              
 		}
 
 		[Test]

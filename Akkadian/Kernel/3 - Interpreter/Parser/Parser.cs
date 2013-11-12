@@ -101,6 +101,9 @@ namespace Akkadian
 				return new ParserResponse(parsedFcn, true, fName);
 			}
 
+			// Special maintenance risk: Put set literals in parentheses  :)
+			s = s.Replace("{","({").Replace("}","})");
+
 			return new ParserResponse(ParseFcn(s));
 		}
 
@@ -118,7 +121,7 @@ namespace Akkadian
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
 				string newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
-				return AddToSubExprListAndParse(s, newStrToParse, newStr,subExprs, fcnName, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, fcnName, argNames);
 			}
 
 			// Pipelined functions |>
@@ -132,7 +135,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/>\.' " + delimiter + @"]*\]");
+			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{} " + delimiter + @"]*\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
@@ -227,6 +230,13 @@ namespace Akkadian
 			if (IsExactMatch(s,stringLiteral))
 			{
 				return "Tvar:" + s.Trim('\'');
+			}
+			if (IsExactMatch(s,setLiteral))
+			{
+				// TODO: Handle nested Tsets
+				s = Util.RemoveParens(s).Replace(",","+");
+				if (s == "") s = "*";	// Empty sets represented as *
+				return "Tvar:" + s;
 			}
 
 			// References to operator names (such as "Abs")
@@ -436,6 +446,16 @@ namespace Akkadian
 		/// </summary>
 		private static Tvar ConvertToBestType(string s)
 		{
+			// Handle Tsets
+			if (s == "*") return Tvar.MakeTset(new List<object>());
+			if (s.Contains("+"))
+			{
+				List<object> list = new List<object>();
+				string[] things = s.Split('+');
+				foreach (string t in things) list.Add(t);
+				return Tvar.MakeTset(list);
+			}
+
 			if (IsExactMatch(s,decimalLiteral)) 		return new Tvar(Convert.ToDecimal(s));
 			if (IsExactMatch(s,dateLiteral)) 			return new Tvar(Convert.ToDateTime(s));
 			if (IsExactMatch(s.ToLower(),boolLiteral))	return new Tvar(Convert.ToBoolean(s));

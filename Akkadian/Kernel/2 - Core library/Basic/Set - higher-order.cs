@@ -33,7 +33,7 @@ namespace Akkadian
         /// Returns true when a condition holds for at least one member of
         /// a given set.
         /// </summary>
-        public Tvar Exists(Func<Thing,Tvar> argumentFcn)
+        public Tvar Exists(Func<object,Tvar> argumentFcn)
         {
             // Analyze set for existence of the condition
             Tvar subset = this.Filter(x => argumentFcn(x));
@@ -44,7 +44,7 @@ namespace Akkadian
         /// Returns true when a condition holds for all members of
         /// a given set.
         /// </summary>
-        public Tvar ForAll(Func<Thing,Tvar> argumentFcn)
+        public Tvar ForAll(Func<object,Tvar> argumentFcn)
         {
             // By convention, the universal quantification of an empty set is always true
             // http://en.wikipedia.org/wiki/Universal_quantification#The_empty_set
@@ -58,14 +58,14 @@ namespace Akkadian
         /// <summary>
         /// Filter function - for various types of legal entities
         /// </summary>
-        public Tvar Filter(Func<Thing,Tvar> argumentFcn)
+        public Tvar Filter(Func<object,Tvar> argumentFcn)
         {
-            return ApplyFcnToTvar(this, x => argumentFcn((Thing)x), y => CoreFilter(y)).LeanTset;
+            return ApplyFcnToTvar(this, x => argumentFcn((object)x), y => CoreFilter(y)).LeanTset;
         }
-        private static Hval CoreFilter(List<Tuple<Thing,Hval>> list)
+        private static Hval CoreFilter(List<Tuple<object,Hval>> list)
         {
-            List<Thing> result = new List<Thing>();
-            foreach (Tuple<Thing,Hval> tu in list)
+            List<object> result = new List<object>();
+            foreach (Tuple<object,Hval> tu in list)
             {
                 if (tu.Item2.IsTrue)
                 {
@@ -79,11 +79,11 @@ namespace Akkadian
         /// Totals the values of a given numeric property of the members of
         /// a set.
         /// </summary>
-        public Tvar Sum(Func<Thing,Tvar> func)
+        public Tvar Sum(Func<object,Tvar> func)
         {
-            return ApplyFcnToTvar(this, x => func((Thing)x), y => CoreSum(y));
+            return ApplyFcnToTvar(this, x => func((object)x), y => CoreSum(y));
         }
-        private static Hval CoreSum(List<Tuple<Thing,Hval>> list)
+        private static Hval CoreSum(List<Tuple<object,Hval>> list)
         {
             return SliceHvalsFromCube(list).Sum(item => Convert.ToDecimal(item.Val));
         }
@@ -92,11 +92,11 @@ namespace Akkadian
         /// Returns the minimum value of a given numeric property of the 
         /// members of a set.
         /// </summary>
-        public Tvar Min(Func<Thing,Tvar> func)
+        public Tvar Min(Func<object,Tvar> func)
         {
-            return ApplyFcnToTvar(this, x => func((Thing)x), y => CoreMin(y));
+            return ApplyFcnToTvar(this, x => func((object)x), y => CoreMin(y));
         }
-        private static Hval CoreMin(List<Tuple<Thing,Hval>> list)
+        private static Hval CoreMin(List<Tuple<object,Hval>> list)
         {
             return Util.Minimum(SliceHvalsFromCube(list));
         }
@@ -105,11 +105,11 @@ namespace Akkadian
         /// Returns the maximum value of a given numeric property of the 
         /// members of a set.
         /// </summary>
-        public Tvar Max(Func<Thing,Tvar> func)
+        public Tvar Max(Func<object,Tvar> func)
         {
-            return ApplyFcnToTvar(this, x => func((Thing)x), y => CoreMax(y));
+            return ApplyFcnToTvar(this, x => func((object)x), y => CoreMax(y));
         }
-        private static Hval CoreMax(List<Tuple<Thing,Hval>> list)
+        private static Hval CoreMax(List<Tuple<object,Hval>> list)
         {
             return Util.Maximum(SliceHvalsFromCube(list));
         }
@@ -118,17 +118,17 @@ namespace Akkadian
         /// Sorts the members of a Tvar based on a Tvar function.  Members with lower function values
         /// come first in the sorted list.
         /// </summary>
-        public Tvar OrderBy(Func<Thing,Tvar> func)
+        public Tvar OrderBy(Func<object,Tvar> func)
         {
-            return ApplyFcnToTvar(this, x => func((Thing)x), y => CoreOrder(y)).LeanTset;
+            return ApplyFcnToTvar(this, x => func((object)x), y => CoreOrder(y)).LeanTset;
         }
-        private static Hval CoreOrder(List<Tuple<Thing,Hval>> list)
+        private static Hval CoreOrder(List<Tuple<object,Hval>> list)
         {
-            List<Thing> result = new List<Thing>();
+            List<object> result = new List<object>();
 
-            IEnumerable<Tuple<Thing,Hval>> query = list.OrderBy(pair => pair.Item2.Val);
+            IEnumerable<Tuple<object,Hval>> query = list.OrderBy(pair => pair.Item2.Val);
 
-            foreach (Tuple<Thing,Hval> pair in query)
+            foreach (Tuple<object,Hval> pair in query)
             {
                 result.Add(pair.Item1);
             }
@@ -140,14 +140,14 @@ namespace Akkadian
         /// Applies an aggregation function to a Tvar and an argument function.
         /// </summary>
 		private static Tvar ApplyFcnToTvar(Tvar theSet, 
-		                                   Func<Thing,Tvar> argumentFcn, 
-		                                   Func<List<Tuple<Thing,Hval>>,Hval> aggregationFcn)
+		                                   Func<object,Tvar> argumentFcn, 
+		                                   Func<List<Tuple<object,Hval>>,Hval> aggregationFcn)
 		{
-			Dictionary<Thing,Tvar> fcnValues = new Dictionary<Thing,Tvar>();
+			Dictionary<object,Tvar> fcnValues = new Dictionary<object,Tvar>();
 			List<Tvar> listOfTvars = new List<Tvar>();
 
 			// Get the temporal value of each distinct entity in the set
-			foreach(Thing le in DistinctEntities(theSet))
+			foreach(object le in DistinctEntities(theSet))
 			{
 				Tvar val = argumentFcn(le);
 				fcnValues.Add(le, val);
@@ -169,17 +169,17 @@ namespace Akkadian
 				else
 				{
 					// Cube that gets sent to the aggregation function
-					List<Tuple<Thing,Hval>> thingValPairs = new List<Tuple<Thing,Hval>>();
+					List<Tuple<object,Hval>> objectValPairs = new List<Tuple<object,Hval>>();
 
 					// Values to check for uncertainty
 					List<Hval> values = new List<Hval>();
 
-					foreach(Thing le in (List<Thing>)membersOfSet.Val)
+					foreach(object le in (List<object>)membersOfSet.Val)
 					{
 						Tvar funcVal = (Tvar)fcnValues[le];    
 						Hval funcValAt = funcVal.ObjectAsOf(dt);
 						values.Add(funcValAt);
-						thingValPairs.Add(new Tuple<Thing,Hval>(le,funcValAt));
+						objectValPairs.Add(new Tuple<object,Hval>(le,funcValAt));
 					}
 
 					Hstate top = PrecedingState(values);
@@ -189,7 +189,7 @@ namespace Akkadian
 					}
 					else
 					{
-						result.AddState(dt, aggregationFcn(thingValPairs));
+						result.AddState(dt, aggregationFcn(objectValPairs));
 					} 
 				}
 			}
@@ -208,12 +208,12 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns the column of Hvals from the cube of Thing-Hval pairs.
+        /// Returns the column of Hvals from the cube of object-Hval pairs.
         /// </summary>
-        private static List<Hval> SliceHvalsFromCube(List<Tuple<Thing,Hval>> list)
+        private static List<Hval> SliceHvalsFromCube(List<Tuple<object,Hval>> list)
         {
             List<Hval> slice = new List<Hval>();
-            foreach (Tuple<Thing,Hval> t in list)
+            foreach (Tuple<object,Hval> t in list)
             {
                 slice.Add(t.Item2);
             }
@@ -224,15 +224,15 @@ namespace Akkadian
         /// Returns a list of all legal entities that were ever members of the 
         /// set. 
         /// </summary>
-        public static List<Thing> DistinctEntities(Tvar theSet)
+        public static List<object> DistinctEntities(Tvar theSet)
         {
-            List<Thing> result = new List<Thing>();
+            List<object> result = new List<object>();
 
             foreach(KeyValuePair<DateTime,Hval> de in theSet.TimeLine)
             {
                 if (de.Value.IsKnown)
                 {
-                    foreach(Thing le in (List<Thing>)de.Value.Val)
+                    foreach(object le in (List<object>)de.Value.Val)
                     {
                         if (!result.Contains(le))
                         {

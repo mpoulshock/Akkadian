@@ -51,5 +51,13 @@ namespace Akkadian
             else if (h == Hstate.Stub)      Id = "#Stub#";
             else Id = "";
         }
+
+		/// <summary>
+		/// Displays the Thing as a string.
+		/// </summary>
+		public override string ToString()
+		{
+			return this.Id;
+		}
     }
 }
