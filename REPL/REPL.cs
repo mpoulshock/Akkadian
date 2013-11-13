@@ -54,7 +54,7 @@ namespace REPL
 					{
 						string name = pr.FunctionName;
 						
-						Expr e = (Expr)Interpreter.StringToNode(pr.ParserString).obj;
+						Expr e = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
 
 						if (sess.ContainsFunction(name))
 						{
@@ -69,7 +69,7 @@ namespace REPL
 					}
 					else
 					{
-						Expr exp = Interpreter.StringToExpr(pr.ParserString);
+						Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
 						object o = sess.eval(exp).obj;
 						if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
 					}

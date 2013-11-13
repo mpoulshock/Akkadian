@@ -48,7 +48,7 @@ namespace Akkadian
 				else if (opID < 200) 		{ return UnaryFcnEval(exp, args, opType); }
 				else if (opID < 250) 		{ return ThreeArgFcnEval(exp, args, opType); }
 				else if (opID < 300) 		{ return FourArgFcnEval(exp, args, opType); }
-				else if (opID > 400) 		{ return ConstantEval(opType); }
+				else if (opID >= 400) 		{ return ConstantEval(opType); }
 				else if (opType == Op.Pipe) { return EvaluatePipelinedExpression(exp, args); }
 
 				else if (opType == Op.Switch)

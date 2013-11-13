@@ -39,8 +39,7 @@ namespace Akkadian.UnitTests
 		public void Abs_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Abs),nTvar(-41));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("Abs[-41]");
 			Assert.AreEqual(41, r.Out);                
 		}
 
@@ -49,9 +48,8 @@ namespace Akkadian.UnitTests
 		{
 			// 41 + 9
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Plus),nTvar(41),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(50, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("41 + 9");
+			Assert.AreEqual(50, r.Out);               
 		}
 
 		[Test]
@@ -59,43 +57,29 @@ namespace Akkadian.UnitTests
 		{
 			// x + 42, where x = 91
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Plus),n(Typ.Var,"0"),nTvar(42));
-			Expr args = expr(nTvar(91),nTvar(92),nTvar(93));
-			Tvar r = (Tvar)sess.eval(exp,args).obj;
-			Assert.AreEqual(133, r.Out);                
-		}
-
-		[Test]
-		public void Addition_variables_2 ()
-		{
-			// x + 42, where x = 91
-			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Plus),nTvar(42),n(Typ.Var,"0"));
-			Expr args = expr(nTvar(91),nTvar(92),nTvar(93));
-			Tvar r = (Tvar)sess.eval(exp,args).obj;
-			Assert.AreEqual(133, r.Out);                
+			sess.ProcessInput("F[x] = x + 42");
+			Tvar r = (Tvar)sess.ProcessInput("F[91]");
+			Assert.AreEqual(133, r.Out);             
 		}
 
 		[Test]
 		public void And_1 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.And),nTvar(true),nTvar(false));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("true & false");
+			Assert.AreEqual(false, r.Out);               
 		}
 
 		[Test]
 		public void And_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.And),nTvar(false),nTvar(true));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("false & true");
 			Assert.AreEqual(false, r.Out);                
 		}
 
 		[Test]
-		public void ChainedExpressions ()
+		public void ChainedExpressions_1 ()
 		{
 			Session sess = new Session();
 			sess.ProcessInput("F[x] = 1017 - ((x*2) + 1)");
@@ -104,48 +88,60 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Concat ()
+		public void ChainedExpressions_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Concat), nTvar("Hello, "), nTvar("World"));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("Hello, World", r.Out);               
+			Tvar r = (Tvar)sess.ProcessInput("((22*2) + 1)");
+			Assert.AreEqual(45, r.Out);          
 		}
+
+		[Test]
+		public void ChainedExpressions_3 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("(22*2) + 1");
+			Assert.AreEqual(45, r.Out);          
+		}
+
+//		[Test]
+//		public void Concat ()
+//		{
+//			Session sess = new Session();
+//			Expr exp = expr(n(Typ.Op,Op.Concat), nTvar("Hello, "), nTvar("World"));
+//			Tvar r = (Tvar)sess.eval(exp).obj;
+//			Assert.AreEqual("Hello, World", r.Out);               
+//		}
 
 		[Test]
 		public void Division ()
 		{
 			// 42 / 7
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Div),nTvar(42),nTvar(7));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(6, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("42/7");
+			Assert.AreEqual(6, r.Out);            
 		}
 
 		[Test]
 		public void Equality_1 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar(7),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("7 == 9");
+			Assert.AreEqual(false, r.Out);              
 		}
 
 		[Test]
 		public void Equality_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar(9),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(true, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("9 == 9");
+			Assert.AreEqual(true, r.Out);              
 		}
 
 		[Test]
 		public void Equality_3 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar("ab"),nTvar("ba"));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("'ab' == 'ba'");
 			Assert.AreEqual(false, r.Out);                
 		}
 
@@ -153,8 +149,7 @@ namespace Akkadian.UnitTests
 		public void Equality_4 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar("ab"),nTvar("ab"));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("'ab' == 'ab'");
 			Assert.AreEqual(true, r.Out);                
 		}
 
@@ -162,109 +157,16 @@ namespace Akkadian.UnitTests
 		public void Equality_5 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar(true),nTvar(true));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(true, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("true == true");
+			Assert.AreEqual(true, r.Out);               
 		}
 
 		[Test]
 		public void Equality_6 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Eq),nTvar(true),nTvar(false));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_1 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Abs,Tvar:-66}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(66, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_2 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Mult,Tvar:4,Tvar:2}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(8, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_3 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Not,Tvar:True}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_4 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:And,Tvar:True,Tvar:False}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_5 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Abs,Var:0}");
-			Expr args = expr(nTvar(-109));
-			Tvar r = (Tvar)sess.eval(exp,args).obj;
-			Assert.AreEqual(109, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_6 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:And,Tvar:True,Tvar:False}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_7 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:And,Tvar:True,Expr:{Op:LsTh,Tvar:5,Tvar:99}}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(true, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_8 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tvar:11,Tvar:6},Tvar:100}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(-34, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_9 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Abs,Expr:{Op:Minus,Expr:{Op:Mult,Tvar:11,Tvar:6},Tvar:100}}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(34, r.Out);                
-		}
-
-		[Test]
-		public void EvalStringExpr_10 ()
-		{
-			Session sess = new Session();
-			Expr exp = StringToExpr("Expr:{Op:Minus,Expr:{Op:Mult,Tvar:11,Tvar:6},Tvar:100}");
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(-34, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("false == true");
+			Assert.AreEqual(false, r.Out);              
 		}
 
 		[Test]
@@ -416,92 +318,114 @@ namespace Akkadian.UnitTests
 		public void GreaterThan_1 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.GrTh),nTvar(7),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("7 > 9");
+			Assert.AreEqual(false, r.Out);            
 		}
 
 		[Test]
 		public void GreaterThan_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.GrTh),nTvar(9),nTvar(7));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("9 > 7");
 			Assert.AreEqual(true, r.Out);                
 		}
 
 		[Test]
-		public void Inequality_1 ()
+		public void GreaterThan_3 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ba"));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("2015-01-01 > 2013-02-02");
 			Assert.AreEqual(true, r.Out);                
 		}
 
 		[Test]
-		public void Inequality_2()
+		public void GreaterThan_4 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ab"));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("2011-01-01 > 2013-02-02");
 			Assert.AreEqual(false, r.Out);                
 		}
+
+//		[Test]
+//		public void Inequality_1 ()
+//		{
+//			Session sess = new Session();
+//			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ba"));
+//			Tvar r = (Tvar)sess.eval(exp).obj;
+//			Assert.AreEqual(true, r.Out);                
+//		}
+//
+//		[Test]
+//		public void Inequality_2()
+//		{
+//			Session sess = new Session();
+//			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ab"));
+//			Tvar r = (Tvar)sess.eval(exp).obj;
+//			Assert.AreEqual(false, r.Out);                
+//		}
 
 		[Test]
 		public void Max_1 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Max),nTvar(7));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(7, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("Max[7]");
+			Assert.AreEqual(7, r.Out);                 
 		}
 
 		[Test]
 		public void Max_2 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Max),nTvar(7),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(9, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("Max[7,9]");
+			Assert.AreEqual(9, r.Out);              
 		}
 
 		[Test]
 		public void Min ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Min),nTvar(7),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("Min[7,9]");
 			Assert.AreEqual(7, r.Out);                
 		}
 
 		[Test]
 		public void Multiplication_1 ()
 		{
-			// 41 * 9
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Mult),nTvar(41),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(369, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("41 * 9");
+			Assert.AreEqual(369, r.Out);                 
 		}
 
 		[Test]
 		public void Multiplication_2 ()
 		{
-			// Unstated * 9
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Mult),n(Typ.Tvar,new Tvar(Hstate.Unstated)),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("Unstated * 9");
 			Assert.AreEqual("Unstated", r.Out);                
 		}
 
 		[Test]
 		public void Multiplication_3 ()
 		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Stub * 9");
+			Assert.AreEqual("Stub", r.Out);                
+		}
+
+		[Test]
+		public void Multiplication_4 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Stub * 0");
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Multiplication_5 ()
+		{
 			// 0 * 9
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Mult),nTvar(0),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("0 * 9");
 			Assert.AreEqual(0, r.Out);                
 		}
 
@@ -510,29 +434,41 @@ namespace Akkadian.UnitTests
 		{
 			// (a * 2) + 1, where a = 44
 			Session sess = new Session();
-			Expr sub = expr(n(Typ.Op,Op.Mult),n(Typ.Var,"0"),nTvar(2));
-			Expr exp = expr(n(Typ.Op,Op.Plus),n(Typ.Expr,sub),nTvar(1));
-			Expr args = expr(nTvar(44));
-			Tvar r = (Tvar)sess.eval(exp,args).obj;
-			Assert.AreEqual(89, r.Out);                
+			sess.ProcessInput("Fcn[a] = (a * 2) + 1");
+			Tvar r = (Tvar)sess.ProcessInput("Fcn[44]");
+			Assert.AreEqual(89, r.Out);               
 		}
 
 		[Test]
-		public void Not ()
+		public void Not_1 ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Not),nTvar(true));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(false, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("!true");
+			Assert.AreEqual(false, r.Out);            
+		}
+
+		[Test]
+		public void Not_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("!false");
+			Assert.AreEqual(true, r.Out);               
+		}
+
+		[Test]
+		public void Not_3 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("!!false");
+			Assert.AreEqual(false, r.Out);               
 		}
 
 		[Test]
 		public void Or ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Or),nTvar(true),nTvar(false));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(true, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("true | false");
+			Assert.AreEqual(true, r.Out);             
 		}
 
 		[Test]
@@ -549,6 +485,42 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("10 * 2^4");
 			Assert.AreEqual(160, r.Out);                
+		}
+
+		[Test]
+		public void NestedFcns_1 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[n] = n^2");
+			sess.ProcessInput("AddOne[n] = n+1");
+			Tvar r = (Tvar)sess.ProcessInput("AddOne[Sq[4]]");
+			Assert.AreEqual(17, r.Out);                
+		}
+
+		[Test]
+		public void NestedFcns_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[n] = n^2");
+			sess.ProcessInput("AddOne[n] = n+1");
+			Tvar r = (Tvar)sess.ProcessInput("AddOne[Sq[(5+2)-3]]");
+			Assert.AreEqual(17, r.Out);                
+		}
+
+		[Test]
+		public void Num_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("9");
+			Assert.AreEqual(9, r.Out);                
+		}
+
+		[Test]
+		public void Parens_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("(2+3) * (15-6)");
+			Assert.AreEqual(45, r.Out);                
 		}
 
 		[Test]
@@ -624,76 +596,53 @@ namespace Akkadian.UnitTests
 			// f7(450) = 1350
 			Session sess = new Session();
 			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-			Tvar r = (Tvar)sess.ProcessInput("F[400]");
-			Assert.AreEqual(1200, r.Out);                 
+			Tvar r = (Tvar)sess.ProcessInput("F[375]");
+			Assert.AreEqual(1125, r.Out);                 
 		}
 
-		[Test]
-		public void Reverse ()
-		{
-			Session sess = new Session();
-			Thing A = new Thing ("A");
-			Thing B = new Thing ("B");
-			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("B,A", r.Out);               
-		}
+//		[Test]
+//		public void Reverse ()
+//		{
+//			Session sess = new Session();
+//			Thing A = new Thing ("A");
+//			Thing B = new Thing ("B");
+//			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
+//			Tvar r = (Tvar)sess.eval(exp).obj;
+//			Assert.AreEqual("B,A", r.Out);               
+//		}
 
 		[Test]
 		public void Subtraction_1 ()
 		{
-			// 41 - 9
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Minus),nTvar(41),nTvar(9));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(32, r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("41 - 9");
+			Assert.AreEqual(32, r.Out);              
 		}
 
 		[Test]
 		public void Subtraction_2 ()
 		{
-			// 41 - Unstated
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Minus),nTvar(41),nTvar(new Tvar(Hstate.Unstated)));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("Unstated", r.Out);                
-		}
-
-		[Test]
-		public void Switch_1 ()
-		{
-			// if cond=true -> 42, 41
-			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Switch),nTvar(true),nTvar(42),nTvar(41));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(42, r.Out);              
-
-//			Session sess = new Session();
-//			sess.ProcessInput("f3[x,y] = y / x");
-//			Tvar r = (Tvar)sess.ProcessInput("f3[11,99]");
-//			Assert.AreEqual(9, r.Out);  
+			Tvar r = (Tvar)sess.ProcessInput("41 - Unstated");
+			Assert.AreEqual("Unstated", r.Out);               
 		}
 
 		[Test]
 		public void Switch_2 ()
 		{
-			// if cond=true -> 42, 41
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.Switch),nTvar(false),nTvar(42),nTvar(41));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual(41, r.Out);                
+			sess.ProcessInput("F[x] = x -> 42, 41");
+			Tvar r = (Tvar)sess.ProcessInput("F[true]");
+			Assert.AreEqual(42, r.Out);                
 		}
 
 		[Test]
 		public void Switch_3 ()
 		{
 			Session sess = new Session();
-			Tvar cond = new Tvar(true);
-			cond.AddState(new DateTime(2015,1,1), false);
-
-			Expr exp = expr(n(Typ.Op,Op.Switch),nTvar(cond),nTvar(42),nTvar(41));
-			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("{Dawn: 42; 1/1/2015: 41}", r.Out);                
+			sess.ProcessInput("F[x] = x -> 42, 41");
+			Tvar r = (Tvar)sess.ProcessInput("F[false]");
+			Assert.AreEqual(41, r.Out);                
 		}
 
 		[Test]
@@ -815,19 +764,8 @@ namespace Akkadian.UnitTests
 		public void ToUSD ()
 		{
 			Session sess = new Session();
-			Expr exp = expr(n(Typ.Op,Op.ToUSD), nTvar(42.224));
-			Tvar r = (Tvar)sess.eval(exp).obj;
+			Tvar r = (Tvar)sess.ProcessInput("ToUSD[42.224]");
 			Assert.AreEqual("$42.22", r.Out);               
-		}
-
-		[Test]
-		public void VariableValues ()
-		{
-			Session sess = new Session();
-			Expr exp = expr(n(Typ.Var,"2"));
-			Expr args = expr(nTvar(91),nTvar(92),nTvar(93));
-			Tvar r = (Tvar)sess.eval(exp,args).obj;
-			Assert.AreEqual(93, r.Out);                
 		}
 	}
 }

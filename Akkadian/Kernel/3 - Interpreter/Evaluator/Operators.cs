@@ -163,6 +163,8 @@ namespace Akkadian
 		Dawn = 432,
 		End = 433,
 		Now = 434,
+		True = 435,
+		False = 436,
 
 		// Meaningless
 		Null = 999
@@ -301,6 +303,10 @@ namespace Akkadian
 			OperatorRegistry.Add("Dawn",Op.Dawn);
 			OperatorRegistry.Add("End",Op.End);
 			OperatorRegistry.Add("Now",Op.Now);
+			OperatorRegistry.Add("True",Op.True);
+			OperatorRegistry.Add("False",Op.False);
+			OperatorRegistry.Add("true",Op.True);
+			OperatorRegistry.Add("false",Op.False);
 		}
 	}
 }

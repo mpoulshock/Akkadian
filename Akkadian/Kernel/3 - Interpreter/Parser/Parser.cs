@@ -35,20 +35,21 @@ namespace Akkadian
 		/// </summary> 
 		public class ParserResponse
 		{
-			public string ParserString;
+			public string ParserString = "";
+			public Node ThatWhichHasBeenParsed;
 			public bool IsNewFunction = false;
 			public string FunctionName;
 
-			public ParserResponse(string parseStr, bool isFcn, string fcnName)
+			public ParserResponse(Node parseStr, bool isFcn, string fcnName)
 			{
-				ParserString = parseStr;
+				ThatWhichHasBeenParsed = parseStr;
 				IsNewFunction = isFcn;
 				FunctionName = fcnName;
 			}
 
-			public ParserResponse(string parseStr)
+			public ParserResponse(Node parseStr)
 			{
-				ParserString = parseStr;
+				ThatWhichHasBeenParsed = parseStr;
 			}
 		}
 
@@ -70,12 +71,20 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, new List<string>(), new string[]{}); 
+				Node parsedFcn = ParseFcn(fcnText, new List<Node>(), new string[]{}); 
 
 				// Compensate for one-item functions, such as F[x] = x
-				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
+//				if (parsedFcn.objType != Typ.Expr) parsedFcn = n(Typ.Expr,parsedFcn);
+//				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
 
-				return new ParserResponse(parsedFcn, true, fcnSig);
+				if (!OperatorRegistry.ContainsKey(fcnSig))
+				{
+					return new ParserResponse(parsedFcn, true, fcnSig);
+				}
+				else 
+				{
+					// Error: Function name is reserved
+				}
 			}
 
 			// Matches function declarations (e.g. F[x] = x + 1)
@@ -93,12 +102,20 @@ namespace Akkadian
 
 				// Parse the expression to the right of the = sign
 				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, new List<string>(), argArray); 
+				Node parsedFcn = ParseFcn(fcnText, new List<Node>(), argArray); 
 
 				// Compensate for one-item functions, such as F[x] = x
-				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
+//				if (parsedFcn.objType != Typ.Expr) parsedFcn = n(Typ.Expr,parsedFcn);
+//				if (parsedFcn.LastIndexOf(":") == parsedFcn.IndexOf(":")) parsedFcn = "Expr:{" + parsedFcn + "}";
 
-				return new ParserResponse(parsedFcn, true, fName);
+				if (!OperatorRegistry.ContainsKey(fName))
+				{
+					return new ParserResponse(parsedFcn, true, fName);
+				}
+				else 
+				{
+					// Error: Function name is reserved
+				}
 			}
 
 			// Special maintenance risk: Put set literals in parentheses  :)
@@ -110,7 +127,7 @@ namespace Akkadian
 		/// <summary>
 		/// Parses a function into a string of nested tokens (representing Exprs).
 		/// </summary>
-		public static string ParseFcn(string s, List<string> subExprs, string[] argNames)
+		public static Node ParseFcn(string s, List<Node> subExprs, string[] argNames)
 		{
 			s = s.Trim();
 
@@ -118,37 +135,49 @@ namespace Akkadian
 			string fp = Util.FirstParenthetical(s,"(",")");
 			if (fp != "")
 			{
+				// Replace the nested text with #n#
 				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
-				string newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
-				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+				string newMainStr = s.Replace(fp, delimiter + index + delimiter);
+
+				// Parse the subexpression and add it to the subexpression list
+				Node subExpr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
+				subExprs.Add(subExpr);
+
+				// Parse the main string
+				return ParseFcn(newMainStr, subExprs, argNames);
 			}
 
 			// Set and time-series literals
-			if (s.StartsWith("{") && s.EndsWith("}"))
-			{
-				// Sets
-				if (IsExactMatch(s,setLiteral))
-				{
-					// TODO: Handle nested Tsets
-					s = Util.RemoveParens(s).Replace(",","+");
-					if (s == "") s = "*";	// Empty sets represented as *
-					return "Tvar:" + s;
-				}
-				// Time serieses
-				// {Dawn: Stub, 2009-07-24: $7.25}
-				// Series:{Tvar:1800-01-01,Tvar:Stub,Tvar:2009-07-24,Tnum:7.25}
-				return "Series:{" + Util.RemoveParens(s).Replace(":",",") + "}";
-			}
+//			if (s.StartsWith("{") && s.EndsWith("}"))
+//			{
+//				// Sets
+//				if (IsExactMatch(s,setLiteral))
+//				{
+//					// TODO: Handle nested Tsets
+//					s = Util.RemoveParens(s).Replace(",","+");
+//					if (s == "") s = "*";	// Empty sets represented as *
+//					return "Tvar:" + s;
+//				}
+//				// Time serieses
+//				// {Dawn: Stub, 2009-07-24: $7.25}
+//				// Series:{Tvar:1800-01-01,Tvar:Stub,Tvar:2009-07-24,Tnum:7.25}
+//				return "Series:{" + Util.RemoveParens(s).Replace(":",",") + "}";
+//			}
 
 			// Pipelined functions |>
 			Regex pipeRegex = new Regex(parens(wildcard) + white + @"\|>" + white + parens(@"EverPer\[" + wildcard + @"\]"));
 			var pipeMatch = pipeRegex.Match(s);
 			if (pipeMatch.Success)
 			{
-				string stuffBeforePipe = pipeMatch.Groups[1].Value;
-				string stuffAfterPipe = pipeMatch.Groups[2].Value;
-				return "Expr:{Op:Pipe," + ParseFcn(stuffBeforePipe,subExprs,argNames) + "," + ParseFcn(stuffAfterPipe,subExprs,argNames) + "}";
+				Node lhs = ParseFcn(pipeMatch.Groups[1].Value, subExprs, argNames);
+				Node rhs = ParseFcn(pipeMatch.Groups[2].Value, subExprs, argNames);
+
+				List<Node> pipeNodes = new List<Node>();
+				pipeNodes.Add(n(Typ.Op,Op.Pipe));
+				pipeNodes.Add(lhs);
+				pipeNodes.Add(rhs);
+				Expr pipeExpr = new Expr(pipeNodes);
+				return n(Typ.Expr,pipeExpr);
 			}
 
 			// Function calls (innermost functions first)
@@ -167,24 +196,37 @@ namespace Akkadian
 
 				// If function name is in operator registry, reference it;
 				// otherwise, assume this is a user-defined function (or a leaf node)
-				string newStr = ""; 
+				List<Node> fCallNodes = new List<Node>();
 				if (OperatorRegistry.ContainsKey(fcnRef))
 				{
-					newStr = "Expr:{Op:" + Convert.ToString(OperatorRegistry[fcnRef]);
+					Op theOp = (Op)Enum.Parse(typeof(Op), Convert.ToString(OperatorRegistry[fcnRef]));
+					fCallNodes.Add(n(Typ.Op, theOp ));
 				}
 				else
 				{
-					newStr = "Expr:{Fcn:" + fcnRef;  	// Should this be an int?
+					fCallNodes.Add(n(Typ.Fcn, fcnRef ));
 				}
 
 				// Add the function's arguments
 				foreach (string arg in args)
 				{
-					newStr += "," + ParseFcn(arg, subExprs, argNames);
+					fCallNodes.Add( ParseFcn(arg, subExprs, argNames) );
 				}
-				newStr += "}";
+				Node newStr = n(Typ.Expr,new Expr(fCallNodes));
 
-				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, argNames);
+				// Deal with any delimited substitutions
+				List<Node> newSubExprs;
+				if (s.Contains(delimiter))
+				{
+					newSubExprs = subExprs;
+					newSubExprs.Add(newStr);
+				}
+				else
+				{
+					newSubExprs = new List<Node>(){newStr};
+				}
+
+				return ParseFcn(newStrToParse, newSubExprs, argNames);
 			}
 
 			// Switch
@@ -195,39 +237,61 @@ namespace Akkadian
 				string switchParts = switchMatch.Value.Replace("->",",");
 				string[] switchArgs = switchParts.Split(',');
 
-				string switchResult = "Expr:{Op:Switch"; 
+				List<Node> switchNodes = new List<Node>();
+				switchNodes.Add(n(Typ.Op,Op.Switch));
+
 				foreach (string arg in switchArgs)
 				{
-					switchResult += "," + ParseFcn(arg, subExprs, argNames);
+					switchNodes.Add( ParseFcn(arg, subExprs, argNames) );
 				}
-				switchResult += "}";
 
-				return switchResult;
+				Expr switcExpr = new Expr(switchNodes);
+				return n(Typ.Expr,switcExpr);
 			}
 
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
 			{
-				return "Tvar:" + s;
+				DateTime d = Convert.ToDateTime(s);
+				return nTvar(new Tvar(d));
 			}
 
 			// Numeric literals - must be before subtraction due to negative numbers
 			if (IsExactMatch(s,decimalLiteral) || IsExactMatch(s,currencyLiteral))
 			{
-				return "Tvar:" + Convert.ToDecimal(s.Replace("$",""));
+				decimal d = Convert.ToDecimal(s.Replace("$",""));
+				return nTvar(new Tvar(d));
 			}
 
 			// Infix operators
 			foreach (string oprtr in infixOps)
 			{
-				string infixResult = TestForInfixOp(s, oprtr, subExprs, fcnName, argNames);
-				if (s != infixResult && infixResult != "") return infixResult;
+				string pattern = parens(wildcard) + oprtr + parens(wildcard);
+
+				if (IsExactMatch(s, pattern))
+				{
+					Match m = Regex.Match(s, pattern);
+					Node lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, argNames);
+					Node rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, argNames);
+
+					List<Node> infixNodes = new List<Node>();
+					Op theOp = OperatorRegistry[oprtr]; 
+					infixNodes.Add(n(Typ.Op,theOp));
+					infixNodes.Add(lhs);
+					infixNodes.Add(rhs);
+					Expr infixExpr = new Expr(infixNodes);
+					return n(Typ.Expr,infixExpr);
+				}
 			}
 
 			// Not - must go after infix ops
 			if (s.StartsWith("!"))
 			{
-				return "Expr:{Op:Not," + ParseFcn(s.Substring(1), subExprs, argNames) + "}";
+				List<Node> notNodes = new List<Node>();
+				notNodes.Add(n(Typ.Op,Op.Not));
+				notNodes.Add(ParseFcn(s.Substring(1), subExprs, argNames));
+				Expr notExpr = new Expr(notNodes);
+				return n(Typ.Expr,notExpr);
 			}
 
 			// Variable references
@@ -235,121 +299,53 @@ namespace Akkadian
 			{
 				for (int i=0; i<argNames.Length; i++)
 				{
-					if (s == argNames[i]) return "Var:" + i;
+					if (s == argNames[i]) return n(Typ.Var,i);
 				}
 			}
 
 			// Boolean and string literal values
 			if (IsExactMatch(s.ToLower(),boolLiteral))
 			{
-				return "Tvar:" + Convert.ToBoolean(s);
+				return nTvar(new Tvar(Convert.ToBoolean(s)));
 			}
 			if (IsExactMatch(s,stringLiteral))
 			{
-				return "Tvar:" + s.Trim('\'');
+				return nTvar(new Tvar(Convert.ToString(s.Trim('\''))));
 			}
 
 			// References to operator names (such as "Abs")
 			if (OperatorRegistry.ContainsKey(s))
 			{
-				return "Op:" + s;
+				Op theOp = OperatorRegistry[s];
+				return n(Typ.Op,theOp);
 			}
 
 			// Constants (i.e. constant functions - those with no arguments)
 			if (IsExactMatch(s,fcnName))
 			{
-				return "Fcn:" + s;
+				return n(Typ.Fcn,s);
 			}
 
-			return DecompressParse(s, subExprs);
-		}
-
-		public static string ParseFcn(string s)
-		{
-			return ParseFcn(s, new List<string>(), null);
-		}
-
-		/// <summary>
-		/// Decomposes expressions defining new functions.
-		/// </summary>
-		private static string TestForFcnExpression(string s, List<string> subExprs)
-		{
-			string pattern = fcnSignature + white + "=" + white + parens(wildcard);
-
-			if (IsExactMatch(s, pattern))
+			// See if part is a reference to a parenthetical
+			if (s.StartsWith(delimiter) && s.Length <= 5)
 			{
-				int eq = s.IndexOf("=");
+				// Get index number within delimiter
+				Match m2 = Regex.Match(s, delimiter + "([0-9]+)" + delimiter);
+				int indx = Convert.ToInt16(m2.Groups[1].Value.Trim());
 
-				// Identify the function name
-				string fcnSig = s.Substring(0,eq).Trim();
-				int firstBrack = fcnSig.IndexOf("[");
-				string fcnName = fcnSig.Substring(0,firstBrack);
-
-				// Identify variable names in the function signature
-				string args = fcnSig.Substring(firstBrack + 1).Trim(']');
-				string[] argArray = args.Split(',');
-
-				// Parse the expression to the right of the = sign
-				string fcnText = s.Substring(eq + 1).Trim();
-				string parsedFcn = ParseFcn(fcnText, subExprs, argArray);
-
-				return parsedFcn;
+				// Then, add that subexpression
+				return subExprs[indx];
 			}
 
-			return s;
+			// Should never get here
+			return n(Typ.Null,-42);
 		}
 
-		/// <summary>
-		/// Adds a string to the sub-expression list and parses the main string
-		/// </summary>
-		private static string AddToSubExprListAndParse(string s, string newStrToParse, string newStr, List<string> subExprs, string[] argNames)
+		public static Node ParseFcn(string s)
 		{
-			List<string> newSubExprs;
-			if (s.Contains(delimiter))
-			{
-				newSubExprs = subExprs;
-				newSubExprs.Add(newStr);
-			}
-			else
-			{
-				newSubExprs = new List<string>(){newStr};
-			}
-
-			return ParseFcn(newStrToParse, newSubExprs, argNames);
-		}
-		
-		/// <summary>
-		/// Puts extracted sub-parses back into the main parse string.
-		/// </summary>
-		private static string DecompressParse(string s, List<string> subExprs)
-		{
-			string result = s;
-			for (int i=0; i<subExprs.Count; i++)
-			{
-				result = result.Replace(delimiter + Convert.ToString(i) + delimiter, subExprs[i]);
-			}
-
-			if (result == s) return result;
-			else return DecompressParse(result, subExprs);
+			return ParseFcn(s, new List<Node>(), null);
 		}
 
-		/// <summary>
-		/// Decomposes expressions with infix operators.
-		/// </summary>
-		private static string TestForInfixOp(string s, string op, List<string> subExprs, string fcnName, string[] argNames)
-		{
-			string pattern = parens(wildcard) + op + parens(wildcard);
-
-			if (IsExactMatch(s, pattern))
-			{
-				Match m = Regex.Match(s, pattern);
-				string lhs = ParseFcn(m.Groups[1].Value.Trim(), subExprs, argNames);
-				string rhs = ParseFcn(m.Groups[2].Value.Trim(), subExprs, argNames);
-				return "Expr:{Op:" + Convert.ToString(OperatorRegistry[op]) + "," + lhs + "," + rhs + "}";
-			}
-
-			return "";
-		}
 
 		/*
 		 * The following method converts parse stings into Nodes.
@@ -374,119 +370,84 @@ namespace Akkadian
 		/// the Expr object directly, rather than generating a string and then
 		/// having this function turn it into an Expr.
 		/// </remarks>
-		protected static Node StringToNode(string s, List<Node> subExprs)
-		{
-			// Determine the node type and value
-			int colon = s.IndexOf(":");
-			string typ = s.Substring(0,colon);
-			string val = s.Substring(colon + 1);
-
-			// Return the node object...
-			if (typ == "Op") 		return n(Typ.Op, (Op)Enum.Parse(typeof(Op),val));
-			if (typ == "Tvar") 		return n(Typ.Tvar, ConvertToBestType(val));
-			if (typ == "Var") 		return n(Typ.Var, Convert.ToInt16(val));
-			if (typ == "Fcn")		return n(Typ.Fcn, val);
-
-			if (typ == "Expr")
-			{
-				// Trim outer brackets
-				val = val.Substring(1,val.Length-2);
-
-				// Identify nested expressions (in brackets)...
-				Match m = Regex.Match(val, "Expr:{" + @"[-0-9a-zA-Z:,'\."+delimiter+"]+" + "}");
-				if (m.Success)
-				{
-					// Replace the nested text with #n#
-					string meat = m.Groups[0].Value;
-					string index = Convert.ToString(subExprs.Count);
-					string newMainStr = s.Replace(meat, delimiter + index + delimiter);
-
-					// Parse the subexpression and add it to the subexpression list
-					Node subExpr = StringToNode(meat, subExprs);
-					subExprs.Add(subExpr);
-
-					// Parse the main string
-					return StringToNode(newMainStr, subExprs);
-				}
-
-				// Process each part of the expression
-				string[] parts = val.Split(',');
-				List<Node> nodes = new List<Node>();
-				foreach (string p in parts)
-				{
-					// See if part is a reference to a parenthetical
-					if (p.Contains(delimiter))
-					{
-						// Get index number within delimiter
-						Match m2 = Regex.Match(p, delimiter + "([0-9]+)" + delimiter);
-						int indx = Convert.ToInt16(m2.Groups[1].Value.Trim());
-
-						// Then, add that subexpression
-						nodes.Add(subExprs[indx]);
-					}
-					else
-					{
-						nodes.Add(StringToNode(p,subExprs));
-					}
-				}
-
-				return new Node(Typ.Expr,new Expr(nodes));
-			}
-//			if (typ == "Series")
+//		protected static Node StringToNode(string s, List<Node> subExprs)
+//		{
+//			// Determine the node type and value
+//			int colon = s.IndexOf(":");
+//			string typ = s.Substring(0,colon);
+//			string val = s.Substring(colon + 1);
+//
+//			// Return the node object...
+//			if (typ == "Op") 		return n(Typ.Op, (Op)Enum.Parse(typeof(Op),val));
+//			if (typ == "Tvar") 		return n(Typ.Tvar, ConvertToBestType(val));
+//			if (typ == "Var") 		return n(Typ.Var, Convert.ToInt16(val));
+//			if (typ == "Fcn")		return n(Typ.Fcn, val);
+//
+//			if (typ == "Expr")
 //			{
-//				// Series:{Dawn,Stub,2009-07-24,$7.25}
-//				Console.WriteLine(s);
-//				string[] intervals = Util.RemoveParens(val).Split(',');
-//				Tvar ts = new Tvar();
-//				for (int j=0; j<intervals.Length-1; j=j+2)
+//				// Trim outer brackets
+//				val = val.Substring(1,val.Length-2);
+//
+//				// Identify nested expressions (in brackets)...
+//				Match m = Regex.Match(val, "Expr:{" + @"[-0-9a-zA-Z:,'\."+delimiter+"]+" + "}");
+//				if (m.Success)
 //				{
-//					Console.WriteLine(intervals[j] + " - " + intervals[j+1]);
-//					string dt = intervals[j];
-//					if (dt.Trim() == "Dawn") dt = "1800-01-01";
-//					DateTime date = DateTime.Parse(dt);
-//					string intVal = Convert.ToString(intervals[j+1]);
-//					ts.AddState(date,intVal);
+//					// Replace the nested text with #n#
+//					string meat = m.Groups[0].Value;
+//					string index = Convert.ToString(subExprs.Count);
+//					string newMainStr = s.Replace(meat, delimiter + index + delimiter);
+//
+//					// Parse the subexpression and add it to the subexpression list
+//					Node subExpr = StringToNode(meat, subExprs);
+//					subExprs.Add(subExpr);
+//
+//					// Parse the main string
+//					return StringToNode(newMainStr, subExprs);
 //				}
-//				return nTvar(ts);
+//
+//				// Process each part of the expression
+//				string[] parts = val.Split(',');
+//				List<Node> nodes = new List<Node>();
+//				foreach (string p in parts)
+//				{
+//					// See if part is a reference to a parenthetical
+//					if (p.Contains(delimiter))
+//					{
+//						// Get index number within delimiter
+//						Match m2 = Regex.Match(p, delimiter + "([0-9]+)" + delimiter);
+//						int indx = Convert.ToInt16(m2.Groups[1].Value.Trim());
+//
+//						// Then, add that subexpression
+//						nodes.Add(subExprs[indx]);
+//					}
+//					else
+//					{
+//						nodes.Add(StringToNode(p,subExprs));
+//					}
+//				}
+//
+//				return new Node(Typ.Expr,new Expr(nodes));
 //			}
-
-			// Should not get here
-			return n(Typ.Null,null);
-		}
-
-		public static Node StringToNode(string p)
-		{
-			return StringToNode(p, new List<Node>());
-		}
-
-		/// <summary>
-		/// Converts a string representing a node into an expression (Expr)
-		/// </summary>
-		public static Expr StringToExpr(string s)
-		{
-			Node n = StringToNode(s);
-			return new Expr(new List<Node>(){n});
-		}
-
-		/// <summary>
-		/// Converts the string to the most appropriate type of Tvar object.
-		/// </summary>
-		private static Tvar ConvertToBestType(string s)
-		{
-			// Handle Tsets
-			if (s == "*") return Tvar.MakeTset(new List<object>());
-			if (s.Contains("+"))
-			{
-				List<object> list = new List<object>();
-				string[] things = s.Split('+');
-				foreach (string t in things) list.Add(t);
-				return Tvar.MakeTset(list);
-			}
-
-			if (IsExactMatch(s,decimalLiteral)) 		return new Tvar(Convert.ToDecimal(s));
-			if (IsExactMatch(s,dateLiteral)) 			return new Tvar(Convert.ToDateTime(s));
-			if (IsExactMatch(s.ToLower(),boolLiteral))	return new Tvar(Convert.ToBoolean(s));
-			return new Tvar(s);
-		}
+////			if (typ == "Series")
+////			{
+////				// Series:{Dawn,Stub,2009-07-24,$7.25}
+////				Console.WriteLine(s);
+////				string[] intervals = Util.RemoveParens(val).Split(',');
+////				Tvar ts = new Tvar();
+////				for (int j=0; j<intervals.Length-1; j=j+2)
+////				{
+////					Console.WriteLine(intervals[j] + " - " + intervals[j+1]);
+////					string dt = intervals[j];
+////					if (dt.Trim() == "Dawn") dt = "1800-01-01";
+////					DateTime date = DateTime.Parse(dt);
+////					string intVal = Convert.ToString(intervals[j+1]);
+////					ts.AddState(date,intVal);
+////				}
+////				return nTvar(ts);
+////			}
+//
+//			// Should not get here
+//			return n(Typ.Null,null);
+//		}
 	}
 }

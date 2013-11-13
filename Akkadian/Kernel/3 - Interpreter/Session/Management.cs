@@ -44,13 +44,13 @@ namespace Akkadian
 
 			if (pr.IsNewFunction)
 			{
-				Expr e = (Expr)StringToNode(pr.ParserString).obj;
+				Expr e = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
 				AddFunction(pr.FunctionName, e);
 				return true;
 			}
 			else
 			{
-				Expr exp = Interpreter.StringToExpr(pr.ParserString);
+				Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
 				return eval(exp).obj;
 			}
 		}
