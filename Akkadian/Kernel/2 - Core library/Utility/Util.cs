@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Akkadian
 {
@@ -109,5 +110,13 @@ namespace Akkadian
 			}
 			return substr;
 		}
+
+//		public static string FirstParenthetical(string clause, string open, string close)
+//		{
+//			Regex rex = new Regex(@"\([-a-zA-Z0-9\+/\.\|><=!\*, ]+\)");
+//			var m = rex.Match(clause);
+//			if (m.Success) 	return m.Value;
+//			return "";
+//		}
     }
 }

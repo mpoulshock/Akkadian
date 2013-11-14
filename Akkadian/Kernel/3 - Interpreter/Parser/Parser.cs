@@ -63,7 +63,7 @@ namespace Akkadian
 			// This could be much cleaner with the proper regex...
 
 			// Matches variable declarations (e.g. Pi = 3.14159)
-			if (IsExactMatch(s, fcnName + white + "=" + white + parens(wildcard)))
+			if (IsExactMatch(s, fcnNameRegex + white + "=" + white + parens(wildcard)))
 			{
 				// Identify the function name
 				int eq = s.IndexOf("=");
@@ -120,6 +120,7 @@ namespace Akkadian
 
 			// Special maintenance risk: Put set literals in parentheses  :)
 			s = s.Replace("{","({").Replace("}","})");
+//			s = s.Replace("[","[(").Replace("]",")]");
 
 			return new ParserResponse(ParseFcn(s));
 		}
@@ -181,37 +182,35 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			Regex rx1 = new Regex(@"([a-zA-Z_][a-zA-Z0-9_]*)\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{} " + delimiter + @"]*\]");
+			Regex rx1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{} " + delimiter + @"]*\]");
 			var m1 = rx1.Match(s);
 			if (m1.Success)
 			{
+				// Entire function expression
 				string firstFcn = m1.Value;
+
+				// Bracketed portion
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
 				string whatsInTheBrackets = Util.RemoveParens(m1.Value.Replace(m1.Groups[1].Value,""));
 
-				// Functions with multiple parameters
-				string[] args = whatsInTheBrackets.Split(',');
+				// Function name
 				string fcnRef = m1.Groups[1].Value;
 
 				// If function name is in operator registry, reference it;
 				// otherwise, assume this is a user-defined function (or a leaf node)
 				List<Node> fCallNodes = new List<Node>();
-				if (OperatorRegistry.ContainsKey(fcnRef))
-				{
-					Op theOp = (Op)Enum.Parse(typeof(Op), Convert.ToString(OperatorRegistry[fcnRef]));
-					fCallNodes.Add(n(Typ.Op, theOp ));
-				}
-				else
-				{
-					fCallNodes.Add(n(Typ.Fcn, fcnRef ));
-				}
+				fCallNodes.Add(ParseFcn(fcnRef,subExprs,argNames));
 
 				// Add the function's arguments
+				string[] args = whatsInTheBrackets.Split(',');
 				foreach (string arg in args)
 				{
 					fCallNodes.Add( ParseFcn(arg, subExprs, argNames) );
 				}
+
+//				return n(Typ.Expr,new Expr(fCallNodes));		// toggle out to revert; add in recursion tests
+
 				Node newStr = n(Typ.Expr,new Expr(fCallNodes));
 
 				// Deal with any delimited substitutions
@@ -220,6 +219,8 @@ namespace Akkadian
 				{
 					newSubExprs = subExprs;
 					newSubExprs.Add(newStr);
+
+//					subExprs.Add(newStr);
 				}
 				else
 				{
@@ -227,7 +228,40 @@ namespace Akkadian
 				}
 
 				return ParseFcn(newStrToParse, newSubExprs, argNames);
+//				return ParseFcn(newStrToParse, subExprs, argNames);
 			}
+
+//			// Function calls (innermost functions first)
+//			Regex rx1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{} " + delimiter + @"]*\]");
+//			var m1 = rx1.Match(s);
+//			if (m1.Success)
+//			{
+//				// Step 1: Deal with nested functions
+//				// Replace nested function with delimiter
+//				string index = Convert.ToString(subExprs.Count);
+//				string newStrToParse = s.Replace(m1.Value,delimiter + index + delimiter);
+//
+//				// Evaluate nested function and save it to the subExpressions list
+//
+//
+//				// Step 2: Process the main string
+//				// To store the result
+//				List<Node> fCallNodes = new List<Node>();
+//
+//				// Function name
+//				string fcnRef = m1.Groups[1].Value;
+//				fCallNodes.Add(ParseFcn(fcnRef,subExprs,argNames));
+//
+//				// Bracketed portion - the function's arguments
+//				string whatsInTheBrackets = Util.RemoveParens(m1.Value.Replace(fcnRef,""));
+//				string[] args = whatsInTheBrackets.Split(',');
+//				foreach (string arg in args)
+//				{
+//					fCallNodes.Add( ParseFcn(arg, subExprs, argNames) );
+//				}
+//
+//				return n(Typ.Expr, new Expr(fCallNodes));
+//			}
 
 			// Switch
 			Regex switchRegex = new Regex(switchStatement);
@@ -321,13 +355,13 @@ namespace Akkadian
 			}
 
 			// Constants (i.e. constant functions - those with no arguments)
-			if (IsExactMatch(s,fcnName))
+			if (IsExactMatch(s,fcnNameRegex))
 			{
 				return n(Typ.Fcn,s);
 			}
 
 			// See if part is a reference to a parenthetical
-			if (s.StartsWith(delimiter) && s.Length <= 5)
+			if (s.StartsWith(delimiter) && s.Length <= 4)
 			{
 				// Get index number within delimiter
 				Match m2 = Regex.Match(s, delimiter + "([0-9]+)" + delimiter);

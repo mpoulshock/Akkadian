@@ -126,31 +126,31 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Regex_FcnName_1 ()
 		{
-			Assert.IsTrue(IsExactMatch("IsEligible",fcnName));
+			Assert.IsTrue(IsExactMatch("IsEligible",fcnNameRegex));
 		}
 
 		[Test]
 		public void Regex_FcnName_2 ()
 		{
-			Assert.IsFalse(IsExactMatch("2IsEligible",fcnName));
+			Assert.IsFalse(IsExactMatch("2IsEligible",fcnNameRegex));
 		}
 
 		[Test]
 		public void Regex_FcnName_3 ()
 		{
-			Assert.IsFalse(IsExactMatch("Is Eligible",fcnName));
+			Assert.IsFalse(IsExactMatch("Is Eligible",fcnNameRegex));
 		}
 
 		[Test]
 		public void Regex_FcnName_4 ()
 		{
-			Assert.IsTrue(IsExactMatch("Is_Eligible",fcnName));
+			Assert.IsTrue(IsExactMatch("Is_Eligible",fcnNameRegex));
 		}
 
 		[Test]
 		public void Regex_FcnName_5 ()
 		{
-			Assert.IsTrue(IsExactMatch("A",fcnName));
+			Assert.IsTrue(IsExactMatch("A",fcnNameRegex));
 		}
 
 		[Test]
