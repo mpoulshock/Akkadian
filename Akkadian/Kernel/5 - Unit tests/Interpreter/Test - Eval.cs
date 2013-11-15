@@ -637,10 +637,10 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Misc_18 ()
 		{
-//			Session sess = new Session();
-//			sess.ProcessInput("Factorial[n] = n == 1 -> 1, n * Factorial[n-1]");
-//			Tvar r = (Tvar)sess.ProcessInput("Factorial[4]");
-//			Assert.AreEqual(24, r.Out);                
+			Session sess = new Session();
+			sess.ProcessInput("Factorial[n] = n == 1 -> 1, n * Factorial[n-1]");
+			Tvar r = (Tvar)sess.ProcessInput("Factorial[4]");
+			Assert.AreEqual(24, r.Out);                
 		}
 
 		[Test]
@@ -721,15 +721,6 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Misc_28_TimeSeriesLiteral ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {Dawn:Stub,2009-07-24:$7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
-			Assert.AreEqual("{Dawn:Stub,2009-07-24:$7.25}", r.Out);                
-		}
-
-		[Test]
 		public void NestedFcns_1 ()
 		{
 			Session sess = new Session();
@@ -799,59 +790,52 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(8.46, r.Out);                
 		}
 
-//		[Test]
-//		public void Recursion_1 ()
-//		{
-//			// f(x) = if x = 0 -> 0, else f(x-1) + 3
-//			// f(0) = 0
-//			Session sess = new Session();
-//			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-//			Tvar r = (Tvar)sess.ProcessInput("F[0]");
-//			Assert.AreEqual(0, r.Out);               
-//		}
-//
-//		[Test]
-//		public void Recursion_2 ()
-//		{
-//			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
-//			// f7(1) = 3
-//			Session sess = new Session();
-//			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-//			Tvar r = (Tvar)sess.ProcessInput("F[1]");
-//			Assert.AreEqual(3, r.Out);                 
-//		}
-//
-//		[Test]
-//		public void Recursion_3 ()
-//		{
-//			// f7(x) = if x = 0 -> 0, else f7(x-1) + 3
-//			// f7(2) = 6
-//			Session sess = new Session();
-//			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-//			Tvar r = (Tvar)sess.ProcessInput("F[2]");
-//			Assert.AreEqual(6, r.Out);               
-//		}
-//
-//		[Test]
-//		public void Recursion_4 ()
-//		{
-//			// f7(450) = 1350
-//			Session sess = new Session();
-//			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-//			Tvar r = (Tvar)sess.ProcessInput("F[375]");
-//			Assert.AreEqual(1125, r.Out);                 
-//		}
+		[Test]
+		public void Recursion_1 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tvar r = (Tvar)sess.ProcessInput("F[0]");
+			Assert.AreEqual(0, r.Out);               
+		}
 
-//		[Test]
-//		public void Reverse ()
-//		{
-//			Session sess = new Session();
-//			Thing A = new Thing ("A");
-//			Thing B = new Thing ("B");
-//			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
-//			Tvar r = (Tvar)sess.eval(exp).obj;
-//			Assert.AreEqual("B,A", r.Out);               
-//		}
+		[Test]
+		public void Recursion_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tvar r = (Tvar)sess.ProcessInput("F[1]");
+			Assert.AreEqual(3, r.Out);                 
+		}
+
+		[Test]
+		public void Recursion_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tvar r = (Tvar)sess.ProcessInput("F[2]");
+			Assert.AreEqual(6, r.Out);               
+		}
+
+		[Test]
+		public void Recursion_4 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
+			Tvar r = (Tvar)sess.ProcessInput("F[375]");
+			Assert.AreEqual(1125, r.Out);                 
+		}
+
+		[Test]
+		public void Reverse ()
+		{
+			Session sess = new Session();
+			Thing A = new Thing ("A");
+			Thing B = new Thing ("B");
+			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
+			Tvar r = (Tvar)sess.eval(exp).obj;
+			Assert.AreEqual("B,A", r.Out);               
+		}
 
 		[Test]
 		public void Subtraction_1 ()
@@ -981,9 +965,18 @@ namespace Akkadian.UnitTests
 		public void TimeSeries_1 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01:3.00,2009-07-24:7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("FedMinWage |> Max");
-			Assert.AreEqual(7.25, r.Out);                
+			sess.ProcessInput("FedMinWage = {Dawn:Stub,2009-07-24:$7.25}");
+			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
+			Assert.AreEqual("{Dawn:Stub,2009-07-24:$7.25}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("FedMinWage = {1800-01-01: $1.95,2009-07-24: $7.25}");
+			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
+			Assert.AreEqual("{Dawn: 1.95,2009-07-24: 7.25}", r.Out);                
 		}
 
 		[Test]
