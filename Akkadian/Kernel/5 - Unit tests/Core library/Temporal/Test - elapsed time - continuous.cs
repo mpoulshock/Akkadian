@@ -39,7 +39,7 @@ namespace Akkadian.UnitTests
 
             Tvar r = tb.ContinuousElapsedIntervals(TheMonth);
 
-            Assert.AreEqual("{Dawn: 0; 2/1/2015: 1; 3/1/2015: 2; 4/1/2015: 0; 6/1/2015: 1; 7/1/2015: 0}", r.Out);    
+			Assert.AreEqual("{Dawn: 0, 2015-02-01: 1, 2015-03-01: 2, 2015-04-01: 0, 2015-06-01: 1, 2015-07-01: 0}", r.Out);    
         }
 
         [Test]

@@ -37,7 +37,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2002,1,1), true);
             t.AddState(Date(2003,1,1), false);
             Tvar result = t.TotalElapsedDaysPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2000: 366; 1/1/2001: 0; 1/1/2002: 365; 1/1/2003: 0}", result.Out);      
+			Assert.AreEqual("{Dawn: 0, 2000-01-01: 366, 2001-01-01: 0, 2002-01-01: 365, 2003-01-01: 0}", result.Out);      
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2000,6,1), true);
             t.AddState(Date(2001,1,1), false);
             Tvar result = t.TotalElapsedDaysPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2000: 214; 1/1/2001: 0}", result.Out);      
+			Assert.AreEqual("{Dawn: 0, 2000-01-01: 214, 2001-01-01: 0}", result.Out);      
         }
 
         [Test]

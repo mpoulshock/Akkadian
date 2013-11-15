@@ -438,7 +438,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2012,11,8), true);
             
             Tvar result = t.EverPer(theYear).Lean;
-            Assert.AreEqual("{Dawn: false; 1/1/2012: true}", result.Out);        
+			Assert.AreEqual("{Dawn: false, 2012-01-01: true}", result.Out);        
         }
         
         [Test]
@@ -473,7 +473,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2012,11,8), true);
             
             Tvar result = t.AlwaysPer(theYear).Lean;
-            Assert.AreEqual("{Dawn: false; 1/1/2013: true}", result.Out);        
+			Assert.AreEqual("{Dawn: false, 2013-01-01: true}", result.Out);        
         }
         
         [Test]
@@ -553,7 +553,7 @@ namespace Akkadian.UnitTests
         {
             Tvar t = new Tvar("42");
             t.AddState(Date(2004,2,21), "43");
-			Assert.AreEqual("{Dawn: 42; 2/21/2004: 43}", t.ToString());        
+			Assert.AreEqual("{Dawn: 42, 2004-02-21: 43}", t.ToString());        
         }
         
         // Tvar.ToDateTime
@@ -591,7 +591,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,3,1), true);
             t.AddState(Date(2010,4,1), false);
             Tvar actual = t.CountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2010: 3; 1/1/2011: 0}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-01-01: 3, 2011-01-01: 0}", actual.Out);      
         }
         
         [Test]
@@ -611,7 +611,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,3,1), true);
             t.AddState(Date(2010,4,1), false);
             Tvar actual = t.CountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2010: 2; 1/1/2011: 0}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-01-01: 2, 2011-01-01: 0}", actual.Out);      
         }
         
         [Test]
@@ -623,7 +623,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2011,1,1), true);
             t.AddState(Date(2011,2,1), false);
             Tvar actual = t.CountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2010: 2; 1/1/2011: 1; 1/1/2012: 0}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-01-01: 2, 2011-01-01: 1, 2012-01-01: 0}", actual.Out);      
         }
         
         [Test]
@@ -635,7 +635,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,3,1), true);
             t.AddState(Date(2010,4,1), false);
             Tvar actual = t.CountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2010: 1; 1/1/2011: 0}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-01-01: 1, 2011-01-01: 0}", actual.Out);      
         }
         
         // Tvar.RunningCountPer
@@ -649,7 +649,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,3,1), true);
             t.AddState(Date(2010,4,1), false);
             Tvar actual = t.RunningCountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 2/1/2010: 1; 3/1/2010: 2; 4/1/2010: 3}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-02-01: 1, 2010-03-01: 2, 2010-04-01: 3}", actual.Out);      
         }
         
         [Test]
@@ -669,7 +669,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,3,1), true);
             t.AddState(Date(2010,4,1), false);
             Tvar actual = t.RunningCountPer(TheYear);
-            Assert.AreEqual("{Dawn: 0; 2/1/2010: 1; 4/1/2010: 2}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-02-01: 1, 2010-04-01: 2}", actual.Out);      
         }
 
         // Tvar.DateFirstTrue
@@ -826,7 +826,7 @@ namespace Akkadian.UnitTests
             tb1.AddState(Date(2000,1,1), unst);
             tb1.AddState(Date(2001,1,1), true);
 
-            Assert.AreEqual("{Dawn: false; 1/1/2000: true; 1/1/2001: false}", tb1.IsUnstated.Out);        
+			Assert.AreEqual("{Dawn: false, 2000-01-01: true, 2001-01-01: false}", tb1.IsUnstated.Out);        
         }
 
         // .Shift
@@ -838,7 +838,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,1,1), 100);
             t.AddState(Date(2011,1,1), 200);
             Tvar actual = t.Shift(-1, TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2011: 100; 1/1/2012: 200}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2011-01-01: 100, 2012-01-01: 200}", actual.Out);      
         }
 
         [Test]
@@ -848,7 +848,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,1,1), 100);
             t.AddState(Date(2011,1,1), 200);
             Tvar actual = t.Shift(0, TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2010: 100; 1/1/2011: 200}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2010-01-01: 100, 2011-01-01: 200}", actual.Out);      
         }
 
         [Test]
@@ -858,7 +858,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2010,1,1), 100);
             t.AddState(Date(2011,1,1), 200);
             Tvar actual = t.Shift(2, TheYear);
-            Assert.AreEqual("{Dawn: 0; 1/1/2008: 100; 1/1/2009: 200}", actual.Out);      
+			Assert.AreEqual("{Dawn: 0, 2008-01-01: 100, 2009-01-01: 200}", actual.Out);      
         }
 
         [Test]

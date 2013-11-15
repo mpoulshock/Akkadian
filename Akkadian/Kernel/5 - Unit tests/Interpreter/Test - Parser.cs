@@ -30,37 +30,37 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void FirstParen_1 ()
 		{
-			Assert.AreEqual("", Util.FirstParenthetical("x + 3", "(", ")"));                
+			Assert.AreEqual("", Util.InnermostParenthetical("x + 3"));                
 		}
 
 		[Test]
 		public void FirstParen_2 ()
 		{
-			Assert.AreEqual("(a + 1)", Util.FirstParenthetical("x + (a + 1) + b", "(", ")"));                
+			Assert.AreEqual("(a + 1)", Util.InnermostParenthetical("x + (a + 1) + b"));                
 		}
 
 		[Test]
 		public void FirstParen_3 ()
 		{
-			Assert.AreEqual("(a + 1)", Util.FirstParenthetical("x + (a + 1) + (b - 2)", "(", ")"));                
+			Assert.AreEqual("(a + 1)", Util.InnermostParenthetical("x + (a + 1) + (b - 2)"));                
 		}
 
 		[Test]
 		public void FirstParen_4 ()
 		{
-			Assert.AreEqual("(a + 1b - 2)", Util.FirstParenthetical("x + (a + 1b - 2)", "(", ")"));                
+			Assert.AreEqual("(a + 1b - 2)", Util.InnermostParenthetical("x + (a + 1b - 2)"));                
 		}
 
 		[Test]
 		public void FirstParen_5 ()
 		{
-			Assert.AreEqual("(a + ( 1 -b ) - 2)", Util.FirstParenthetical("x + (a + ( 1 -b ) - 2)", "(", ")"));                
+			Assert.AreEqual("( 1 -b )", Util.InnermostParenthetical("x + (a + ( 1 -b ) - 2)"));                
 		}
 
 		[Test]
 		public void FirstParen_6 ()
 		{
-			Assert.AreEqual("((22*2) + 1)", Util.FirstParenthetical("((22*2) + 1)", "(", ")"));                
+			Assert.AreEqual("(22*2)", Util.InnermostParenthetical("((22*2) + 1)"));                
 		}
 	}
 }

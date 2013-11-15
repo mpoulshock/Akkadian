@@ -86,7 +86,7 @@ namespace Akkadian.UnitTests
 		public void IsBetween0 ()
 		{
 			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
-            Assert.AreEqual("{Dawn: false; 1/20/2001: true; 1/20/2009: false}", isDuringTheBushYears.Out);		
+			Assert.AreEqual("{Dawn: false, 2001-01-20: true, 2009-01-20: false}", isDuringTheBushYears.Out);		
 		}
 		
 		[Test]
@@ -129,7 +129,7 @@ namespace Akkadian.UnitTests
         {
             Tvar d = new Tvar(Hstate.Uncertain);
             Tvar isDuringTheBushYears = Time.IsBetween(d, Date(2009,1,20));   
-            Assert.AreEqual("{Dawn: Uncertain; 1/20/2009: false}", isDuringTheBushYears.Out);           
+			Assert.AreEqual("{Dawn: Uncertain, 2009-01-20: false}", isDuringTheBushYears.Out);           
         }
 
 		// TheYear
@@ -139,7 +139,7 @@ namespace Akkadian.UnitTests
 		{	
 			// This test will break every new calendar year (b/c the time frame of TheYear is determined by the system clock)
 			// Last updated: 4/28/12
-            Assert.AreEqual("{Dawn: 0; 1/1/2011: 2011; 1/1/2012: 2012; 1/1/2013: 2013; 1/1/2014: 2014; 1/1/2015: 0}", Time.Year(2).Out);		
+			Assert.AreEqual("{Dawn: 0, 2011-01-01: 2011, 2012-01-01: 2012, 2013-01-01: 2013, 2014-01-01: 2014, 2015-01-01: 0}", Time.Year(2).Out);		
 		}
 		
 		[Test]

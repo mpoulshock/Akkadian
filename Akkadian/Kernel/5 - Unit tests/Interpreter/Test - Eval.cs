@@ -967,7 +967,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {Dawn:Stub,2009-07-24:$7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
-			Assert.AreEqual("{Dawn:Stub,2009-07-24:$7.25}", r.Out);                
+			Assert.AreEqual("{Dawn: Stub, 2009-07-24: 7.25}", r.Out);                
 		}
 
 		[Test]
@@ -976,7 +976,81 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {1800-01-01: $1.95,2009-07-24: $7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
-			Assert.AreEqual("{Dawn: 1.95,2009-07-24: 7.25}", r.Out);                
+			Assert.AreEqual("{Dawn: 1.95, 2009-07-24: 7.25}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: {'a'}, 2009-07-24:{'a','b'}}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: {'a'}, 2009-07-24: {'a','b'}}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_4 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: {1}, 2009-07-24: {1, 2}}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: {1}, 2009-07-24: {1,2}}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_5 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: Abs[-9], 2009-07-24: Abs[-42] + 1}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 9, 2009-07-24: 43}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_6 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x^2");
+			sess.ProcessInput("hh = {Dawn: Sq[3], 2009-07-24: Sq[Sq[2]]}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 9, 2009-07-24: 16}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_7 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = x*y");
+			sess.ProcessInput("hh = {Dawn: F[4,5], 2009-07-24: F[2,3]}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 20, 2009-07-24: 6}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_8 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: (9*7), 2009-07-24: false|true}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 63, 2009-07-24: true}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_9 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: -8 |> Abs, 2009-07-24: 42}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 8, 2009-07-24: 42}", r.Out);                
+		}
+
+		[Test]
+		public void TimeSeries_10 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("hh = {Dawn: {1,3,5} |> Count, 2009-07-24: 42}");
+			Tvar r = (Tvar)sess.ProcessInput("hh");
+			Assert.AreEqual("{Dawn: 3, 2009-07-24: 42}", r.Out);                
 		}
 
 		[Test]

@@ -39,7 +39,7 @@ namespace Akkadian.UnitTests
 
             Tvar r = tb.RunningElapsedIntervals(TheDay);
 
-            Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/4/2015: 2}", r.Out);    
+			Assert.AreEqual("{Dawn: 0, 2015-01-02: 1, 2015-01-04: 2}", r.Out);    
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace Akkadian.UnitTests
 
             Tvar r = tb.RunningElapsedIntervals(TheDay);
 
-            Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/4/2015: 2; 1/5/2015: 3}", r.Out);    
+			Assert.AreEqual("{Dawn: 0, 2015-01-02: 1, 2015-01-04: 2, 2015-01-05: 3}", r.Out);    
         }
     }
 }

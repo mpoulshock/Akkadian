@@ -237,7 +237,7 @@ namespace Akkadian.UnitTests
             t.AddState(new DateTime(2000,1,1), 7);
 
             Tvar res = t / 7;
-            Assert.AreEqual("{Dawn: 0; 1/1/2000: 1}", res.Out);        
+			Assert.AreEqual("{Dawn: 0, 2000-01-01: 1}", res.Out);        
         }
 
         // MODULO
@@ -358,7 +358,7 @@ namespace Akkadian.UnitTests
         {
             Tvar x = new Tvar(10);
             x.AddState(new DateTime(2000,1,1), 1);
-            Assert.AreEqual("{Dawn: 11; 1/1/2000: 2}", (x+1).Out );    
+			Assert.AreEqual("{Dawn: 11, 2000-01-01: 2}", (x+1).Out );    
         }
         
         [Test]
@@ -366,7 +366,7 @@ namespace Akkadian.UnitTests
         {
             Tvar x = new Tvar(10);
             x.AddState(new DateTime(2000,1,1), 1);
-            Assert.AreEqual("{Dawn: 9; 1/1/2000: 0}", (x-1).Out );    
+			Assert.AreEqual("{Dawn: 9, 2000-01-01: 0}", (x-1).Out );    
         }
 
         // Pow(a,b)

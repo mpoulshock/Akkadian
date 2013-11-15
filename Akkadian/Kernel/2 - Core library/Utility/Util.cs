@@ -85,38 +85,14 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Returns the first first-level set of {}s or ()s in the input string.
+		/// Returns the substring that's the innermost parenthetical expression.
 		/// </summary>
-		public static string FirstParenthetical(string clause, string open, string close)
+		public static string InnermostParenthetical(string clause)
 		{
-			int start = clause.IndexOf(open);
-			if (start == -1) return "";
-
-			string substr = "";
-			int bracketLevel = 0;
-
-			// Iterate through clause from first "{" to find its spouse, "}"
-			for (int counter = start; counter < clause.Length; counter++)
-			{
-				if (clause[counter] == Convert.ToChar(open))
-					bracketLevel++;
-				else if (clause[counter] == Convert.ToChar(close))
-					bracketLevel--;
-				if (bracketLevel == 0)
-				{
-					substr = clause.Substring(start,counter-start+1);
-					return substr;
-				}
-			}
-			return substr;
+			Regex rex = new Regex(@"\([-a-zA-Z0-9+/\.\|><=!*,&\{\}# ]*\)");
+			var m = rex.Match(clause);
+			if (m.Success) 	return m.Value;
+			return "";
 		}
-
-//		public static string FirstParenthetical(string clause, string open, string close)
-//		{
-//			Regex rex = new Regex(@"\([-a-zA-Z0-9\+/\.\|><=!\*,& ]+\)");
-//			var m = rex.Match(clause);
-//			if (m.Success) 	return m.Value;
-//			return "";
-//		}
     }
 }

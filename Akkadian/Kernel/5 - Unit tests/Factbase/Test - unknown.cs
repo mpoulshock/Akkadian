@@ -57,7 +57,7 @@ namespace Akkadian.UnitTests
         {
             Tvar n2 = new Tvar(4);
             Tvar result = tnv() + n2;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - subtraction
@@ -75,7 +75,7 @@ namespace Akkadian.UnitTests
         {
             Tvar n2 = new Tvar(4);
             Tvar result = tnv() - n2;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - multiplication
@@ -108,7 +108,7 @@ namespace Akkadian.UnitTests
         {
             Tvar n2 = new Tvar(4);
             Tvar result = tnv() * n2;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - div
@@ -118,7 +118,7 @@ namespace Akkadian.UnitTests
         {
             Tvar n2 = new Tvar(4);
             Tvar result = tnv() / n2;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - modulo
@@ -142,7 +142,7 @@ namespace Akkadian.UnitTests
         {
             Tvar n2 = new Tvar(4);
             Tvar result = tnv() % n2;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - abs
@@ -158,7 +158,7 @@ namespace Akkadian.UnitTests
         public void Unknown_Abs_2 ()
         {
             Tvar result = Abs(tnv());
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - round
@@ -174,20 +174,20 @@ namespace Akkadian.UnitTests
         public void Unknown_Round_2 ()
         {
             Tvar result = tnv().RoundToNearest(10);
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         [Test]
         public void Unknown_Round_3 ()
         {
             Tvar result = tnv().RoundUp(10);
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
         [Test]
         public void Unknown_Round_4 ()
         {
             Tvar result = tnv().RoundDown(10);
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
 
@@ -205,7 +205,7 @@ namespace Akkadian.UnitTests
         public void Unknown_Min_2 ()
         {
             Tvar result = Min(tnv(),3);
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Math - max
@@ -222,7 +222,7 @@ namespace Akkadian.UnitTests
         public void Unknown_Max_2 ()
         {
             Tvar result = Max(tnv(),3);
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", result.Out);        
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", result.Out);        
         }
 
         // Tvar.Lean
@@ -344,14 +344,14 @@ namespace Akkadian.UnitTests
         public void Unknown_NumericComparison1 ()
         {
             Tvar r = tnv() > 7;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", r.Out);    
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", r.Out);    
         }
 
         [Test]
         public void Unknown_NumericComparison2 ()
         {
             Tvar r = tnv() == 7;
-            Assert.AreEqual("{Dawn: Stub; 1/1/2001: Uncertain; 1/1/2002: Unstated}", r.Out);    
+			Assert.AreEqual("{Dawn: Stub, 2001-01-01: Uncertain, 2002-01-01: Unstated}", r.Out);    
         }
 
         [Test]

@@ -35,7 +35,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2012, 1, 1), 1000);
             t.AddState(Date(2012, 3, 1), 0);
             Tvar r = t.RunningSummedIntervals(TheMonth);           
-            Assert.AreEqual("{Dawn: 0; 2/1/2012: 1000; 3/1/2012: 2000}", r.Out);    
+			Assert.AreEqual("{Dawn: 0, 2012-02-01: 1000, 2012-03-01: 2000}", r.Out);    
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Akkadian.UnitTests
             Tvar t = new Tvar(1000);
             t.AddState(Date(2013, 1, 1), 2000);
             Tvar r = t.SlidingSummedIntervals(TheYear, 2);           
-            Assert.AreEqual("{Dawn: 2000; 1/1/2014: 3000; 1/1/2015: 4000}", r.Out);    
+			Assert.AreEqual("{Dawn: 2000, 2014-01-01: 3000, 2015-01-01: 4000}", r.Out);    
         }
 
         [Test]

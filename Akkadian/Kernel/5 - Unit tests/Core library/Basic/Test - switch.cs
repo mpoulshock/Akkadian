@@ -129,7 +129,7 @@ namespace Akkadian.UnitTests
             Tvar result = Switch(()=> x <= 1, ()=> new Tvar(1),
                                  ()=> 2);   
             
-            Assert.AreEqual("{Dawn: 2; 1/1/2000: 1}", result.Out);        
+			Assert.AreEqual("{Dawn: 2, 2000-01-01: 1}", result.Out);        
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Akkadian.UnitTests
             Tvar result = Switch(()=> x >= 5, ()=> new Tvar(1),
                                  ()=> 2);   
             
-            Assert.AreEqual("{Dawn: 1; 1/1/2000: 2}", result.Out);        
+			Assert.AreEqual("{Dawn: 1, 2000-01-01: 2}", result.Out);        
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace Akkadian.UnitTests
                                  ()=> true, ()=> new Tvar(42),
                                  ()=> new Tvar(43));   
             
-            Assert.AreEqual("{Dawn: 41; 1/1/2000: 42}", result.Out);        
+			Assert.AreEqual("{Dawn: 41, 2000-01-01: 42}", result.Out);        
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace Akkadian.UnitTests
                                  ()=> tb2, ()=> new Tvar(42),
                                  ()=> new Tvar(43));   
             
-            Assert.AreEqual("{Dawn: 41; 1/1/2000: 43}", result.Out);        
+			Assert.AreEqual("{Dawn: 41, 2000-01-01: 43}", result.Out);        
         }
 
         // Switch<Tvar>
@@ -237,7 +237,7 @@ namespace Akkadian.UnitTests
             tn2.AddState(Date(2003,1,1), unst);
 
             Tvar result = Util.MergeTvars(tn1,tn2);
-            Assert.AreEqual("{Dawn: 0; 1/1/2000: 1; 1/1/2001: 2; 1/1/2002: 3; 1/1/2003: Null}", result.Out);        
+			Assert.AreEqual("{Dawn: 0, 2000-01-01: 1, 2001-01-01: 2, 2002-01-01: 3, 2003-01-01: Null}", result.Out);        
         }
 
         [Test]

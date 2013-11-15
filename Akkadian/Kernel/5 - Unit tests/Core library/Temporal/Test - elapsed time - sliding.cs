@@ -37,7 +37,7 @@ namespace Akkadian.UnitTests
 
             Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
 
-            Assert.AreEqual("{Dawn: 0; 1/2/2015: 1; 1/3/2015: 2; 1/4/2015: 1; 1/5/2015: 0}", r.Out);    
+			Assert.AreEqual("{Dawn: 0, 2015-01-02: 1, 2015-01-03: 2, 2015-01-04: 1, 2015-01-05: 0}", r.Out);    
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,2,18),false);
 
             Tvar r = tb.SlidingElapsedIntervals(TheDay, 2);
-            string tline = "{Dawn: 0; 1/2/2015: 1; 1/3/2015: 2; 1/4/2015: 1; 1/5/2015: 0; " +
-                "1/11/2015: 1; 1/12/2015: 2; 2/19/2015: 1; 2/20/2015: 0}"; 
+			string tline = "{Dawn: 0, 2015-01-02: 1, 2015-01-03: 2, 2015-01-04: 1, 2015-01-05: 0, " +
+			               "2015-01-11: 1, 2015-01-12: 2, 2015-02-19: 1, 2015-02-20: 0}"; 
 
             Assert.AreEqual(tline, r.Out);    
         }
@@ -103,7 +103,7 @@ namespace Akkadian.UnitTests
             Tvar t = new Tvar(true);
             t.AddState(Date(2012,1,1), false);
             Tvar actual = t.SlidingElapsedIntervals(TheYear, 2);
-            Assert.AreEqual("{Dawn: 0; 1/1/1801: 1; 1/1/1802: 2; 1/1/2013: 1; 1/1/2014: 0}", actual.Out);
+			Assert.AreEqual("{Dawn: 0, 1801-01-01: 1, 1802-01-01: 2, 2013-01-01: 1, 2014-01-01: 0}", actual.Out);
         }
 
         [Test]

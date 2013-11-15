@@ -79,7 +79,7 @@ namespace Akkadian.UnitTests
             Tvar x = new Tvar();
             x.AddState(Time.DawnOf, 10);
             x.AddState(new DateTime(2000,1,1), 1);
-            Assert.AreEqual("{Dawn: 89; 1/1/2000: 1}", TemporalFibonacci(x).Out);    
+			Assert.AreEqual("{Dawn: 89, 2000-01-01: 1}", TemporalFibonacci(x).Out);    
         }
         
         private static Tvar TemporalFibonacci(Tvar x)

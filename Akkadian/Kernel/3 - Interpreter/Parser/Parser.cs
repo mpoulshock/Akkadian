@@ -124,7 +124,7 @@ namespace Akkadian
 			s = s.Trim();
 
 			// Parentheses
-			string fp = Util.FirstParenthetical(s,"(",")");
+			string fp = Util.InnermostParenthetical(s);
 			if (fp != "")
 			{
 				// Replace the nested text with #n#
@@ -132,37 +132,6 @@ namespace Akkadian
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
 				Node newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
-			}
-
-			// Set and time-series literals
-			if (s.StartsWith("{") && s.EndsWith("}"))
-			{
-				string[] members = Util.RemoveParens(s).Split(',');
-
-				// Sets
-				if (IsExactMatch(s,setLiteral))
-				{
-					// TODO: Handle nested Tsets
-					List<object> mems = new List<object>();
-					foreach (string mem in members) mems.Add(mem);
-					return nTvar(Tvar.MakeTset(mems));
-				}
-
-				// Time series literal, such as {Dawn: Stub, 2009-07-24: $7.25}
-				Tvar tv = new Tvar();
-				foreach (string mem in members)
-				{
-					// 2009-07-24: $7.25
-					int colon = mem.IndexOf(":");
-					string datePart = mem.Substring(0,colon);
-					if (datePart == "Dawn") datePart = "1800-01-01";
-
-					string valPart = mem.Substring(colon+1);
-					valPart = valPart.Trim().Replace("$","");
-
-					tv.AddState(DateTime.Parse(datePart), Convert.ToDecimal(valPart));
-				}
-				return nTvar(tv);
 			}
 
 			// Pipelined functions |>
@@ -212,6 +181,44 @@ namespace Akkadian
 				Node newStr = n(Typ.Expr,new Expr(fCallNodes));
 
 				return AddToSubExprListAndParse(s, newStrToParse, newStr ,subExprs, argNames);
+			}
+
+			// Set and time-series literals
+			if (s.StartsWith("{") && s.EndsWith("}"))
+			{
+				string[] members = Util.RemoveParens(s).Split(',');
+
+				// Sets
+				if (IsExactMatch(s,setLiteral))
+				{
+					// TODO: Handle nested Tsets
+					List<object> mems = new List<object>();
+					foreach (string mem in members) mems.Add(mem);
+					return nTvar(Tvar.MakeTset(mems));
+				}
+
+				// Time series literals, such as {Dawn: Stub, 2009-07-24: $7.25}
+				List<Node> switchParts = new List<Node>(){n(Typ.Op,Op.Switch)};
+				for (int i=members.Length-1; i>=0; i--)
+				{
+					// Parse the date-value pair, e.g. 2009-07-24: $7.25
+					string mem = members[i];
+					int colon = mem.IndexOf(":");
+					string datePart = mem.Substring(0,colon);
+					string valPart = mem.Substring(colon+1);
+
+					// Boolean input to switch: IsAtOrAfter[datePart]
+					List<Node> subNodes = new List<Node>(){n(Typ.Op,Op.IsAtOrAfter)};
+					subNodes.Add(ParseFcn(datePart,subExprs,argNames));
+					Node boolNode = n(Typ.Expr,new Expr(subNodes));
+					switchParts.Add(boolNode);
+
+					// Value input to switch
+					switchParts.Add(ParseFcn(valPart,subExprs,argNames));
+				}
+
+				Expr tsExpr = new Expr(switchParts);
+				return n(Typ.Expr,tsExpr);
 			}
 
 			// Switch

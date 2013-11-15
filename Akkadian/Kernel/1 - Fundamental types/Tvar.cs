@@ -150,12 +150,12 @@ namespace Akkadian
                     
                     foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
                     {
-                        string date = de.Key.ToString().Replace("1/1/1800", "Dawn");
+						string date = de.Key.ToString("yyyy-MM-dd").Replace("1800-01-01", "Dawn");
                         date = date.Replace(" 12:00:00 AM", "");
                         string val = de.Value.ToString.Replace("True","true").Replace("False","false");
-                        result += date + ": " + val + "; ";
+						result += date + ": " + val + ", ";
                     }
-                    return result.TrimEnd(' ', ';') + "}";
+					return result.TrimEnd(' ', ',') + "}";
                 }
             }
         }
