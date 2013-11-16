@@ -60,44 +60,21 @@ namespace Akkadian
 		{
 			s = s.Trim();
 
-			// This could be much cleaner with the proper regex...
-
-			// Matches variable declarations (e.g. Pi = 3.14159)
-			if (IsExactMatch(s, fcnNameRegex + white + "=" + white + parens(wildcard)))
+			// Match a rule, e.g. F[x] = x*4 or Pi = 3.14
+			Regex rex = new Regex(fcnSignature + white + "=" + white + parens(wildcard));
+			var pipeMatch = rex.Match(s);
+			if (pipeMatch.Success)
 			{
-				// Identify the function name
-				int eq = s.IndexOf("=");
-				string fcnSig = s.Substring(0,eq).Trim();
+				// Get parts of the expression
+				string fName = pipeMatch.Groups[1].Value;
+				string argList = pipeMatch.Groups[3].Value;
+				string fcnText = pipeMatch.Groups[4].Value;
 
-				// Parse the expression to the right of the = sign
-				string fcnText = s.Substring(eq + 1).Trim();
-				Node parsedFcn = ParseFcn(fcnText, new List<Node>(), new string[]{}); 
+				// Process arguments (if any)
+				string[] argArray = new string[]{};
+				if (argList != null) argArray = argList.Trim().Split(',');
 
-				if (!OperatorRegistry.ContainsKey(fcnSig))
-				{
-					return new ParserResponse(parsedFcn, true, fcnSig);
-				}
-				else 
-				{
-					// Error: Function name is reserved
-				}
-			}
-
-			// Matches function declarations (e.g. F[x] = x + 1)
-			if (IsExactMatch(s, fcnSignature + white + "=" + white + parens(wildcard)))
-			{
-				// Identify the function name
-				int eq = s.IndexOf("=");
-				string fcnSig = s.Substring(0,eq).Trim();
-				int firstBrack = fcnSig.IndexOf("[");
-				string fName = fcnSig.Substring(0,firstBrack);
-
-				// Identify variable names in the function signature
-				string args = fcnSig.Substring(firstBrack + 1).Trim(']');
-				string[] argArray = args.Split(',');
-
-				// Parse the expression to the right of the = sign
-				string fcnText = s.Substring(eq + 1).Trim();
+				// Parse the function
 				Node parsedFcn = ParseFcn(fcnText, new List<Node>(), argArray); 
 
 				if (!OperatorRegistry.ContainsKey(fName))
@@ -109,9 +86,6 @@ namespace Akkadian
 					// Error: Function name is reserved
 				}
 			}
-
-			// Special maintenance risk: Put set literals in parentheses  :)
-//			s = s.Replace("{","({").Replace("}","})");
 
 			return new ParserResponse(ParseFcn(s));
 		}

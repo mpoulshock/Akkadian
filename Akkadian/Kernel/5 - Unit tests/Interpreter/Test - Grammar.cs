@@ -197,6 +197,18 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Regex_FcnSig_8 ()
+		{
+			Assert.IsTrue(IsExactMatch("FedMinWage",fcnSignature));
+		}
+
+		[Test]
+		public void Regex_FcnSig_9 ()
+		{
+			Assert.IsFalse(IsExactMatch("999",fcnSignature));
+		}
+
+		[Test]
 		public void Regex_FcnVar_1 ()
 		{
 			Assert.IsTrue(IsExactMatch("z",fcnVariable));
