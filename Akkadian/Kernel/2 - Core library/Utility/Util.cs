@@ -100,7 +100,7 @@ namespace Akkadian
 		/// </summary>
 		public static string FirstSetLiteral(string clause)
 		{
-			Regex rex = new Regex(@"\{[-a-zA-Z0-9\.', ]*\}");
+			Regex rex = new Regex(@"\{[-a-zA-Z0-9\.',# ]*\}");
 			var m = rex.Match(clause);
 			if (m.Success) 	return m.Value;
 			return "";

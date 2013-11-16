@@ -1062,6 +1062,14 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Tset_3 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{A,B, {C,D}}");
+			Assert.AreEqual("{A,B,{C,D}}", r.Out);                
+		}
+
+		[Test]
 		public void ToUSD ()
 		{
 			Session sess = new Session();
