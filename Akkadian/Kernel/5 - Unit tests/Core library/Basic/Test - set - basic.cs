@@ -42,7 +42,7 @@ namespace Akkadian.UnitTests
             s1.AddState(Time.DawnOf, P1);
             s1.AddState(Time.DawnOf.AddYears(1), P1);
             Tvar s2 = new Tvar(s1);
-            Assert.AreEqual("P1", s2.LeanTset.Out); 
+			Assert.AreEqual("{P1}", s2.LeanTset.Out); 
         }
         
         // .Lean
@@ -53,7 +53,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = new Tvar();
             s1.AddState(Time.DawnOf, P1);
             s1.AddState(Time.DawnOf.AddYears(1), P1);
-            Assert.AreEqual("P1", s1.LeanTset.Out);
+			Assert.AreEqual("{P1}", s1.LeanTset.Out);
         }
         
         // .AsOf
@@ -64,7 +64,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = new Tvar();
             s1.AddState(Time.DawnOf, P1);
             s1.AddState(Time.DawnOf.AddYears(1), P2);
-            Assert.AreEqual("P2", s1.AsOf(Time.DawnOf.AddYears(2)).Out);        // Lean not working
+			Assert.AreEqual("{P2}", s1.AsOf(Time.DawnOf.AddYears(2)).Out);        // Lean not working
         }
         
         [Test]
@@ -73,7 +73,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = new Tvar();
             s1.AddState(Time.DawnOf, P1, P2);
             s1.AddState(Time.DawnOf.AddYears(3), P2);
-            Assert.AreEqual("P1,P2", s1.AsOf(Time.DawnOf.AddYears(2)).Out);        // Lean not working
+			Assert.AreEqual("{P1,P2}", s1.AsOf(Time.DawnOf.AddYears(2)).Out);        // Lean not working
         }
         
         
@@ -82,7 +82,7 @@ namespace Akkadian.UnitTests
         [Test]
         public void Test1_1 ()
         {
-			Assert.AreEqual("P1,P2", MakeTset(P1,P2).Out);        
+			Assert.AreEqual("{P1,P2}", MakeTset(P1,P2).Out);        
         }
         
         [Test]
@@ -90,7 +90,7 @@ namespace Akkadian.UnitTests
         {
             Tvar s1 = new Tvar();
             s1.SetEternally();
-            Assert.AreEqual("", s1.Out);        
+			Assert.AreEqual("{}", s1.Out);        
         }
         
         // .Count
@@ -238,7 +238,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(P1,P2);
 			Tvar s2 = MakeTset(P2,P3);
             Tvar res = Union(s1, s2);
-            Assert.AreEqual("P1,P2,P3", res.Out);        
+			Assert.AreEqual("{P1,P2,P3}", res.Out);        
         }
         
         [Test]
@@ -247,7 +247,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(P1);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Union(s1, s2);
-            Assert.AreEqual("P1,P2,P3", res.Out);        
+			Assert.AreEqual("{P1,P2,P3}", res.Out);        
         }
         
         [Test]
@@ -257,7 +257,7 @@ namespace Akkadian.UnitTests
             s1.SetEternally();
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Union(s1, s2);
-            Assert.AreEqual("P2,P3", res.Out);        
+			Assert.AreEqual("{P2,P3}", res.Out);        
         }
 
         [Test]
@@ -266,7 +266,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = new Tvar(Hstate.Stub);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Union(s1, s2);
-            Assert.AreEqual("Stub", res.Out);        
+			Assert.AreEqual("Stub", res.Out);        
         }
 
         // Intersection
@@ -277,7 +277,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(P1,P2);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Intersection(s1, s2);
-            Assert.AreEqual("P2", res.Out);        
+			Assert.AreEqual("{P2}", res.Out);        
         }
         
         [Test]
@@ -286,7 +286,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = MakeTset(P1);
             Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Intersection(s1, s2);
-            Assert.AreEqual("", res.Out);        
+			Assert.AreEqual("{}", res.Out);        
         }
         
         [Test]
@@ -296,7 +296,7 @@ namespace Akkadian.UnitTests
             s1.SetEternally();
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Intersection(s1, s2);
-            Assert.AreEqual("", res.Out);        
+			Assert.AreEqual("{}", res.Out);        
         }
         
         [Test]
@@ -305,7 +305,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(P1,P2,P3);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Intersection(s1, s2);
-            Assert.AreEqual("P2,P3", res.Out);        
+			Assert.AreEqual("{P2,P3}", res.Out);        
         }
 
         [Test]
@@ -314,7 +314,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = new Tvar(Hstate.Stub);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = Intersection(s1, s2);
-            Assert.AreEqual("Stub", res.Out);        
+			Assert.AreEqual("Stub", res.Out);        
         }
 
         // Relative complement
@@ -325,7 +325,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = MakeTset(P1,P2);
             Tvar s2 = MakeTset(P2,P3);
 			Tvar res = RelativeComplement(s1,s2);
-            Assert.AreEqual("P1", res.Out);        
+			Assert.AreEqual("{P1}", res.Out);        
         }
         
         [Test]
@@ -334,7 +334,7 @@ namespace Akkadian.UnitTests
             Tvar s1 = MakeTset(P1);
             Tvar s2 = MakeTset(P2,P3);
 			Tvar res = RelativeComplement(s1,s2);
-            Assert.AreEqual("P1", res.Out);        
+			Assert.AreEqual("{P1}", res.Out);        
         }
         
         [Test]
@@ -344,7 +344,7 @@ namespace Akkadian.UnitTests
             s1.SetEternally();
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = RelativeComplement(s1,s2);
-            Assert.AreEqual("", res.Out);        
+			Assert.AreEqual("{}", res.Out);        
         }
         
         [Test]
@@ -353,7 +353,7 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(P1,P2,P3);
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = RelativeComplement(s1,s2);
-            Assert.AreEqual("P1", res.Out);        
+			Assert.AreEqual("{P1}", res.Out);        
         }
         
         [Test]
@@ -363,7 +363,7 @@ namespace Akkadian.UnitTests
 			s1.SetEternally();
 			Tvar s2 = MakeTset(P2,P3);
 			Tvar res = RelativeComplement(s2,s1);
-			Assert.AreEqual("P2,P3", res.Out);        
+			Assert.AreEqual("{P2,P3}", res.Out);        
         }
 
         [Test]
@@ -439,7 +439,7 @@ namespace Akkadian.UnitTests
         public void Reverse1 ()
         {
 			Tvar s1 = MakeTset(P1,P2,P3);
-            Assert.AreEqual("P3,P2,P1", s1.Reverse.Out);        
+			Assert.AreEqual("{P3,P2,P1}", s1.Reverse.Out);        
         }
 
         [Test]
@@ -447,24 +447,6 @@ namespace Akkadian.UnitTests
         {
             Tvar s1 = new Tvar(Hstate.Unstated);
             Assert.AreEqual("Unstated", s1.Reverse.Out);        
-        }
-
-        // Tvar.Out
-
-        [Test]
-        public void TestOutput1 ()
-        {
-            string val = "ham; beans";
-            string[] items = val.Split(new char[] {';'});
-			List<object> list = new List<object>();
-
-            foreach (string i in items)
-            {
-                list.Add(i.Trim());
-            }
-
-			Tvar result = MakeTset(list);
-            Assert.AreEqual("ham,beans", result.Out);        
         }
     }
 }

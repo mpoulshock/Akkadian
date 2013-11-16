@@ -94,5 +94,16 @@ namespace Akkadian
 			if (m.Success) 	return m.Value;
 			return "";
 		}
+
+		/// <summary>
+		/// Returns the substring that's the first set literal in the expression.
+		/// </summary>
+		public static string FirstSetLiteral(string clause)
+		{
+			Regex rex = new Regex(@"\{[-a-zA-Z0-9\.', ]*\}");
+			var m = rex.Match(clause);
+			if (m.Success) 	return m.Value;
+			return "";
+		}
     }
 }

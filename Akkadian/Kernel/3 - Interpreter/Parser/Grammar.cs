@@ -38,7 +38,7 @@ namespace Akkadian
 		protected const string currencyLiteral = @"\$[0-9\.,]+";
 		protected const string stringLiteral = @"'" + wildcard + "'";	// TODO: Change to double quotes
 		protected const string dateLiteral = @"(1|2)[0-9]{3}\-(0[1-9]|1[0-2])\-(0[1-9]|[1-2][0-9]|30|31)";		// yyyy-mm-dd
-		protected const string setLiteral = @"{[a-zA-Z0-9,\.{}' ]*}";
+		protected const string setLiteral = @"{[a-zA-Z0-9,\.{}'# ]*}";
 
 		// Time-varying literal values like "Dawn: 42, 2011-01-01: 43;"
 		protected const string timeSeriesLiteral = "(Dawn|DawnOfTime|" + dateLiteral + @"):[-a-zA-Z0-9,\.{}': ]+;";

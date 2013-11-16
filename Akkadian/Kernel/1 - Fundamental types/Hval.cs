@@ -161,12 +161,12 @@ namespace Akkadian
         /// </summary>
         public string ToSerializedSet()
         {
-            string result = "";
+			string result = "{";
 			foreach(object t in (List<object>)this.Obj)
             {
 				result += t.ToString() + ",";
             }
-            return result.TrimEnd(',',' ');
+			return result.TrimEnd(',',' ') + "}";
         }
 
         /// <summary>

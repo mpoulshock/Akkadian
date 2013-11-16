@@ -705,19 +705,11 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Misc_26_SetLiteral ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{A,B,C}");
-			Assert.AreEqual("A,B,C", r.Out);                
-		}
-
-		[Test]
 		public void Misc_27_EmptySet ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{}");
-			Assert.AreEqual("", r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("{  }");
+			Assert.AreEqual("{}", r.Out);                
 		}
 
 		[Test]
@@ -834,7 +826,7 @@ namespace Akkadian.UnitTests
 			Thing B = new Thing ("B");
 			Expr exp = expr(n(Typ.Op,Op.Reverse), n(Typ.Tvar,Tvar.MakeTset(A,B)));
 			Tvar r = (Tvar)sess.eval(exp).obj;
-			Assert.AreEqual("B,A", r.Out);               
+			Assert.AreEqual("{B,A}", r.Out);               
 		}
 
 		[Test]
@@ -1058,7 +1050,7 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{A,B,C}");
-			Assert.AreEqual("A,B,C", r.Out);                
+			Assert.AreEqual("{A,B,C}", r.Out);                
 		}
 
 		[Test]
@@ -1066,7 +1058,7 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("Union[{A,B,C},{D,E}]");
-			Assert.AreEqual("A,B,C,D,E", r.Out);                
+			Assert.AreEqual("{A,B,C,D,E}", r.Out);                
 		}
 
 		[Test]

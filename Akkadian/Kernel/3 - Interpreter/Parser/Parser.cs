@@ -111,7 +111,7 @@ namespace Akkadian
 			}
 
 			// Special maintenance risk: Put set literals in parentheses  :)
-			s = s.Replace("{","({").Replace("}","})");
+//			s = s.Replace("{","({").Replace("}","})");
 
 			return new ParserResponse(ParseFcn(s));
 		}
@@ -131,6 +131,23 @@ namespace Akkadian
 				string index = Convert.ToString(subExprs.Count);
 				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
 				Node newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+			}
+
+			// Set literals, e.g. {1,3,5}
+			string innerSet = Util.FirstSetLiteral(s);
+			if (innerSet != "")
+			{
+				// Replace the nested text with #n#
+				string index = Convert.ToString(subExprs.Count);
+				string newStrToParse = s.Replace(innerSet, delimiter + index + delimiter);
+
+				// TODO: Handle nested Tsets
+				string[] members = Util.RemoveParens(innerSet).Split(',');
+				List<object> mems = new List<object>();
+				foreach (string mem in members) mems.Add(mem.Trim());
+				Node newStr =  nTvar(Tvar.MakeTset(mems));
+
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 			}
 
@@ -186,18 +203,8 @@ namespace Akkadian
 			// Set and time-series literals
 			if (s.StartsWith("{") && s.EndsWith("}"))
 			{
-				string[] members = Util.RemoveParens(s).Split(',');
-
-				// Sets
-				if (IsExactMatch(s,setLiteral))
-				{
-					// TODO: Handle nested Tsets
-					List<object> mems = new List<object>();
-					foreach (string mem in members) mems.Add(mem);
-					return nTvar(Tvar.MakeTset(mems));
-				}
-
 				// Time series literals, such as {Dawn: Stub, 2009-07-24: $7.25}
+				string[] members = Util.RemoveParens(s).Split(',');
 				List<Node> switchParts = new List<Node>(){n(Typ.Op,Op.Switch)};
 				for (int i=members.Length-1; i>=0; i--)
 				{

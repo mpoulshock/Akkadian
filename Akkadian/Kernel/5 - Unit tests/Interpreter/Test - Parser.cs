@@ -62,5 +62,29 @@ namespace Akkadian.UnitTests
 		{
 			Assert.AreEqual("(22*2)", Util.InnermostParenthetical("((22*2) + 1)"));                
 		}
+
+		[Test]
+		public void FirstSetLiteral_1 ()
+		{
+			Assert.AreEqual("{1,3,5}", Util.FirstSetLiteral("hh = {Dawn: {1,3,5} |> Count, 2009-07-24: 42}"));                
+		}
+
+		[Test]
+		public void FirstSetLiteral_2 ()
+		{
+			Assert.AreEqual("{A,B,C}", Util.FirstSetLiteral("Union[{A,B,C},{D,E}]"));                
+		}
+
+		[Test]
+		public void FirstSetLiteral_3 ()
+		{
+			Assert.AreEqual("{1}", Util.FirstSetLiteral("hh = {Dawn: {1}, 2009-07-24: {1, 2}}"));                
+		}
+
+		[Test]
+		public void FirstSetLiteral_4 ()
+		{
+			Assert.AreEqual("{1, 2}", Util.FirstSetLiteral("hh = {Dawn: #0#, 2009-07-24: {1, 2}}"));                
+		}
 	}
 }
