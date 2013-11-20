@@ -448,5 +448,14 @@ namespace Akkadian.UnitTests
             Tvar s1 = new Tvar(Hstate.Unstated);
             Assert.AreEqual("Unstated", s1.Reverse.Out);        
         }
+
+		// Sum
+
+		[Test]
+		public void Sum1 ()
+		{
+			Tvar s1 = MakeTset(1,3,5,7,9);
+			Assert.AreEqual(25, s1.SumItems.Out);        
+		}
     }
 }

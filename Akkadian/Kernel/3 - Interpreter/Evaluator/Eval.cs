@@ -31,6 +31,8 @@ namespace Akkadian
 		/// </summary>
 		public Node eval(Expr exp, Expr args)
 		{
+//			Console.WriteLine(exp.ToString());
+
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
 
@@ -66,6 +68,10 @@ namespace Akkadian
 				else if (opType == Op.Max || opType == Op.Min || opType == Op.BoolCount)
 				{
 					return MultiTvarFcnEval(exp, args, opType);
+				}
+				else if (opType == Op.Map)
+				{
+					return EvalMap(exp,args);
 				}
 			}
 			else if (typ == Typ.Fcn)
@@ -116,21 +122,25 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Evaluates an expression referencing a higher order function.
+		/// Evaluates an expression referencing a variable.
 		/// </summary>
 		private Node EvaluateVariableReferences(Expr exp, Expr args)
 		{
 			object ob = exp.nodes[0].obj;
 
+			// The Min function Handles wildcards to higher-order functions, 
+			// which are always the last item in the args list
+			int index = Math.Min(Convert.ToInt16(ob),args.nodes.Count-1);   
+
 			// Shortcut for ordinary variable references - faster
 			if (exp.nodes.Count == 1)
 			{
 				// Gets the variable value from vals, at the specificed index
-				return eval(args.nodes[Convert.ToInt16(ob)], args);
+				return eval(args.nodes[index], args);
 			}
 
 			// New expr is the function reference in args
-			Expr newExp = expr(args.nodes[Convert.ToInt16(ob)]);
+			Expr newExp = expr(args.nodes[index]);
 
 			return MixAndMatch(exp, args, newExp);
 		}

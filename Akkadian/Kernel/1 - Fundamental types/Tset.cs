@@ -298,6 +298,51 @@ namespace Akkadian
             list.Reverse();
             return new Hval(list);
         }
+
+		/// <summary>
+		/// Sums the items in a Tset composed of numbers.
+		/// </summary>
+		public Tvar SumItems
+		{
+			get
+			{
+				return ApplyFcnToTimeline(x => CoreTvarSumItems(x), this);
+			}
+		}
+		private static Hval CoreTvarSumItems(Hval h)
+		{
+			return ((List<object>)h.Val).Sum(item => Convert.ToDecimal(item));
+		}
+
+		/// <summary>
+		/// Finds the maximum in a Tset composed of numbers.
+		/// </summary>
+		public Tvar MaxItem
+		{
+			get
+			{
+				return ApplyFcnToTimeline(x => CoreTvarMaxItem(x), this);
+			}
+		}
+		private static Hval CoreTvarMaxItem(Hval h)
+		{
+			return ((List<object>)h.Val).Max(item => Convert.ToDecimal(item));
+		}
+
+		/// <summary>
+		/// Finds the minimum in a Tset composed of numbers.
+		/// </summary>
+		public Tvar MinItem
+		{
+			get
+			{
+				return ApplyFcnToTimeline(x => CoreTvarMinItem(x), this);
+			}
+		}
+		private static Hval CoreTvarMinItem(Hval h)
+		{
+			return ((List<object>)h.Val).Min(item => Convert.ToDecimal(item));
+		}
     }
 
     #pragma warning restore 660, 661

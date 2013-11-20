@@ -123,6 +123,9 @@ namespace Akkadian
 		IsBefore = 125,
 		Low = 126,
 		High = 127,
+		SetSum = 128,  // Sums a Tset of numbers
+		SetMin = 129,
+		SetMax = 130,
 
 		// Three arguments
 		Shift = 200,
@@ -142,6 +145,7 @@ namespace Akkadian
 		Min = 302,
 		BoolCount = 303,
 		Pipe = 304,		// Pipeline |>
+		Map = 305,
 
 		// Constants
 		Unstated = 400,
@@ -193,7 +197,6 @@ namespace Akkadian
 			OperatorRegistry.Add(@"\*",Op.Mult);
 
 			// Binary operators
-			OperatorRegistry.Add(@"\|>",Op.Pipe);
 			OperatorRegistry.Add(@"\+",Op.Plus);
 			OperatorRegistry.Add("-",Op.Minus);
 			OperatorRegistry.Add("/",Op.Div);
@@ -264,6 +267,9 @@ namespace Akkadian
 			OperatorRegistry.Add("IsBefore",Op.IsBefore);
 			OperatorRegistry.Add("Low",Op.Low);
 			OperatorRegistry.Add("High",Op.High);
+			OperatorRegistry.Add("SetSum",Op.SetSum);
+			OperatorRegistry.Add("SetMin",Op.SetMin);
+			OperatorRegistry.Add("SetMax",Op.SetMax);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);
@@ -278,10 +284,12 @@ namespace Akkadian
 			OperatorRegistry.Add("TotalElapsedIntervals",Op.TotalElapsedIntervals);
 
 			// Special
+			OperatorRegistry.Add(@"\|>",Op.Pipe);
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
 			OperatorRegistry.Add("BoolCount",Op.BoolCount);
+			OperatorRegistry.Add("Map",Op.Map);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);

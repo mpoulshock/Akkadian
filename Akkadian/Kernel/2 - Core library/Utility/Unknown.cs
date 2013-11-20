@@ -91,7 +91,7 @@ namespace Akkadian
         {
             return PrecedingState(Util.ListToArray<Hval>(list));
         }
-        protected static Hstate PrecedingState(params Hval[] list) 
+		public static Hstate PrecedingState(params Hval[] list) 
         {
             // This returns the minimum value of the listed Hstates, exploiting the fact that C# 
             // enums are actually integers.

@@ -26,67 +26,93 @@ namespace Akkadian
 {
 	public partial class Session
 	{
-//		/// <summary>
-//		/// Applies an aggregation function to a Tvar and an argument function.
-//		/// </summary>
-//		private T ApplyFcnToTvar<T>(Tvar theSet, 
-//		                                   Node argumentFcn, 
-//		                                   Func<List<Tuple<Thing,Hval>>,Hval> aggregationFcn) where T : Tvar
-//		{
-//			Dictionary<Thing,Tvar> fcnValues = new Dictionary<Thing,Tvar>();
-//			List<Tvar> listOfTvars = new List<Tvar>();
-//
-//			// Get the temporal value of each distinct entity in the set
-//			foreach(Thing le in Tvar.DistinctEntities(theSet))
-//			{
-//				// Func<Thing,Tvar> argumentFcn
-//				Tvar val = (Tvar)eval(argumentFcn, expr(n(Typ.Thing,le))).obj;
-//				fcnValues.Add(le, val);
-//				listOfTvars.Add(val);
-//			} 
-//
-//			// At each breakpoint, for each member of the set,
-//			// aggregate and analyze the values of the functions
-//			T result = (T)Akkadian.Util.ReturnProperTvar<T>();
-//			foreach(DateTime dt in Tvar.AggregatedTimePoints(theSet, listOfTvars))
-//			{
-//				Hval membersOfSet = theSet.ObjectAsOf(dt);
-//
-//				// If theSet is unknown...
-//				if (!membersOfSet.IsKnown)
-//				{
-//					result.AddState(dt, membersOfSet);
-//				}
-//				else
-//				{
-//					// Cube that gets sent to the aggregation function
-//					List<Tuple<Thing,Hval>> thingValPairs = new List<Tuple<Thing,Hval>>();
-//
-//					// Values to check for uncertainty
-//					List<Hval> values = new List<Hval>();
-//
-//					foreach(Thing le in (List<Thing>)membersOfSet.Val)
-//					{
-//						Tvar funcVal = (Tvar)fcnValues[le];    
-//						Hval funcValAt = funcVal.ObjectAsOf(dt);
-//						values.Add(funcValAt);
-//						thingValPairs.Add(new Tuple<Thing,Hval>(le,funcValAt));
-//					}
-//
-//					Hstate top = H.PrecedingState(values);
-//					if (top != Hstate.Known)
-//					{
-//						result.AddState(dt, new Hval(null, top));
-//					}
-//					else
-//					{
-//						// List<Tuple<Thing,Hval>>,Hval> aggregationFcn
-//						result.AddState(dt, aggregationFcn(thingValPairs));
-//					} 
-//				}
-//			}
-//
-//			return (T)result.Lean;
-//		}
+
+		// Filter2[IsFemale[_], thePeople]
+		public Tvar Filter2(Expr argumentFcn, Expr args, Tvar mainSet)
+		{
+			return ApplyFcnToTvar2(mainSet, argumentFcn, args, y => CoreFilter2(y)).LeanTset;
+		}
+		private static Hval CoreFilter2(List<Tuple<object,Hval>> list)
+		{
+			List<object> result = new List<object>();
+			foreach (Tuple<object,Hval> tu in list)
+			{
+				if (tu.Item2.IsTrue)
+				{
+					result.Add(tu.Item1);
+				}
+			}
+			return new Hval(result);
+		}
+
+		/// <summary>
+		/// Applies an aggregation function to a Tvar and an argument function.
+		/// </summary>
+		private Tvar ApplyFcnToTvar2(Tvar theSet, Expr argumentFcn, Expr args,
+									 Func<List<Tuple<object,Hval>>,Hval> aggregationFcn)
+		{
+			Dictionary<object,Tvar> fcnValues = new Dictionary<object,Tvar>();
+			List<Tvar> listOfTvars = new List<Tvar>();
+
+			// Get the temporal value of each distinct entity in the set
+			foreach(object le in Tvar.DistinctEntities(theSet))
+			{
+				// set * in args to le
+				List<Node> argNodes = args.nodes;
+				List<Node> argNodesWithSubstitution = new List<Node>();
+				foreach (Node node in argNodes)
+				{
+					argNodesWithSubstitution.Add(node);
+				}
+				Expr newArgs = new Expr(argNodesWithSubstitution);
+
+				Tvar val = (Tvar)this.eval(argumentFcn, newArgs).obj;
+				fcnValues.Add(le, val);
+				listOfTvars.Add(val);
+			} 
+
+			// At each breakpoint, for each member of the set,
+			// aggregate and analyze the values of the functions
+			Tvar result = new Tvar();
+			foreach(DateTime dt in Tvar.AggregatedTimePoints(theSet, listOfTvars))
+			{
+				Hval membersOfSet = theSet.ObjectAsOf(dt);
+
+				// If theSet is unknown...
+				if (!membersOfSet.IsKnown)
+				{
+					result.AddState(dt, membersOfSet);
+				}
+				else
+				{
+					// Cube that gets sent to the aggregation function
+					List<Tuple<object,Hval>> thingValPairs = new List<Tuple<object,Hval>>();
+
+					// Values to check for uncertainty
+					List<Hval> values = new List<Hval>();
+
+					foreach(object le in (List<object>)membersOfSet.Val)
+					{
+						Tvar funcVal = (Tvar)fcnValues[le];    
+						Hval funcValAt = funcVal.ObjectAsOf(dt);
+						values.Add(funcValAt);
+						thingValPairs.Add(new Tuple<object,Hval>(le,funcValAt));
+					}
+
+					Hstate top = H.PrecedingState(values);
+					if (top != Hstate.Known)
+					{
+						result.AddState(dt, new Hval(null, top));
+					}
+					else
+					{
+						// List<Tuple<object,Hval>>,Hval> aggregationFcn
+						result.AddState(dt, aggregationFcn(thingValPairs));
+					} 
+				}
+			}
+
+			return result.LeanTset;
+		}
 	}
 }

@@ -123,7 +123,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{} " + delimiter + @"]*\]").Match(s);
+			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{}_ " + delimiter + @"]*\]").Match(s);
 			if (m1.Success)
 			{
 				return ParseFunctionCalls(m1, s, subExprs, argNames);
@@ -184,6 +184,12 @@ namespace Akkadian
 				{
 					if (s == argNames[i]) return n(Typ.Var,i);
 				}
+			}
+
+			// Wildcard for higher-order functions
+			if (s == "_")
+			{
+				return n(Typ.Var,Int16.MaxValue);
 			}
 
 			// Boolean and string literal values
@@ -248,7 +254,7 @@ namespace Akkadian
 //					if (theMem.Contains("#")) mems.Add(ParseFcn(theMem, subExprs, argNames)); 
 //					else mems.Add(theMem);
 //				}
-			Node newStr =  nTvar(Tvar.MakeTset(mems));
+			Node newStr = nTvar(Tvar.MakeTset(mems));
 
 			return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 		}

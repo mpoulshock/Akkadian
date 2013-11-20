@@ -109,7 +109,9 @@ namespace Akkadian
 			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
 			if (op == Op.IsEmpty)   		{ return nTvar(((Tvar)ob1).IsEmpty); }
 			if (op == Op.Reverse)   		{ return nTvar(((Tvar)ob1).Reverse); }
-//			if (op == Op.ToThing)   		{ return n(Typ.Thing, ((Tvar)ob1).ToThing); }
+			if (op == Op.SetSum)   			{ return nTvar(((Tvar)ob1).SumItems); }
+			if (op == Op.SetMax)   			{ return nTvar(((Tvar)ob1).MaxItem); }
+			if (op == Op.SetMin)   			{ return nTvar(((Tvar)ob1).MinItem); }
 
 			if (op == Op.Day)   			{ return nTvar(((Tvar)ob1).Day); }
 			if (op == Op.Month)				{ return nTvar(((Tvar)ob1).Month); }
@@ -118,8 +120,8 @@ namespace Akkadian
 			if (op == Op.Year)   			{ return nTvar(((Tvar)ob1).Year); }
 			if (op == Op.IsAtOrAfter)   	{ return nTvar( Time.IsAtOrAfter((Tvar)ob1)); }
 			if (op == Op.IsBefore)   		{ return nTvar( Time.IsBefore((Tvar)ob1)); }
-			if (op == Op.Low)   	{ return nTvar(((Tvar)ob1).Min()); }
-			if (op == Op.High)   	{ return nTvar(((Tvar)ob1).Max()); }
+			if (op == Op.Low)   			{ return nTvar(((Tvar)ob1).Min()); }
+			if (op == Op.High)   			{ return nTvar(((Tvar)ob1).Max()); }
 			if (op == Op.DateFirstTrue)   	{ return nTvar(((Tvar)ob1).DateFirstTrue); }
 			if (op == Op.DateLastTrue)   	{ return nTvar(((Tvar)ob1).DateLastTrue); }
 			if (op == Op.DaysToYears)   	{ return nTvar(((Tvar)ob1).DaysToYears); }
@@ -224,6 +226,61 @@ namespace Akkadian
 
 			return n(Typ.Null,null);
 		}
+
+		/// <summary>
+		/// Evaluates expressions with two arguments.
+		/// </summary>
+		private Node EvalMap(Expr exp, Expr args)
+		{
+			// E.g., Map[Sq[_],someSet]
+			Tvar theSet = (Tvar)eval(expr(exp.nodes[2]),args).obj;
+
+			Tvar result = new Tvar();
+
+			// Foreach interval in theSet
+			foreach(KeyValuePair<DateTime,Hval> slice in theSet.IntervalValues)
+			{  
+				// Handle unknowns
+				Hstate top = Tvar.PrecedingState(slice.Value);
+				if (top != Hstate.Known)
+				{
+					result.AddState(slice.Key, new Hval(null, top));
+				}
+				else
+				{
+					// Apply the expression to every item in the set
+					List<object> sliceSet = (List<object>)slice.Value.Val;
+					List<object> resultSet = new List<object>();
+					foreach (object ob in sliceSet)
+					{
+						// The wildcard argument (_) is the last item in the args list
+						// Assumption: every item in the set is a Tvar
+						Node theOb = nTvar(new Tvar(Convert.ToString(ob)));
+						Expr newArgs = AddNodeToExpression(args,theOb);	
+
+						// Evaluate the expression, given the new list of args
+						Tvar itemResult = (Tvar)eval(expr(exp.nodes[1]), newArgs).obj;
+
+						resultSet.Add(itemResult.FirstValue.Val);
+					}
+					result.AddState(slice.Key, new Hval(resultSet));
+				}
+			}
+
+			return n(Typ.Tvar, result);
+		}
+
+		private static Expr AddNodeToExpression(Expr args, Node newNode)
+		{
+			List<Node> resultNodes = new List<Node>();
+			foreach (Node n in args.nodes)
+			{
+				resultNodes.Add(n);
+			}
+			resultNodes.Add(newNode);
+			return new Expr(resultNodes);
+		}
+
 
 		//		private static Node EvalExists(Expr exp, Expr args, string op)
 		//		{

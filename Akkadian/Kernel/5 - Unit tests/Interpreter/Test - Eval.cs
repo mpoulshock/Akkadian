@@ -496,6 +496,33 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Map_1 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x * x");
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Map[Sq[_]]");
+			Assert.AreEqual("{4,9,25,49}", r.Out);                
+		}
+
+		[Test]
+		public void Map_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("MultBy[x,y] = x * y");
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Map[MultBy[_,2]]");
+			Assert.AreEqual("{4,6,10,14}", r.Out);                
+		}
+
+		[Test]
+		public void Map_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = x -> 1, 0");
+			Tvar r = (Tvar)sess.ProcessInput("{True,False,True,True,True} |> Map[F[_]]");
+			Assert.AreEqual("{1,0,1,1,1}", r.Out);                
+		}
+
+		[Test]
 		public void Misc_1 ()
 		{
 			Session sess = new Session();
@@ -710,6 +737,30 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{  }");
 			Assert.AreEqual("{}", r.Out);                
+		}
+
+		[Test]
+		public void Misc_28 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetSum");
+			Assert.AreEqual(26, r.Out);                
+		}
+
+		[Test]
+		public void Misc_29 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetMax");
+			Assert.AreEqual(9, r.Out);                
+		}
+
+		[Test]
+		public void Misc_30 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetMin");
+			Assert.AreEqual(2, r.Out);                
 		}
 
 		[Test]
