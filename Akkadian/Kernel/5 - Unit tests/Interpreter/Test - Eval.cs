@@ -259,44 +259,46 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(3.14159, r.Out);                
 		}
 
-		//		[Test]
-		//		public void Filter_1 ()
-		//		{
-		//			Thing T1 = new Thing("T1");
-		//			Thing T2 = new Thing("T2");
-		//
-		//			Expr exp = expr(n(Typ.Op,"Filter"));
-		//			Func<int> r = (Func<int>)sess.eval(exp).obj;
-		//			Assert.AreEqual(7, r.Invoke());                
-		//		}
-		//
-		//		private Tvar IncomeOf(Thing t)
-		//		{
-		//			if (t.Id == "T1") return new Tvar(500);
-		//			else return new Tvar(1000);
-		//		}
+		[Test]
+		public void Filter_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Filter[_ >= 4]");
+			Assert.AreEqual("{5,7}", r.Out);                
+		}
+
+		[Test]
+		public void Filter_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{True,False,False} |> Filter[_ == False]");
+			Assert.AreEqual("{False,False}", r.Out);                
+		}
+
+		[Test]
+		public void Filter_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x * x");
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Filter[Sq[_] >= _ + 3]");
+			Assert.AreEqual("{3,5,7}", r.Out);                
+		}
 
 		[Test]
 		public void FunctionsAsArguments ()
 		{
 			// f(x,y) = y(x,17); x = 34; y = f(a,b) = b/a
 			//        = y(34,17) = 17/34 = 0.5
-//			Expr exp = expr(n(Typ.Fcn,"4"));
-//			Expr args = expr(nTvar(34),n(Typ.Fcn,"3"));
-//			Tvar r = (Tvar)sess.eval(exp,args).obj;
-//			Assert.AreEqual(0.5, r.Out);        
-
-			Session sess = new Session();
-			sess.ProcessInput("f[x,y] = y[x,17]");
-			sess.ProcessInput("f2[a,b] = b/a");
-			Tvar r = (Tvar)sess.ProcessInput("f[34,f2]");
-			Assert.AreEqual(0.5, r.Out);          
+//			Session sess = new Session();
+//			sess.ProcessInput("f[x,y] = y[x,17]");
+//			sess.ProcessInput("f2[a,b] = b/a");
+//			Tvar r = (Tvar)sess.ProcessInput("f[34,f2]");
+//			Assert.AreEqual(0.5, r.Out);          
 		}
 
 		[Test]
 		public void FunctionCall_1 ()
 		{
-			// (a * 2) + 1, where a = 44
 			Session sess = new Session();
 			sess.ProcessInput("F[a] = (a*2) + 1");
 			Tvar r = (Tvar)sess.ProcessInput("F[44]");
@@ -315,7 +317,6 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void FunctionWith2Args ()
 		{
-			// y / x, where y = 99, x = 11
 			Session sess = new Session();
 			sess.ProcessInput("f3[x,y] = y / x");
 			Tvar r = (Tvar)sess.ProcessInput("f3[11,99]");
@@ -354,23 +355,21 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(false, r.Out);                
 		}
 
-//		[Test]
-//		public void Inequality_1 ()
-//		{
-//			Session sess = new Session();
-//			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ba"));
-//			Tvar r = (Tvar)sess.eval(exp).obj;
-//			Assert.AreEqual(true, r.Out);                
-//		}
-//
-//		[Test]
-//		public void Inequality_2()
-//		{
-//			Session sess = new Session();
-//			Expr exp = expr(n(Typ.Op,Op.Neq),nTvar("ab"),nTvar("ab"));
-//			Tvar r = (Tvar)sess.eval(exp).obj;
-//			Assert.AreEqual(false, r.Out);                
-//		}
+		[Test]
+		public void Inequality_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("'ab' <> 'ab'");
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Inequality_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("'ab' <> 'ba'");
+			Assert.AreEqual(true, r.Out);                
+		}
 
 		[Test]
 		public void Max_1 ()
@@ -431,7 +430,6 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void Multiplication_5 ()
 		{
-			// 0 * 9
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("0 * 9");
 			Assert.AreEqual(0, r.Out);                
@@ -440,7 +438,6 @@ namespace Akkadian.UnitTests
 		[Test]
 		public void NestedExpression ()
 		{
-			// (a * 2) + 1, where a = 44
 			Session sess = new Session();
 			sess.ProcessInput("Fcn[a] = (a * 2) + 1");
 			Tvar r = (Tvar)sess.ProcessInput("Fcn[44]");
@@ -520,6 +517,32 @@ namespace Akkadian.UnitTests
 			sess.ProcessInput("F[x] = x -> 1, 0");
 			Tvar r = (Tvar)sess.ProcessInput("{True,False,True,True,True} |> Map[F[_]]");
 			Assert.AreEqual("{1,0,1,1,1}", r.Out);                
+		}
+
+		[Test]
+		public void Map_4 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Map[_ >= 4]");
+			Assert.AreEqual("{False,False,True,True}", r.Out);                
+		}
+
+		[Test]
+		public void Map_5 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x * x");
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7} |> Map[Sq[_] >= _ + 3]");
+			Assert.AreEqual("{False,True,True,True}", r.Out);                
+		}
+
+		[Test]
+		public void Map_6 ()
+		{
+			Session sess = new Session();
+			// sess.ProcessInput("Sq[x] = x * x");  // When Sq is undefined, treats enum value as number
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4} |> Map[Sq[_]] |> SetSum");
+			Assert.AreEqual(30, r.Out);                
 		}
 
 		[Test]
@@ -834,6 +857,81 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Pipes_5 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x*x");
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4,5,6,7} |> Map[Sq[_]] |> SetSum");
+			Assert.AreEqual(140, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_1 ()
+		{
+			Session sess = new Session(); 
+			Tvar r = (Tvar)sess.ProcessInput("~'2");
+			Assert.AreEqual(2, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_2 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0");
+			sess.ProcessInput("GrTh4[n] = n > 4"); 
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,4,5,6} |> Exists['GrTh4[_]]");
+			Assert.AreEqual(true, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_3 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0");
+			sess.ProcessInput("GrTh4[n] = n > 4"); 
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3} |> Exists['GrTh4[_]]");
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_4 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0");
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4,5} |> Exists[ '( _ > 4 )]");
+			Assert.AreEqual(true, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_5 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0");
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3} |> Exists['(_ > 4)]");
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_6 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("SumOver[fcn,set] = set |> Map[~fcn] |> SetSum");
+			sess.ProcessInput("Sq[n] = n^2"); 
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4} |> SumOver['Sq[_]]");
+			Assert.AreEqual(30, r.Out);                
+		}
+
+		[Test]
+		public void Quote_Unquote_7 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("SumOver[fcn,set] = set |> Map[~fcn] |> SetSum");
+			sess.ProcessInput("MultBy[x,y] = x*y"); 
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4} |> SumOver['MultBy[_,7]]");
+			Assert.AreEqual(70, r.Out);                
+		}
+
+		[Test]
 		public void Recursion_1 ()
 		{
 			Session sess = new Session();
@@ -865,8 +963,8 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-			Tvar r = (Tvar)sess.ProcessInput("F[375]");
-			Assert.AreEqual(1125, r.Out);                 
+			Tvar r = (Tvar)sess.ProcessInput("F[415]");
+			Assert.AreEqual(1245, r.Out);                 
 		}
 
 		[Test]

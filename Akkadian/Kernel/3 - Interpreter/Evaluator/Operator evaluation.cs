@@ -101,7 +101,7 @@ namespace Akkadian
 		/// </summary>
 		private Node UnaryFcnEval(Expr exp, Expr args, Op op)
 		{
-			object ob1 = eval(expr(exp.nodes [1]), args).obj;
+			object ob1 = eval(expr(exp.nodes[1]), args).obj;
 
 			if (op == Op.Not)    			{ return nTvar(!(Tvar)ob1); }
 			if (op == Op.ToUSD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
@@ -228,9 +228,46 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Evaluates expressions with two arguments.
+		/// Evaluates the unquote operator (~).
 		/// </summary>
-		private Node EvalMap(Expr exp, Expr args)
+		private Node EvaluateFunction(Expr exp, Expr args, string fcnName)
+		{
+			if (ContainsFunction(fcnName))
+			{
+				// Call the function with the given name
+				Expr ex1 = GetFunction(fcnName);
+				return MixAndMatch(exp, args, ex1);
+			}
+			else
+			{
+				// Make a list of the arguments
+				string argString = "";
+				for (int i=0; i < exp.nodes.Count; i++)
+				{
+					if (i>0) 
+					{
+						Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
+						argString += argTv.ToString() + ",";
+					}
+				}
+
+				// Pose the leaf node as a question
+//					Console.Write("  -" + fcnName + "[" + argString.TrimEnd(',') + "]? ");
+//					string s = Console.ReadLine();
+//					result = nTvar(s);
+
+				return nTvar(new Tvar(Hstate.Unstated));
+			}
+		}
+
+		/// <summary>
+		/// Applies the higher-order Filter and Map functions to a Tset.
+		/// </summary>
+		/// <remarks>
+		/// Filter - Filters the items in a Tset according to boolean criteria (keeping those that meet the condition).
+		/// Map - Maps an expression to the items in a Tset.
+		/// </remarks>
+		private Node EvalFilterOrMap(Expr exp, Expr args, Op op)
 		{
 			// E.g., Map[Sq[_],someSet]
 			Tvar theSet = (Tvar)eval(expr(exp.nodes[2]),args).obj;
@@ -261,7 +298,20 @@ namespace Akkadian
 						// Evaluate the expression, given the new list of args
 						Tvar itemResult = (Tvar)eval(expr(exp.nodes[1]), newArgs).obj;
 
-						resultSet.Add(itemResult.FirstValue.Val);
+						// E.g., Map[Sq[_],someSet]
+						if (op == Op.Map)
+						{
+							resultSet.Add(itemResult.FirstValue.Val);  // TODO: Deal with unknowns
+						}
+
+						// E.g., Filter[ _ > 25,someSet]
+						if (op == Op.Filter)
+						{
+							if (itemResult.FirstValue.IsTrue)
+							{
+								resultSet.Add(ob);
+							}
+						}
 					}
 					result.AddState(slice.Key, new Hval(resultSet));
 				}
@@ -270,6 +320,35 @@ namespace Akkadian
 			return n(Typ.Tvar, result);
 		}
 
+		/// <summary>
+		/// Evaluates the unquote operator (~).
+		/// </summary>
+		private Node EvaluateUnquoteOperator(Expr exp, Expr args)
+		{
+			// E.g. {Op:Unquote,node2}
+			Node node2 = exp.nodes[1];
+
+			if (node2.objType == Typ.Expr)
+			{
+				Node subnode = ((Expr)node2.obj).nodes[0];
+				if ((Op)subnode.obj == Op.Quote)
+				{
+					// E.g. {Op:Unquote,Expr:{Op.Quote,Tvar:2}}
+					Expr quotedExpr = (Expr)exp.nodes[1].obj;			// {Op.Quote,Tvar:2}
+					List<Node> nodesToEval = Rest(quotedExpr.nodes);    // {Tvar:2}
+					return eval(new Expr(nodesToEval), args);
+				}
+			}
+
+			// E.g. {Op:Unquote,Var:0}
+			// Evaluate the second node, then return an unquoted expression
+			Node eval2 = eval(node2,args);
+			return eval(new Expr(new List<Node>(){n(Typ.Op,Op.Unquote),eval2}), args);
+		}
+
+		/// <summary>
+		/// Adds a node to the end of an expression.
+		/// </summary>
 		private static Expr AddNodeToExpression(Expr args, Node newNode)
 		{
 			List<Node> resultNodes = new List<Node>();
@@ -280,18 +359,5 @@ namespace Akkadian
 			resultNodes.Add(newNode);
 			return new Expr(resultNodes);
 		}
-
-
-		//		private static Node EvalExists(Expr exp, Expr args, string op)
-		//		{
-		//			Node argFcnNode = n(Typ.Null,null);
-		//			Tvar theSet  = (Tvar)eval(expr(exp.nodes [1]), args).obj;
-		//			Tvar result = ApplyFcnToTvar<Tvar>(theSet, argFcnNode, y => CoreFilter(y));
-		//
-		//			//			Tvar theSet  = (Tvar)eval(expr(exp.nodes [1]), args).obj;
-		//			//			Func<Thing,Tvar> theFunc = (Func<Thing,Tvar>)eval(expr(exp.nodes [2]), args).obj;
-		//
-		//			return n("Tvar", result);  
-		//		}
 	}
 }

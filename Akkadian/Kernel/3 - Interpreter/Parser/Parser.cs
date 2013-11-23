@@ -123,7 +123,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>\.'{}_ " + delimiter + @"]*\]").Match(s);
+			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}_ " + delimiter + @"]*\]").Match(s);
 			if (m1.Success)
 			{
 				return ParseFunctionCalls(m1, s, subExprs, argNames);
@@ -170,11 +170,7 @@ namespace Akkadian
 			// Not - must go after infix ops
 			if (s.StartsWith("!"))
 			{
-				List<Node> notNodes = new List<Node>();
-				notNodes.Add(n(Typ.Op,Op.Not));
-				notNodes.Add(ParseFcn(s.Substring(1), subExprs, argNames));
-				Expr notExpr = new Expr(notNodes);
-				return n(Typ.Expr,notExpr);
+				return ParsePrefixOp(s, subExprs, argNames, Op.Not);
 			}
 
 			// Variable references
@@ -200,6 +196,18 @@ namespace Akkadian
 			if (IsExactMatch(s,stringLiteral))
 			{
 				return nTvar(new Tvar(Convert.ToString(s.Trim('\''))));
+			}
+
+			// ' - Quote operator (delays the evaluation of an expression)
+			// Must go after string literals while strings are encapsulated by single quotes
+			if (s.StartsWith("'"))
+			{
+				return ParsePrefixOp(s, subExprs, argNames, Op.Quote);
+			}
+			// ~ - Unquote operator (forces the evaluation of a lazy expression)
+			if (s.StartsWith("~"))
+			{
+				return ParsePrefixOp(s, subExprs, argNames, Op.Unquote);
 			}
 
 			// References to operator names (such as "Abs")
@@ -392,6 +400,18 @@ namespace Akkadian
 			}
 
 			return ParseFcn(newStrToParse, newSubExprs, argNames);
+		}
+
+		/// <summary>
+		/// Parses a string with a prefix operator like: ! ' ~
+		/// </summary>
+		private static Node ParsePrefixOp(string s, List<Node> subExprs, string[] argNames, Op op)
+		{
+			List<Node> subsequentNodes = new List<Node>();
+			subsequentNodes.Add(n(Typ.Op,op));
+			subsequentNodes.Add(ParseFcn(s.Substring(1), subExprs, argNames));
+			Expr notExpr = new Expr(subsequentNodes);
+			return n(Typ.Expr,notExpr);
 		}
 	}
 }

@@ -27,16 +27,28 @@ namespace Akkadian
 	public partial class Session : Interpreter
 	{
 		/// <summary>
+		/// Returns a copy of a list of Nodes, omitting the first Node.
+		/// </summary>
+		private static List<Node> Rest(List<Node> list)
+		{
+			List<Node> result = new List<Node>();
+			for (int i=0; i<list.Count; i++)
+			{
+				if (i>0) result.Add(list[i]);
+			}
+			return result;
+		}
+
+		/// <summary>
 		/// The soul of a new machine.
 		/// </summary>
 		public Node eval(Expr exp, Expr args)
 		{
-//			Console.WriteLine(exp.ToString());
+//			try { Console.WriteLine(exp.ToString() + "  " + args.ToString()); }
+//			catch { Console.WriteLine(exp.ToString() + " {?}"); } Console.WriteLine();
 
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
-
-//			Console.WriteLine("eval in: " + exp.ToString() + "  " + args.ToString());
 
 			if (typ == Typ.Var) 		{ return EvaluateVariableReferences(exp, args); }
 			else if (typ == Typ.Expr) 	{ return eval((Expr)ob, args); }
@@ -69,43 +81,23 @@ namespace Akkadian
 				{
 					return MultiTvarFcnEval(exp, args, opType);
 				}
-				else if (opType == Op.Map)
+				else if (opType == Op.Filter || opType == Op.Map)
 				{
-					return EvalMap(exp,args);
+					return EvalFilterOrMap(exp,args,opType);
+				}
+				else if (opType == Op.Quote)		
+				{ 
+					return n(Typ.Expr, new Expr(exp.nodes)); 	// Do virtually nothing
+				}  
+				else if (opType == Op.Unquote)
+				{
+					return EvaluateUnquoteOperator(exp, args);
 				}
 			}
 			else if (typ == Typ.Fcn)
 			{
 				string fcnName = Convert.ToString(ob);
-				if (ContainsFunction(fcnName))
-				{
-					// Call the function with the given name
-					Expr ex1 = GetFunction(fcnName);
-					return MixAndMatch(exp, args, ex1);
-				}
-				else
-				{
-					// Make a list of the arguments
-					string argString = "";
-					for (int i=0; i < exp.nodes.Count; i++)
-					{
-						if (i>0) 
-						{
-							Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
-							argString += argTv.ToString() + ",";
-						}
-					}
-
-					// Pose the leaf node as a question
-//					Console.Write("  -" + fcnName + "[" + argString.TrimEnd(',') + "]? ");
-//					string s = Console.ReadLine();
-//					result = nTvar(s);
-
-					return nTvar(new Tvar(Hstate.Unstated));
-				}
-			}
-			else if (typ == Typ.Series)
-			{
+				return EvaluateFunction(exp, args, fcnName);
 			}
 
 			return exp.nodes[0];

@@ -146,6 +146,9 @@ namespace Akkadian
 		BoolCount = 303,
 		Pipe = 304,		// Pipeline |>
 		Map = 305,
+		Filter = 306,
+		Quote = 307,
+		Unquote = 308,
 
 		// Constants
 		Unstated = 400,
@@ -270,6 +273,8 @@ namespace Akkadian
 			OperatorRegistry.Add("SetSum",Op.SetSum);
 			OperatorRegistry.Add("SetMin",Op.SetMin);
 			OperatorRegistry.Add("SetMax",Op.SetMax);
+			OperatorRegistry.Add("'",Op.Quote);
+			OperatorRegistry.Add("~",Op.Unquote);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);
@@ -290,6 +295,7 @@ namespace Akkadian
 			OperatorRegistry.Add("Min",Op.Min);
 			OperatorRegistry.Add("BoolCount",Op.BoolCount);
 			OperatorRegistry.Add("Map",Op.Map);
+			OperatorRegistry.Add("Filter",Op.Filter);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);
