@@ -105,8 +105,7 @@ namespace Akkadian.UnitTests
         public void Count2 ()
         {
             // This is how you assert an eternally empty set
-            Tvar s1 = new Tvar();
-            s1.SetEternally();
+			Tvar s1 = EmptyTset(); 
             Assert.AreEqual(0, s1.Count.Out);        
         }
         

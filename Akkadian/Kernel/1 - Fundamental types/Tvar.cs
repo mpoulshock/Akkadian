@@ -162,10 +162,46 @@ namespace Akkadian
 
 
 		/// <summary>
-		/// Displays an output object.
+		/// Represents a Tvar as a string.
 		/// </summary>
 		public override string ToString()
 		{
+			if (this.TimeLine.Count == 1)
+			{
+				Hval v = this.FirstValue;
+				if (v.IsKnown)
+				{
+					if (v.IsSet())   return v.ToSerializedSet();
+
+					// Dates
+					DateTime temp;
+					string d = Convert.ToString(v.Val);
+					if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
+
+					// Numbers
+					Decimal temp2;
+					if (decimal.TryParse(d, out temp2)) return temp2.ToString("G29");  // Removes trailing zeros from decimal
+
+					return v.Obj.ToString();
+				}
+				else
+				{
+					return v.ToString;
+				}
+			}
+			else
+			{
+				string result = "{";
+
+				foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
+				{
+					string date = Util.FormatDate(de.Key);
+					string val = de.Value.ToString.Replace("True","true").Replace("False","false");
+					result += date + ": " + val + ", ";
+				}
+				return result.TrimEnd(' ', ',') + "}";
+			}
+
 			return this.Out.ToString();
 		}
 

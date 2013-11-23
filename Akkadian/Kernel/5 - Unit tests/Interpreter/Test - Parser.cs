@@ -86,5 +86,11 @@ namespace Akkadian.UnitTests
 		{
 			Assert.AreEqual("{1, 2}", Util.FirstSetLiteral("hh = {Dawn: #0#, 2009-07-24: {1, 2}}"));                
 		}
+
+		[Test]
+		public void FirstSetLiteral_5 ()
+		{
+			Assert.AreEqual("{}", Util.FirstSetLiteral("hh = {Dawn: {}, 2009-07-24: {1, 2}}"));                
+		}
 	}
 }

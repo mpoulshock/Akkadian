@@ -67,8 +67,8 @@ namespace Akkadian
 		Pow = 21,
 		RndUp = 22, 
 		RndDn = 23, 
-		RndNrUp = 24, 
-		RndNrDn = 25,
+		RoundNearUp = 24, 
+		RoundNearDown = 25,
 		Concat = 26,
 		Subset = 27, 
 		Contains = 28, 
@@ -76,8 +76,8 @@ namespace Akkadian
 		Intersect = 30, 
 		Remove = 31,
 		AddDays = 32, 
-		AddMos = 33, 
-		AddYrs = 34, 
+		AddMonths = 33, 
+		AddYears = 34, 
 		DayDiff = 35, 
 		WeekDiff = 36,
 		YearDiff = 37,
@@ -214,17 +214,17 @@ namespace Akkadian
 			OperatorRegistry.Add(@"\^",Op.Pow);
 			OperatorRegistry.Add("RoundUp",Op.RndUp);
 			OperatorRegistry.Add("RoundDown",Op.RndDn);
-			OperatorRegistry.Add("RoundNearUp",Op.RndNrUp);
-			OperatorRegistry.Add("RoundNearDown",Op.RndNrDn);
-			OperatorRegistry.Add("?????",Op.Concat);
+			OperatorRegistry.Add("RoundNearUp",Op.RoundNearUp);
+			OperatorRegistry.Add("RoundNearDown",Op.RoundNearDown);
+			OperatorRegistry.Add("Concat",Op.Concat);
 			OperatorRegistry.Add("IsSubsetOf",Op.Subset);
 			OperatorRegistry.Add("Contains",Op.Contains);
 			OperatorRegistry.Add("Union",Op.Union);
 			OperatorRegistry.Add("Intersection",Op.Intersect);
 			OperatorRegistry.Add("Remove",Op.Remove);
 			OperatorRegistry.Add("AddDays",Op.AddDays);
-			OperatorRegistry.Add("AddMonths",Op.AddMos);
-			OperatorRegistry.Add("AddYears",Op.AddYrs);
+			OperatorRegistry.Add("AddMonths",Op.AddMonths);
+			OperatorRegistry.Add("AddYears",Op.AddYears);
 			OperatorRegistry.Add("DayDiff",Op.DayDiff);
 			OperatorRegistry.Add("WeekDiff",Op.WeekDiff);
 			OperatorRegistry.Add("YearDiff",Op.YearDiff);

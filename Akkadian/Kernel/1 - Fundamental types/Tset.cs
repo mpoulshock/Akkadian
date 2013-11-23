@@ -61,6 +61,14 @@ namespace Akkadian
 			return t;
 		}
   
+		/// <summary>
+		/// Constructs an eternally empty Tset. 
+		/// </summary>
+		public static Tvar EmptyTset()
+		{
+			return MakeTset(new List<object>());
+		}
+
         /// <summary>
         /// Constructs a Tvar from an existing Tvar. 
         /// </summary>
@@ -295,8 +303,12 @@ namespace Akkadian
         private static Hval CoreReverse(Hval h)
         {
             List<object> list = (List<object>)h.Val;
-            list.Reverse();
-            return new Hval(list);
+
+			// Can't use list.Reverse() because it has side effects
+			List<object> resultList = new List<object>();
+			for (int i=list.Count-1; i>=0; i--) resultList.Add(list[i]);
+
+			return new Hval(resultList);
         }
 
 		/// <summary>

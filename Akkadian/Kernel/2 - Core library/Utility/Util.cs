@@ -105,5 +105,14 @@ namespace Akkadian
 			if (m.Success) 	return m.Value;
 			return "";
 		}
+
+		/// <summary>
+		/// Formats a date as yyyy-mm-dd.
+		/// </summary>
+		public static string FormatDate(DateTime d)
+		{
+			string date = d.ToString("yyyy-MM-dd").Replace("1800-01-01", "Dawn");
+			return date.Replace(" 12:00:00 AM", "");
+		}
     }
 }

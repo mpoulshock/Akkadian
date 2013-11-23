@@ -67,7 +67,7 @@ namespace REPL
 					{
 						Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
 						object o = sess.eval(exp).obj;
-						if (o.GetType() == typeof(Tvar)) 	{ result = Convert.ToString(((Tvar)o).Out); }
+						if (o.GetType() == typeof(Tvar)) 	{ result = ((Tvar)o).ToString(); }
 					}
 
 					// Print

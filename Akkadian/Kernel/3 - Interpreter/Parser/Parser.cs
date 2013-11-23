@@ -253,18 +253,25 @@ namespace Akkadian
 			string newStrToParse = s.Replace(innerSet, delimiter + index + delimiter);
 
 			// TODO: Handle nested Tsets
-			string[] members = Util.RemoveParens(innerSet).Split(',');
-			List<object> mems = new List<object>();
-			foreach (string mem in members) mems.Add(mem.Trim());
-//				foreach (string mem in members)
-//				{
-//					string theMem = mem.Trim();
-//					if (theMem.Contains("#")) mems.Add(ParseFcn(theMem, subExprs, argNames)); 
-//					else mems.Add(theMem);
-//				}
-			Node newStr = nTvar(Tvar.MakeTset(mems));
+			string innards = Util.RemoveParens(innerSet);
+			if (innards.Trim().Length > 0)
+			{
+				string[] members = innards.Split(',');
+				List<object> mems = new List<object>();
+				foreach (string mem in members) mems.Add(mem.Trim());
+	//				foreach (string mem in members)
+	//				{
+	//					string theMem = mem.Trim();
+	//					if (theMem.Contains("#")) mems.Add(ParseFcn(theMem, subExprs, argNames)); 
+	//					else mems.Add(theMem);
+	//				}
+				Node newStr = nTvar(Tvar.MakeTset(mems));
 
-			return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+			}
+
+			// Empty Tsets have to be instantiated as EmptyTset()
+			return AddToSubExprListAndParse(s, newStrToParse, nTvar(Tvar.EmptyTset()), subExprs, argNames);
 		}
 
 		/// <summary>

@@ -787,6 +787,30 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Misc_31 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("WeekDiff[2014-01-01,2020-12-15]");
+			Assert.AreEqual("362.857", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_32 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{} |> Count");
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Misc_33 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{}");
+			Assert.AreEqual(1, r.IntervalValues.Count);                
+		}
+
+		[Test]
 		public void NestedFcns_1 ()
 		{
 			Session sess = new Session();
