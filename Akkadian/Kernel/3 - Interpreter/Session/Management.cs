@@ -26,6 +26,8 @@ namespace Akkadian
 {
 	public partial class Session 
 	{
+		public bool AskQuestions = false;
+
 		/// <summary>
 		/// Instantiates a new Session object.
 		/// </summary>

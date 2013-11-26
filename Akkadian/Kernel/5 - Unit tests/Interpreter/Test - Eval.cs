@@ -149,7 +149,7 @@ namespace Akkadian.UnitTests
 		public void Equality_3 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("'ab' == 'ba'");
+			Tvar r = (Tvar)sess.ProcessInput("\"ab\" == \"ba\"");
 			Assert.AreEqual(false, r.Out);                
 		}
 
@@ -157,7 +157,7 @@ namespace Akkadian.UnitTests
 		public void Equality_4 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("'ab' == 'ab'");
+			Tvar r = (Tvar)sess.ProcessInput("\"ab\" == \"ab\"");
 			Assert.AreEqual(true, r.Out);                
 		}
 
@@ -359,7 +359,7 @@ namespace Akkadian.UnitTests
 		public void Inequality_1 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("'ab' <> 'ab'");
+			Tvar r = (Tvar)sess.ProcessInput("\"ab\" <> \"ab\"");
 			Assert.AreEqual(false, r.Out);                
 		}
 
@@ -367,7 +367,7 @@ namespace Akkadian.UnitTests
 		public void Inequality_2 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("'ab' <> 'ba'");
+			Tvar r = (Tvar)sess.ProcessInput("\"ab\" <> \"ba\"");
 			Assert.AreEqual(true, r.Out);                
 		}
 
@@ -671,7 +671,7 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			sess.ProcessInput("IsEligible[p] = Age[p] > 65 | Income[p] < $17,000");
-			Tvar r = (Tvar)sess.ProcessInput("IsEligible['jim']");
+			Tvar r = (Tvar)sess.ProcessInput("IsEligible[\"jim\"]");
 			Assert.AreEqual("Unstated", r.Out);                
 		}
 
@@ -808,6 +808,30 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{}");
 			Assert.AreEqual(1, r.IntervalValues.Count);                
+		}
+
+		[Test]
+		public void Misc_34 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("\"homer\"");
+			Assert.AreEqual("homer", r.Out);                
+		}
+
+		[Test]
+		public void Misc_35 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15]");
+			Assert.AreEqual(6.956, r.Out);                
+		}
+
+		[Test]
+		public void Misc_36 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15]");
+			Assert.AreEqual("6.956", r.ToString());                
 		}
 
 		[Test]
@@ -987,8 +1011,8 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			sess.ProcessInput("F[x] = x==0 -> 0, F[x-1]+3");
-			Tvar r = (Tvar)sess.ProcessInput("F[415]");
-			Assert.AreEqual(1245, r.Out);                 
+			Tvar r = (Tvar)sess.ProcessInput("F[350]");  // 415
+			Assert.AreEqual(1050, r.Out);                 
 		}
 
 		[Test]
@@ -1148,9 +1172,9 @@ namespace Akkadian.UnitTests
 		public void TimeSeries_3 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("hh = {Dawn: {'a'}, 2009-07-24:{'a','b'}}");
+			sess.ProcessInput("hh = {Dawn: {\"a\"}, 2009-07-24:{\"a\",\"b\"}}");
 			Tvar r = (Tvar)sess.ProcessInput("hh");
-			Assert.AreEqual("{Dawn: {'a'}, 2009-07-24: {'a','b'}}", r.Out);                
+			Assert.AreEqual("{Dawn: {\"a\"}, 2009-07-24: {\"a\",\"b\"}}", r.Out);                
 		}
 
 		[Test]

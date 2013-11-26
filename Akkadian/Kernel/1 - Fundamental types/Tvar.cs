@@ -173,14 +173,15 @@ namespace Akkadian
 				{
 					if (v.IsSet())   return v.ToSerializedSet();
 
-					// Dates
-					DateTime temp;
 					string d = Convert.ToString(v.Val);
-					if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
 
 					// Numbers
 					Decimal temp2;
 					if (decimal.TryParse(d, out temp2)) return temp2.ToString("G29");  // Removes trailing zeros from decimal
+
+					// Dates
+					DateTime temp;
+					if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
 
 					return v.Obj.ToString();
 				}

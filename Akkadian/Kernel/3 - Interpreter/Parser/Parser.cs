@@ -97,6 +97,17 @@ namespace Akkadian
 		{
 			s = s.Trim();
 
+			// String literals
+			string fsl = Util.FirstStringLiteral(s);
+			if (fsl != "")
+			{
+				// Replace the nested text with #n#
+				string index = Convert.ToString(subExprs.Count);
+				string newStrToParse = s.Replace(fsl, delimiter + index + delimiter);
+				Node newStr = nTvar(new Tvar(fsl.Trim('"')));
+				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
+			}
+
 			// Parentheses
 			string fp = Util.InnermostParenthetical(s);
 			if (fp != "")
@@ -123,7 +134,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}_ " + delimiter + @"]*\]").Match(s);
+			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}_ " + delimiter + "\"" + @"]*\]").Match(s);
 			if (m1.Success)
 			{
 				return ParseFunctionCalls(m1, s, subExprs, argNames);
@@ -193,10 +204,10 @@ namespace Akkadian
 			{
 				return nTvar(new Tvar(Convert.ToBoolean(s)));
 			}
-			if (IsExactMatch(s,stringLiteral))
-			{
-				return nTvar(new Tvar(Convert.ToString(s.Trim('\''))));
-			}
+//			if (IsExactMatch(s,stringLiteral))
+//			{
+//				return nTvar(new Tvar(Convert.ToString(s.Trim('\''))));
+//			}
 
 			// ' - Quote operator (delays the evaluation of an expression)
 			// Must go after string literals while strings are encapsulated by single quotes

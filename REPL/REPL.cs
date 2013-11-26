@@ -12,12 +12,13 @@ namespace REPL
 			Console.Title = "Akkadian REPL";
 
 			Session sess = new Session();
+			sess.AskQuestions = true;
 
 			// Loop
 			while (true)
 			{
-//				try
-//				{
+				try
+				{
 					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine();
@@ -45,7 +46,6 @@ namespace REPL
 					// Eval
 					Interpreter.ParserResponse pr = Interpreter.ParseInputLine(userInput);
 					
-
 					if (pr.IsNewFunction)
 					{
 						string name = pr.FunctionName;
@@ -73,12 +73,12 @@ namespace REPL
 					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
-//				}
-//				catch
-//				{
-//					Console.WriteLine("  Syntax error.");
-//					Console.WriteLine();
-//				}
+				}
+				catch
+				{
+					Console.WriteLine("  Syntax error.");
+					Console.WriteLine();
+				}
 			}
 		}
 	}

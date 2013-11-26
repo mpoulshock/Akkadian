@@ -58,6 +58,7 @@ namespace Akkadian
 				Op opType = (Op)ob;
 				int opID = Convert.ToInt16(opType);
 
+				if (opID < 3) 				{ return ShortCircuitEval(exp, args, opType); }   // Temporary
 				if (opID < 100) 			{ return BinaryFcnEval(exp, args, opType); }
 				else if (opID < 200) 		{ return UnaryFcnEval(exp, args, opType); }
 				else if (opID < 250) 		{ return ThreeArgFcnEval(exp, args, opType); }

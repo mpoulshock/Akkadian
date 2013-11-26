@@ -126,6 +126,7 @@ namespace Akkadian
 		SetSum = 128,  // Sums a Tset of numbers
 		SetMin = 129,
 		SetMax = 130,
+		Trim = 131,
 
 		// Three arguments
 		Shift = 200,
@@ -275,6 +276,7 @@ namespace Akkadian
 			OperatorRegistry.Add("SetMax",Op.SetMax);
 			OperatorRegistry.Add("'",Op.Quote);
 			OperatorRegistry.Add("~",Op.Unquote);
+			OperatorRegistry.Add("Trim",Op.Trim);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);

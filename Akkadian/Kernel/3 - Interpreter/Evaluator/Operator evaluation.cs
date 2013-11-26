@@ -26,6 +26,35 @@ namespace Akkadian
 	public partial class Session
 	{
 		/// <summary>
+		/// Evaluates expressions with and/or.
+		/// </summary>
+		private Node ShortCircuitEval(Expr exp, Expr args, Op op)
+		{
+			Node n1 = eval(expr(exp.nodes [1]), args);
+			Typ tp = n1.objType;
+			object ob1 = n1.obj;
+
+			// And, Or
+			if (op == Op.And)
+			{
+				if (((Tvar)ob1).IsFalse) return nTvar(new Tvar(false));
+
+				object ob2 = eval(expr(exp.nodes [2]), args).obj;
+				return nTvar((Tvar)ob1 && (Tvar)ob2); 
+			}
+
+			if (op == Op.Or)
+			{
+				if (((Tvar)ob1).IsTrue) return nTvar(new Tvar(true));
+
+				object ob2 = eval(expr(exp.nodes [2]), args).obj;
+				return nTvar((Tvar)ob1 || (Tvar)ob2); 
+			}
+
+			return n(Typ.Null,null);
+		}
+
+		/// <summary>
 		/// Evaluates expressions with two arguments.
 		/// </summary>
 		private Node BinaryFcnEval(Expr exp, Expr args, Op op)
@@ -105,6 +134,7 @@ namespace Akkadian
 
 			if (op == Op.Not)    			{ return nTvar(!(Tvar)ob1); }
 			if (op == Op.ToUSD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
+			if (op == Op.Trim)				{ return nTvar(((Tvar)ob1).Lean); }
 
 			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
 			if (op == Op.IsEmpty)   		{ return nTvar(((Tvar)ob1).IsEmpty); }
@@ -251,11 +281,13 @@ namespace Akkadian
 					}
 				}
 
-				// Pose the leaf node as a question
-//					Console.Write("  -" + fcnName + "[" + argString.TrimEnd(',') + "]? ");
-//					string s = Console.ReadLine();
-//					result = nTvar(s);
-
+				// Pose the leaf node as a question - temporary
+				if (AskQuestions)
+				{
+					Console.Write("  - " + fcnName + "[" + argString.TrimEnd(',') + "]? ");
+					string s = Console.ReadLine();
+					return nTvar(s);
+				}
 				return nTvar(new Tvar(Hstate.Unstated));
 			}
 		}

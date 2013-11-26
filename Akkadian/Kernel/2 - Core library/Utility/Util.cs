@@ -89,7 +89,7 @@ namespace Akkadian
 		/// </summary>
 		public static string InnermostParenthetical(string clause)
 		{
-			Regex rex = new Regex(@"\([-a-zA-Z0-9+/\.\|><=!*,&\{\}#_ ]*\)");
+			Regex rex = new Regex(@"\([-a-zA-Z0-9+/\.\|><=!*,&\{\}#_"" ]*\)");
 			var m = rex.Match(clause);
 			if (m.Success) 	return m.Value;
 			return "";
@@ -100,10 +100,28 @@ namespace Akkadian
 		/// </summary>
 		public static string FirstSetLiteral(string clause)
 		{
-			Regex rex = new Regex(@"\{[-a-zA-Z0-9\.',# ]*\}");
+			Regex rex = new Regex(@"\{[-a-zA-Z0-9\.',#'"" ]*\}");
 			var m = rex.Match(clause);
 			if (m.Success) 	return m.Value;
 			return "";
+		}
+
+		/// <summary>
+		/// Returns the substring that's the first string literal in the expression.
+		/// </summary>
+		public static string FirstStringLiteral(string clause)
+		{
+			Regex rex = new Regex("\"[^\"]*\"");
+			var m = rex.Match(clause);
+			if (m.Success) 	return m.Value;
+			return "";
+
+//			if (clause.Contains("\""))
+//			{
+//				return "feet";
+//			}
+//
+//			return "";
 		}
 
 		/// <summary>

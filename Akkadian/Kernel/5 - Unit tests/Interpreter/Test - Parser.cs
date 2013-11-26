@@ -92,5 +92,23 @@ namespace Akkadian.UnitTests
 		{
 			Assert.AreEqual("{}", Util.FirstSetLiteral("hh = {Dawn: {}, 2009-07-24: {1, 2}}"));                
 		}
+
+		[Test]
+		public void FirstStringLiteral_1 ()
+		{
+			Assert.AreEqual("\"some stuff\"", Util.FirstStringLiteral("h = \"some stuff\""));                
+		}
+
+		[Test]
+		public void FirstStringLiteral_2 ()
+		{
+			Assert.AreEqual("\"some stuff\"", Util.FirstStringLiteral("h = \"some stuff\" and \"Yet More Stuff!\""));                
+		}
+
+		[Test]
+		public void FirstStringLiteral_3 ()
+		{
+			Assert.AreEqual("\"Yet More Stuff!\"", Util.FirstStringLiteral("h = #0# and \"Yet More Stuff!\""));                
+		}
 	}
 }
