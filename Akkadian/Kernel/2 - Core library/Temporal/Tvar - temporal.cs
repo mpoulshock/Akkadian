@@ -64,11 +64,7 @@ namespace Akkadian
                 result.AddState(tPoints[i], isEverTrue);
             }
             
-            // This doesn't use .Lean because the output of EverPer() is often
-            // the input to a function that counts the number of discrete 
-            // intervals.  If you want a "lean" result, append .Lean when using
-            // this function.
-            return result;
+			return result.Lean;
         }
         
         /// <summary>
@@ -95,8 +91,7 @@ namespace Akkadian
                 result.AddState(tPoints[i], isAlwaysTrue);
             }
             
-            // Doesn't use .Lean.  See explanation in EverPer() above.
-            return result;
+			return result.Lean;
         }
         
         /// <summary>

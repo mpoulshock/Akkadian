@@ -437,7 +437,7 @@ namespace Akkadian.UnitTests
             t.AddState(Time.DawnOf, false);
             t.AddState(Date(2012,11,8), true);
             
-            Tvar result = t.EverPer(theYear).Lean;
+            Tvar result = t.EverPer(theYear);
 			Assert.AreEqual("{Dawn: false, 2012-01-01: true}", result.Out);        
         }
         
@@ -472,7 +472,7 @@ namespace Akkadian.UnitTests
             t.AddState(Time.DawnOf, false);
             t.AddState(Date(2012,11,8), true);
             
-            Tvar result = t.AlwaysPer(theYear).Lean;
+            Tvar result = t.AlwaysPer(theYear);
 			Assert.AreEqual("{Dawn: false, 2013-01-01: true}", result.Out);        
         }
         
