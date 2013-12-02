@@ -115,13 +115,6 @@ namespace Akkadian
 			var m = rex.Match(clause);
 			if (m.Success) 	return m.Value;
 			return "";
-
-//			if (clause.Contains("\""))
-//			{
-//				return "feet";
-//			}
-//
-//			return "";
 		}
 
 		/// <summary>

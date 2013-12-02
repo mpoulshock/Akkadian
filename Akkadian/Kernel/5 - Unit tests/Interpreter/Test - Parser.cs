@@ -94,6 +94,12 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void FirstSetLiteral_6 ()
+		{
+			Assert.AreEqual("", Util.FirstSetLiteral("{Dawn: Stub, 2000-01-01: true, 2010-12-31: false} & {Dawn: false, 1985-12-16: true, 2018-06-14: false}"));                
+		}
+
+		[Test]
 		public void FirstStringLiteral_1 ()
 		{
 			Assert.AreEqual("\"some stuff\"", Util.FirstStringLiteral("h = \"some stuff\""));                

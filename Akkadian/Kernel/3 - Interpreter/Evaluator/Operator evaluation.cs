@@ -96,6 +96,7 @@ namespace Akkadian
 			if (op == Op.RunningElapsedIntervals)	{ return nTvar(((Tvar)ob2).RunningElapsedIntervals((Tvar)ob1)); }
 			if (op == Op.ContinuousElapsedIntervals){ return nTvar(((Tvar)ob2).ContinuousElapsedIntervals((Tvar)ob1)); }
 			if (op == Op.RunningSummedIntervals)	{ return nTvar(((Tvar)ob2).RunningSummedIntervals((Tvar)ob1)); }
+			if (op == Op.Regularize)				{ return nTvar(((Tvar)ob2).Regularize((Tvar)ob1)); }
 
 			// Date
 			if (op == Op.AddDays) 	{ return nTvar(((Tvar)ob2).AddDays((Tvar)ob1)); }

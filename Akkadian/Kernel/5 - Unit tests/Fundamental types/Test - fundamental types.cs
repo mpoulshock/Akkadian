@@ -637,7 +637,7 @@ namespace Akkadian.UnitTests
             Tvar actual = t.CountPer(TheYear);
 			Assert.AreEqual("{Dawn: 0, 2010-01-01: 1, 2011-01-01: 0}", actual.Out);      
         }
-        
+
         // Tvar.RunningCountPer
         
         [Test]

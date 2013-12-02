@@ -14,11 +14,18 @@ namespace REPL
 			Session sess = new Session();
 			sess.AskQuestions = true;
 
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("(FedMinWage > 7) |> EverPer[TheYear]");
+
+			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
+			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek] |> Regularize[TheWeek] |> CountPer[TheYear]");
+			Console.WriteLine(r.ToString());
+
 			// Loop
 			while (true)
 			{
-				try
-				{
+//				try
+//				{
 					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine();
@@ -73,12 +80,12 @@ namespace REPL
 					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
-				}
-				catch
-				{
-					Console.WriteLine("  Syntax error.");
-					Console.WriteLine();
-				}
+//				}
+//				catch
+//				{
+//					Console.WriteLine("  Syntax error.");
+//					Console.WriteLine();
+//				}
 			}
 		}
 	}

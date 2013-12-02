@@ -95,6 +95,7 @@ namespace Akkadian
 		/// </summary>
 		public static Node ParseFcn(string s, List<Node> subExprs, string[] argNames)
 		{
+//			Console.WriteLine(s);
 			s = s.Trim();
 
 			// String literals
@@ -103,7 +104,7 @@ namespace Akkadian
 			{
 				// Replace the nested text with #n#
 				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(fsl, delimiter + index + delimiter);
+				string newStrToParse = s.Replace(fsl, delimiter + index + delimiter); 
 				Node newStr = nTvar(new Tvar(fsl.Trim('"')));
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 			}
@@ -114,7 +115,7 @@ namespace Akkadian
 			{
 				// Replace the nested text with #n#
 				string index = Convert.ToString(subExprs.Count);
-				string newStrToParse = s.Replace(fp, delimiter + index + delimiter);
+				string newStrToParse = s.Replace(fp, delimiter + index + delimiter); 
 				Node newStr = ParseFcn(Util.RemoveParens(fp), subExprs, argNames);
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 			}
@@ -141,7 +142,7 @@ namespace Akkadian
 			}
 
 			// Time-series literals
-			if (s.StartsWith("{") && s.EndsWith("}"))
+			if (IsExactMatch(s,timeSeriesLiteral)) 
 			{
 				return ParseTimeSeriesLiterals(s, subExprs, argNames);
 			}
@@ -199,15 +200,11 @@ namespace Akkadian
 				return n(Typ.Var,Int16.MaxValue);
 			}
 
-			// Boolean and string literal values
+			// Boolean literal values
 			if (IsExactMatch(s.ToLower(),boolLiteral))
 			{
 				return nTvar(new Tvar(Convert.ToBoolean(s)));
 			}
-//			if (IsExactMatch(s,stringLiteral))
-//			{
-//				return nTvar(new Tvar(Convert.ToString(s.Trim('\''))));
-//			}
 
 			// ' - Quote operator (delays the evaluation of an expression)
 			// Must go after string literals while strings are encapsulated by single quotes
@@ -261,7 +258,7 @@ namespace Akkadian
 		{
 			// Replace the nested text with #n#
 			string index = Convert.ToString(subExprs.Count);
-			string newStrToParse = s.Replace(innerSet, delimiter + index + delimiter);
+			string newStrToParse = s.Replace(innerSet, delimiter + index + delimiter); 
 
 			// TODO: Handle nested Tsets
 			string innards = Util.RemoveParens(innerSet);
@@ -311,7 +308,7 @@ namespace Akkadian
 
 			// Bracketed portion
 			string index = Convert.ToString(subExprs.Count);
-			string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter);
+			string newStrToParse = s.Replace(firstFcn,delimiter + index + delimiter); 
 			string whatsInTheBrackets = Util.RemoveParens(m1.Value.Replace(m1.Groups[1].Value,""));
 
 			// Function name

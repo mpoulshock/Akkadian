@@ -117,6 +117,7 @@ namespace Akkadian
             for (int b = 0; b < big.Count-1; b++ ) 
             {
                 int count = 0;
+
                 DateTime bStart = big.Keys[b];
                 DateTime bEnd = big.Keys[b+1];
                 
@@ -125,10 +126,23 @@ namespace Akkadian
                     DateTime sStart = small.Keys[s];
                     DateTime sEnd = small.Keys[s+1];
                     
-                    if (sStart >= bStart && sEnd <= bEnd && this.AsOf(sStart).ToBool == true)
-                    {
-                        count++;
-                    }
+					// EXPERIMENTAL
+//					Tvar isTrue = this.IsAlwaysTrue(new Tvar(sStart), new Tvar(sEnd));
+
+//					Console.WriteLine(this.AsOf(sStart).ToString());
+//
+//					bool isTrue = this.AsOf(sStart).ToBool == true ? true : false;
+//					if (isTrueBool) count ++;
+
+					if (sStart >= bStart && sEnd <= bEnd && this.AsOf(sStart).ToBool == true)
+					{
+						count++;
+					}
+
+//					if (sStart >= bStart && sEnd <= bEnd && isTrue == true)
+//                    {
+//                        count++;
+//                    }
                 }
                 
                 result.AddState(bStart,count);
@@ -183,6 +197,37 @@ namespace Akkadian
         
             return result.Lean;
         }
+
+		/// <summary>
+		/// Turns an irregular time series into a regular one that has the intervals defined 
+		/// in the argument Tvar.
+		/// </summary>
+		/// <remarks>
+		/// 1. The Regularize operation can be undone using .Lean ("Trim" in Akkadian)
+		/// 2. If the base Tvar has change points that do not align with those of the argument
+		///    Tvar, the base Tvar's change points will be ignored.
+		/// </remarks>
+		public Tvar Regularize(Tvar intervals)
+		{
+			// If the interval Tvar is eternally unknown, return unknown
+			if (intervals.IntervalValues.Count == 1 &&
+				!intervals.FirstValue.IsKnown)
+			{
+				return new Tvar(intervals.FirstValue);
+			}
+
+			Tvar result = new Tvar();
+
+			// Foreach interval in intervals
+			SortedList<DateTime, Hval> iv = intervals.IntervalValues;
+			for (int i = 0; i < iv.Count-1; i++) 
+			{
+				result.AddState(iv.Keys[i], this.AsOf(iv.Keys[i]).FirstValue);
+			}
+
+			return result;
+		}
+
 
         /// <summary>
         /// Returns the number of intervals that the Tvar is true,
