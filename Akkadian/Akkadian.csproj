@@ -6,7 +6,7 @@
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A78D2D14-FDB5-48A4-BC3A-5609DFF317F8}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Akkadian</RootNamespace>
     <AssemblyName>Akkadian</AssemblyName>
     <UseMSBuildEngine>False</UseMSBuildEngine>
@@ -19,7 +19,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -104,6 +104,8 @@
     <Compile Include="Kernel\3 - Interpreter\Session\Fact table.cs" />
     <Compile Include="Kernel\3 - Interpreter\Session\Management.cs" />
     <Compile Include="Kernel\2 - Core library\Basic\Comparison.cs" />
+    <Compile Include="REPL.cs" />
+    <Compile Include="Kernel\3 - Interpreter\Session\Standard library.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -78,7 +78,7 @@ namespace Akkadian
 
 					return n(Typ.Tvar, Switch2(newArgs, args));
 				}
-				else if (opType == Op.Max || opType == Op.Min || opType == Op.BoolCount)
+				else if (opType == Op.Max || opType == Op.Min)
 				{
 					return MultiTvarFcnEval(exp, args, opType);
 				}

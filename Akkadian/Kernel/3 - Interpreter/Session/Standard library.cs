@@ -19,43 +19,29 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 namespace Akkadian
 {
 	public partial class Session 
 	{
-		public bool AskQuestions = false;
-
 		/// <summary>
-		/// Instantiates a new Session object.
+		/// Loads the Akkadian standard library functions into the session.
 		/// </summary>
-		public Session()
+		public void LoadStandardLibrary()
 		{
-			Interpreter.InitializeOperatorRegistry();
-			ClearFunctions();
-			LoadStandardLibrary();
-		}
+			// Logic
+			ProcessInput("IfThen[a,b] = !a | b;");
+			ProcessInput("BoolToBinary[b] = b == True -> 1, 0;");
+			ProcessInput("BoolCount[set] = set |> Map[BoolToBinary[_]] |> SetSum;");
 
-		/// <summary>
-		/// Processes a user-input string in light of the session data.
-		/// </summary>
-		public object ProcessInput(string s)
-		{
-			Interpreter.ParserResponse pr = Interpreter.ParseInputLine(s.TrimEnd(';'));
+//			ProcessInput("BoolCount[set] = set |> Map[(_ == True -> 1, 0)] |> SetSum;");
 
-			if (pr.IsNewFunction)
-			{
-				Expr e = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
-				AddFunction(pr.FunctionName, e);
-				return true;
-			}
-			else
-			{
-				Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
-				return eval(exp).obj;
-			}
+			// Set
+			ProcessInput("IsEmpty2[set] = (set |> Count) == 0;");
+
+			// Higher-order set
+			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");
+			ProcessInput("ForAll[fcn,set] = (Filter[~fcn,set] |> Count) == (set |> Count);");
 		}
 	}
 }

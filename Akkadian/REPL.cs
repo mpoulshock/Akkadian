@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Akkadian;
 
 
@@ -24,11 +26,11 @@ namespace REPL
 			// Loop
 			while (true)
 			{
-//				try
-//				{
+				try
+				{
 					// Read
 					Console.Write("> ");
-					string userInput = Console.ReadLine();
+					string userInput = Console.ReadLine().TrimEnd(';');
 					string result = "";
 
 					// Clear all functions from the session
@@ -40,12 +42,22 @@ namespace REPL
 						continue;
 					}
 
-					// Import rules from a text file
-					if (userInput.ToLower().StartsWith("import "))
+					// Compile all .akk files in a specified folder
+					if (userInput.ToLower().StartsWith("compile "))
 					{
-						string loc = userInput.Replace("import ","");
-						result = Interpreter.ImportRuleFile(sess, "C:\\Users\\mpoulshock\\Documents\\MP\\" + loc);  // Test.txt
-						Console.WriteLine("  " + result);
+						sess.ClearFunctions();
+						sess.LoadStandardLibrary();
+
+						string loc = userInput.Replace("compile ","");
+						if (!loc.EndsWith(@"\")) loc = loc + @"\"; 
+
+						string[] akkFiles = Directory.GetFiles(loc, "*.akk", SearchOption.AllDirectories);
+						Parallel.ForEach(akkFiles, f => 
+						{
+							Interpreter.ImportRuleFile(sess, f);
+						} );
+
+						Console.WriteLine("  Compilation complete.");
 						Console.WriteLine();
 						continue;
 					}
@@ -80,12 +92,12 @@ namespace REPL
 					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
-//				}
-//				catch
-//				{
-//					Console.WriteLine("  Syntax error.");
-//					Console.WriteLine();
-//				}
+				}
+				catch
+				{
+					Console.WriteLine("  Syntax error.");
+					Console.WriteLine();
+				}
 			}
 		}
 	}

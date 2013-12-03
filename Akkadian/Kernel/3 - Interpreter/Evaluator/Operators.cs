@@ -146,7 +146,6 @@ namespace Akkadian
 		Switch = 300,
 		Max = 301,
 		Min = 302,
-		BoolCount = 303,
 		Pipe = 304,		// Pipeline |>
 		Map = 305,
 		Filter = 306,
@@ -299,7 +298,7 @@ namespace Akkadian
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
-			OperatorRegistry.Add("BoolCount",Op.BoolCount);
+//			OperatorRegistry.Add("BoolCount",Op.BoolCount);
 			OperatorRegistry.Add("Map",Op.Map);
 			OperatorRegistry.Add("Filter",Op.Filter);
 

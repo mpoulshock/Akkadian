@@ -222,7 +222,7 @@ namespace Akkadian
 
 			if (op == Op.Max) 			{ return nTvar(Tvar.Max(list)); }
 			if (op == Op.Min) 			{ return nTvar(Tvar.Min(list)); }
-			if (op == Op.BoolCount) 	{ return nTvar(H.BoolCount(list)); }
+//			if (op == Op.BoolCount) 	{ return nTvar(H.BoolCount(list)); }
 
 			return n(Typ.Null,null);
 		}
