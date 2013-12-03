@@ -923,6 +923,54 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void Misc_47_Contains_nums ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,4} |> Contains[2]");
+			Assert.AreEqual("True", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_48 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("4-3-2 == (4-3)-2");
+			Assert.AreEqual("True", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_49_YearDiff ()
+		{
+			Session sess = new Session();      // 6.956							    	-6.954
+			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15] == 0 - YearDiff[2020-12-15,2014-01-01]");
+			Assert.AreEqual("True", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_50_Diff ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("TheYear |> Diff[2]");  // Compares current value to value at time lag 2
+			Assert.AreEqual("2", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_51 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Seq[0,9]");
+			Assert.AreEqual("{0,1,2,3,4,5,6,7,8,9}", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_52 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Seq[Stub,9]");
+			Assert.AreEqual("Stub", r.ToString());                
+		}
+
+		[Test]
 		public void NestedFcns_1 ()
 		{
 			Session sess = new Session();

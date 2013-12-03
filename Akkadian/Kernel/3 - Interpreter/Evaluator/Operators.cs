@@ -94,6 +94,7 @@ namespace Akkadian
 		ContinuousElapsedIntervals = 48,
 		RunningSummedIntervals = 49,
 		Regularize = 50,
+		Seq = 51,
 
 		// Unary operators
 		Not = 100,
@@ -243,6 +244,7 @@ namespace Akkadian
 			OperatorRegistry.Add("ContinuousElapsedIntervals",Op.ContinuousElapsedIntervals);
 			OperatorRegistry.Add("RunningSummedIntervals",Op.RunningSummedIntervals);
 			OperatorRegistry.Add("Regularize",Op.Regularize);
+			OperatorRegistry.Add("Seq",Op.Seq);
 
 			// Unary operators
 			OperatorRegistry.Add("!",Op.Not);

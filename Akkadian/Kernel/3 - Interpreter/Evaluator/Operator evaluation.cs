@@ -112,6 +112,7 @@ namespace Akkadian
 			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Remove) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob2,(Tvar)ob1))); }
+			if (op == Op.Seq) 		{ return nTvar((Tvar.Seq((Tvar)ob1,(Tvar)ob2))); }
 
 			// Math and rounding
 			if (op == Op.RndUp) 		{ return nTvar(((Tvar)ob2).RoundUp((Tvar)ob1)); }

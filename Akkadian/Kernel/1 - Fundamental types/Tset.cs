@@ -355,6 +355,27 @@ namespace Akkadian
 		{
 			return ((List<object>)h.Val).Min(item => Convert.ToDecimal(item));
 		}
+
+		/// <summary>
+		/// Creates a sequential list of integers (a set) from a starting value to an ending value.
+		/// </summary>
+		public static Tvar Seq(Tvar first, Tvar last)
+		{
+			return ApplyFcnToTimeline(x => CoreSeq(x), first, last);
+		}
+		private static Hval CoreSeq(List<Hval> list)
+		{
+			int fir = Convert.ToInt32(list[0].Val);
+			int las = Convert.ToInt32(list[1].Val);
+
+			List<object> resultList = new List<object>();
+			for (int i=fir; i<=las; i++)
+			{
+				resultList.Add(i);
+			}
+
+			return new Hval(resultList);
+		}
     }
 
     #pragma warning restore 660, 661
