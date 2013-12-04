@@ -5,7 +5,7 @@
 
 *.dll
 *.pdb
-*.exe
+## *.exe
 
 !nunit.core.dll
 !nunit.framework.dll
