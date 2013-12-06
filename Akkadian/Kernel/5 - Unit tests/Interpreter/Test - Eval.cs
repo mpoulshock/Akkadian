@@ -766,7 +766,7 @@ namespace Akkadian.UnitTests
 		public void Misc_28 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetSum");
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetSum2");
 			Assert.AreEqual(26, r.Out);                
 		}
 
@@ -967,6 +967,16 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("Seq[Stub,9]");
+			Assert.AreEqual("Stub", r.ToString());                
+		}
+
+		[Test]
+		public void Misc_53 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("var1 = {Dawn: 4, 2015-01-01: 9}");
+			sess.ProcessInput("var2 = {777,var1}");
+			Tvar r = (Tvar)sess.ProcessInput("var2 |> SetSum");
 			Assert.AreEqual("Stub", r.ToString());                
 		}
 
@@ -1383,23 +1393,23 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{A,B,C}");
-			Assert.AreEqual("{A,B,C}", r.Out);                
+			Assert.AreEqual("{Unstated,Unstated,Unstated}", r.Out);                
 		}
 
 		[Test]
 		public void Tset_2 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("Union[{A,B,C},{D,E}]");
-			Assert.AreEqual("{A,B,C,D,E}", r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("Union[{1,2,3},{4,5}]");
+			Assert.AreEqual("{1,2,3,4,5}", r.Out);                
 		}
 
 		[Test]
 		public void Tset_3 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{A,B, {C,D}}");
-			Assert.AreEqual("{A,B,{C,D}}", r.Out);                
+			Tvar r = (Tvar)sess.ProcessInput("{1,2, {3,4}}");
+			Assert.AreEqual("{1,2,{3,4}}", r.Out);                
 		}
 
 		[Test]

@@ -44,8 +44,8 @@ namespace Akkadian
 		/// </summary>
 		public Node eval(Expr exp, Expr args)
 		{
-//			try { Console.WriteLine(exp.ToString() + "  " + args.ToString()); }
-//			catch { Console.WriteLine(exp.ToString() + " {?}"); } Console.WriteLine();
+			try { Console.WriteLine(exp.ToString() + "  " + args.ToString()); }
+			catch { Console.WriteLine(exp.ToString() + " {?}"); } Console.WriteLine();
 
 			Typ typ = exp.nodes[0].objType;
 			object ob = exp.nodes[0].obj;
@@ -78,7 +78,7 @@ namespace Akkadian
 
 					return n(Typ.Tvar, Switch2(newArgs, args));
 				}
-				else if (opType == Op.Max || opType == Op.Min)
+				else if (opType == Op.Max || opType == Op.Min || opType == Op.MakeTset)
 				{
 					return MultiTvarFcnEval(exp, args, opType);
 				}

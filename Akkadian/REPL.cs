@@ -21,13 +21,15 @@ namespace REPL
 
 //			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
 //			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek] |> Regularize[TheWeek] |> CountPer[TheYear]");
-//			Console.WriteLine(r.ToString());
+
+			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetSum2");
+			Console.WriteLine(r.ToString());
 
 			// Loop
 			while (true)
 			{
-				try
-				{
+//				try
+//				{
 					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine().TrimEnd(';');
@@ -92,12 +94,12 @@ namespace REPL
 					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
-				}
-				catch
-				{
-					Console.WriteLine("  Syntax error.");
-					Console.WriteLine();
-				}
+//				}
+//				catch
+//				{
+//					Console.WriteLine("  Syntax error.");
+//					Console.WriteLine();
+//				}
 			}
 		}
 	}

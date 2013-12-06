@@ -42,6 +42,7 @@ namespace Akkadian
 			// Higher-order set
 			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");
 			ProcessInput("ForAll[fcn,set] = (Filter[~fcn,set] |> Count) == (set |> Count);");
+			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, Count[set] == 1 -> First[set], First[set] + SetSum2[Rest[set]];");
 		}
 	}
 }

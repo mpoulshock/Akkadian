@@ -265,15 +265,25 @@ namespace Akkadian
 			if (innards.Trim().Length > 0)
 			{
 				string[] members = innards.Split(',');
-				List<object> mems = new List<object>();
-				foreach (string mem in members) mems.Add(mem.Trim());
-	//				foreach (string mem in members)
-	//				{
-	//					string theMem = mem.Trim();
-	//					if (theMem.Contains("#")) mems.Add(ParseFcn(theMem, subExprs, argNames)); 
-	//					else mems.Add(theMem);
-	//				}
-				Node newStr = nTvar(Tvar.MakeTset(mems));
+
+//				List<object> mems = new List<object>();
+//				foreach (string mem in members) mems.Add(mem.Trim());
+//				Node newStr = nTvar(Tvar.MakeTset(mems)); // construct the set at runtime?
+
+				List<Node> mems = new List<Node>();
+				mems.Add(n(Typ.Op,Op.MakeTset));
+
+				foreach (string mem in members)
+				{
+					mems.Add(ParseFcn(mem, subExprs, argNames)); 
+				}
+
+				Node newStr = n(Typ.Expr,new Expr(mems));
+
+
+
+
+//				Console.WriteLine(newStr.ToString());
 
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 			}

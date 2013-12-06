@@ -144,6 +144,8 @@ namespace Akkadian
 			if (op == Op.SetSum)   			{ return nTvar(((Tvar)ob1).SumItems); }
 			if (op == Op.SetMax)   			{ return nTvar(((Tvar)ob1).MaxItem); }
 			if (op == Op.SetMin)   			{ return nTvar(((Tvar)ob1).MinItem); }
+			if (op == Op.First)   			{ return nTvar(((Tvar)ob1).First); }
+			if (op == Op.Rest)   			{ return nTvar(((Tvar)ob1).Rest); }
 
 			if (op == Op.Day)   			{ return nTvar(((Tvar)ob1).Day); }
 			if (op == Op.Month)				{ return nTvar(((Tvar)ob1).Month); }
@@ -222,7 +224,12 @@ namespace Akkadian
 
 			if (op == Op.Max) 			{ return nTvar(Tvar.Max(list)); }
 			if (op == Op.Min) 			{ return nTvar(Tvar.Min(list)); }
-//			if (op == Op.BoolCount) 	{ return nTvar(H.BoolCount(list)); }
+
+			if (op == Op.MakeTset) 		
+			{ 
+
+				return nTvar(Tvar.MakeTset(list)); 
+			}
 
 			return n(Typ.Null,null);
 		}

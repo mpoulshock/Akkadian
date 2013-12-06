@@ -456,5 +456,88 @@ namespace Akkadian.UnitTests
 			Tvar s1 = MakeTset(1,3,5,7,9);
 			Assert.AreEqual(25, s1.SumItems.Out);        
 		}
+
+		// First
+
+		[Test]
+		public void First1 ()
+		{
+			Tvar s1 = MakeTset(1,3,5,7,9);
+			Assert.AreEqual(1, s1.First.Out);        
+		}
+
+		[Test]
+		public void First2 ()
+		{
+			Tvar s1 = MakeTset(3,5,7,9);
+			Assert.AreEqual(3, s1.First.Out);        
+		}
+
+		[Test]
+		public void First3 ()
+		{
+			Tvar s1 = MakeTset(7);
+			Assert.AreEqual(7, s1.First.Out);        
+		}
+
+		[Test]
+		public void First4 ()
+		{
+			Tvar s1 = new Tvar(Hstate.Unstated);
+			Assert.AreEqual("Unstated", s1.First.Out);       
+		}
+
+		[Test]
+		public void First5 ()
+		{
+			Tvar s1 = MakeTset("3","5","7","9");
+			Assert.AreEqual("3", s1.First.Out);        
+		}
+
+		[Test]
+		public void First6 ()
+		{
+			Tvar s1 = MakeTset(true, false, false);
+			Assert.AreEqual(true, s1.First.Out);        
+		}
+
+		[Test]
+		public void First7 ()
+		{
+			Tvar s1 = new Tvar();
+			s1.AddState(Time.DawnOf, new Hval(new List<object>(){3}));  // TODO: ??????????????????
+			s1.AddState(new DateTime(2010,12,12), new Hval(new List<object>(){7}));
+			Assert.AreEqual("{Dawn: 3, 2010-12-12: 7}", s1.First.Out);
+		}
+
+		// Rest
+
+		[Test]
+		public void Rest1 ()
+		{
+			Tvar s1 = MakeTset(1,3,5,7,9);
+			Assert.AreEqual("{3,5,7,9}", s1.Rest.Out);        
+		}
+
+		[Test]
+		public void Rest2 ()
+		{
+			Tvar s1 = MakeTset(5,7,9);
+			Assert.AreEqual("{7,9}", s1.Rest.Out);        
+		}
+
+		[Test]
+		public void Rest3 ()
+		{
+			Tvar s1 = MakeTset(9);
+			Assert.AreEqual("{}", s1.Rest.Out);        
+		}
+
+		[Test]
+		public void Rest4 ()
+		{
+			Tvar s1 = new Tvar(Hstate.Unstated);
+			Assert.AreEqual("Unstated", s1.Rest.Out);      
+		}
     }
 }

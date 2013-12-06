@@ -129,6 +129,8 @@ namespace Akkadian
 		SetMin = 129,
 		SetMax = 130,
 		Trim = 131,
+		First = 132,
+		Rest = 133,
 
 		// Three arguments
 		Shift = 200,
@@ -151,6 +153,7 @@ namespace Akkadian
 		Filter = 306,
 		Quote = 307,
 		Unquote = 308,
+		MakeTset = 309,
 
 		// Constants
 		Unstated = 400,
@@ -280,6 +283,8 @@ namespace Akkadian
 			OperatorRegistry.Add("'",Op.Quote);
 			OperatorRegistry.Add("~",Op.Unquote);
 			OperatorRegistry.Add("Trim",Op.Trim);
+			OperatorRegistry.Add("First",Op.First);
+			OperatorRegistry.Add("Rest",Op.Rest);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);
@@ -298,9 +303,9 @@ namespace Akkadian
 			OperatorRegistry.Add("Switch",Op.Switch);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
-//			OperatorRegistry.Add("BoolCount",Op.BoolCount);
 			OperatorRegistry.Add("Map",Op.Map);
 			OperatorRegistry.Add("Filter",Op.Filter);
+			OperatorRegistry.Add("MakeTset",Op.MakeTset);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);

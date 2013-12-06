@@ -123,23 +123,6 @@ namespace Akkadian
             
             return true;
         }                             
-        
-        /// <summary>
-        /// Converts a Tvar containing a single member into a (nullable) 
-        /// LegalEntity.  Returns null if the Tvar is unknown, if it's 
-        /// value changes over time, or if it has more than one member.
-        /// </summary>
-		public object ToObject
-        {
-            // TODO: Handle exceptions...(e.g. empty and uncertain sets)
-            get
-            {
-//                if (this.FirstValue.IsUnstated) { return new object(""); }
-
-                List<object> list = (List<object>)this.TimeLine.Values[0].Obj;
-                return (object)list[0];
-            }
-		}
 
         /// <summary>
         /// Counts the number of set members at each time interval. 
@@ -354,6 +337,43 @@ namespace Akkadian
 		private static Hval CoreTvarMinItem(Hval h)
 		{
 			return ((List<object>)h.Val).Min(item => Convert.ToDecimal(item));
+		}
+
+		/// <summary>
+		/// Returns the first item in the set, in each time interval. 
+		/// </summary>
+		public Tvar First
+		{
+			get
+			{
+				return ApplyFcnToTimeline(x => CoreTsetFirst(x), this);
+			}
+		}
+		private static Hval CoreTsetFirst(Hval h)
+		{
+			List<object> theSet = (List<object>)h.Val;
+			return new Hval(theSet[0]);
+		}
+
+		/// <summary>
+		/// Returns every item in the set except the first item, in each time interval. 
+		/// </summary>
+		public Tvar Rest
+		{
+			get
+			{
+				return ApplyFcnToTimeline(x => CoreTsetRest(x), this);
+			}
+		}
+		private static Hval CoreTsetRest(Hval h)
+		{
+			List<object> theSet = (List<object>)h.Val;
+			List<object> resultSet = new List<object>();
+			for (int i=0; i<theSet.Count; i++)
+			{
+				if (i > 0) resultSet.Add(theSet[i]);
+			}
+			return new Hval(resultSet);
 		}
 
 		/// <summary>
