@@ -34,10 +34,31 @@ namespace Akkadian
         {
             return ApplyFcnToTimeline(x => CoreSum(x), tn1, tn2);
         }
+//		private static Hval CoreSum(List<Hval> list)
+//		{
+//			return Convert.ToDecimal(list[0].Val) + Convert.ToDecimal(list[1].Val);
+//		}
         private static Hval CoreSum(List<Hval> list)
         {
-            return Convert.ToDecimal(list[0].Val) + Convert.ToDecimal(list[1].Val);
+//			return Decimalize(list[0].Val) + Decimalize(list[1].Val);
+
+			if (list[0].Val.GetType() == (new Tvar()).GetType() || list[1].Val.GetType() == (new Tvar()).GetType())
+			{
+				return new Hval( (Tvar)list[0].Val + (Tvar)list[1].Val);
+			}
+
+			return Convert.ToDecimal(list[0].Val) + Convert.ToDecimal(list[1].Val);
         }
+
+		private static decimal Decimalize(object obj)
+		{
+			if (obj.GetType() == (new Tvar()).GetType())
+			{
+				return Convert.ToDecimal(((Tvar)obj).FirstValue.Val);
+			}
+
+			return Convert.ToDecimal(obj);
+		}
 
         /// <summary>
         /// Subtracts one Tvar from another.

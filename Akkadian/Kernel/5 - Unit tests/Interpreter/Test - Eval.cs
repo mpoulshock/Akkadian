@@ -826,158 +826,192 @@ namespace Akkadian.UnitTests
 			Assert.AreEqual(6.956, r.Out);                
 		}
 
-		[Test]
-		public void Misc_36 ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15]");
-			Assert.AreEqual("6.956", r.ToString());                
-		}
+//		[Test]
+//		public void Misc_36 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15]");
+//			Assert.AreEqual("6.956", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_37_Tset_list ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("kids = {\"Mary\",\"Jill\",\"Laura\"}");
+//			Assert.AreEqual("{Mary,Jill,Laura}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_38 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("{Dawn: Stub, 2000-01-01: true, 2010-12-31: false} & {Dawn: false, 1985-12-16: true, 2018-06-14: false}");
+//			Assert.AreEqual("{Dawn: false, 1985-12-16: Stub, 2000-01-01: true, 2010-12-31: false}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_39_unnecessary_parens_in_pipeline ()
+//		{
+//			// EverPer[TheYear] is getting parse as #1# but not added to subExpr list ???
+//			Session sess = new Session();
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("(FedMinWage > 7) |> EverPer[TheYear]");
+//			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_40 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("FedMinWage > 7");
+//			Assert.AreEqual("{Dawn: false, 2009-07-24: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_41 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-07-24: true} |> EverPer[TheYear]");
+//			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_42 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, FedMinWage > 7]");
+//			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_43 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
+//			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, (FedMinWage > 7)]");
+//			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_44 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
+//			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek]");
+//			Assert.AreEqual("{Dawn: false, 2014-03-15: true, 2014-05-17: false, 2014-06-28: true}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_45 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
+//			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek] |> Regularize[TheWeek] |> CountPer[TheYear]");
+//			Assert.AreEqual("{ }", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_46_Regularize ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-01-01: true, 2015-12-31: false} |> Regularize[TheWeek] |> CountPer[TheYear]");
+//			Assert.AreEqual("{Dawn: 0, 2009-01-01: 51, 2010-01-01: 52, 2012-01-01: 51, 2016-01-01: 0}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_47_Contains_nums ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("{2,3,4} |> Contains[2]");
+//			Assert.AreEqual("True", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_48 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("4-3-2 == (4-3)-2");
+//			Assert.AreEqual("True", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_49_YearDiff ()
+//		{
+//			Session sess = new Session();      // 6.956							    	-6.954
+//			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15] == 0 - YearDiff[2020-12-15,2014-01-01]");
+//			Assert.AreEqual("True", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_50_Diff ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("TheYear |> Diff[2]");  // Compares current value to value at time lag 2
+//			Assert.AreEqual("2", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_51 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("Seq[0,9]");
+//			Assert.AreEqual("{0,1,2,3,4,5,6,7,8,9}", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_52 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("Seq[Stub,9]");
+//			Assert.AreEqual("Stub", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_53 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("var1 = {Dawn: 4, 2015-01-01: 9}");
+//			sess.ProcessInput("var2 = {777,var1}");
+//			Tvar r = (Tvar)sess.ProcessInput("var2 |> SetSum");
+//			Assert.AreEqual("Stub", r.ToString());                
+//		}
+//
+//		[Test]
+//		public void Misc_54 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4,5} |> SetSum2");
+//			Assert.AreEqual(15, r.Out);                
+//		}
+//
+//		[Test]
+//		public void Misc_55 ()
+//		{
+//			Session sess = new Session();
+//			Tvar r = (Tvar)sess.ProcessInput("Seq[1,5] |> SetSum2");
+//			Assert.AreEqual(15, r.Out);                
+//		}
+//
+//		[Test]
+//		public void Misc_56 ()
+//		{
+//			Session sess = new Session();
+//			sess.ProcessInput("f = {Dawn: 1, 2014-01-01: 5}");
+//			sess.ProcessInput("s = {3,f}");
+//			Tvar r = (Tvar)sess.ProcessInput("s |> SetSum2");
+//			Assert.AreEqual("{Dawn: 4, 2014-01-01: 8}", r.Out);                
+//		}
 
 		[Test]
-		public void Misc_37_Tset_list ()
+		public void TsetOfTvars_1 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("kids = {\"Mary\",\"Jill\",\"Laura\"}");
-			Assert.AreEqual("{Mary,Jill,Laura}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_38 ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{Dawn: Stub, 2000-01-01: true, 2010-12-31: false} & {Dawn: false, 1985-12-16: true, 2018-06-14: false}");
-			Assert.AreEqual("{Dawn: false, 1985-12-16: Stub, 2000-01-01: true, 2010-12-31: false}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_39_unnecessary_parens_in_pipeline ()
-		{
-			// EverPer[TheYear] is getting parse as #1# but not added to subExpr list ???
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("(FedMinWage > 7) |> EverPer[TheYear]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_40 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("FedMinWage > 7");
-			Assert.AreEqual("{Dawn: false, 2009-07-24: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_41 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-07-24: true} |> EverPer[TheYear]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_42 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, FedMinWage > 7]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_43 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, (FedMinWage > 7)]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_44 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
-			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek]");
-			Assert.AreEqual("{Dawn: false, 2014-03-15: true, 2014-05-17: false, 2014-06-28: true}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_45 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
-			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek] |> Regularize[TheWeek] |> CountPer[TheYear]");
-			Assert.AreEqual("{ }", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_46_Regularize ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-01-01: true, 2015-12-31: false} |> Regularize[TheWeek] |> CountPer[TheYear]");
-			Assert.AreEqual("{Dawn: 0, 2009-01-01: 51, 2010-01-01: 52, 2012-01-01: 51, 2016-01-01: 0}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_47_Contains_nums ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{2,3,4} |> Contains[2]");
-			Assert.AreEqual("True", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_48 ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("4-3-2 == (4-3)-2");
-			Assert.AreEqual("True", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_49_YearDiff ()
-		{
-			Session sess = new Session();      // 6.956							    	-6.954
-			Tvar r = (Tvar)sess.ProcessInput("YearDiff[2014-01-01,2020-12-15] == 0 - YearDiff[2020-12-15,2014-01-01]");
-			Assert.AreEqual("True", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_50_Diff ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("TheYear |> Diff[2]");  // Compares current value to value at time lag 2
-			Assert.AreEqual("2", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_51 ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("Seq[0,9]");
-			Assert.AreEqual("{0,1,2,3,4,5,6,7,8,9}", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_52 ()
-		{
-			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("Seq[Stub,9]");
-			Assert.AreEqual("Stub", r.ToString());                
-		}
-
-		[Test]
-		public void Misc_53 ()
-		{
-			Session sess = new Session();
-			sess.ProcessInput("var1 = {Dawn: 4, 2015-01-01: 9}");
-			sess.ProcessInput("var2 = {777,var1}");
-			Tvar r = (Tvar)sess.ProcessInput("var2 |> SetSum");
-			Assert.AreEqual("Stub", r.ToString());                
+			Tvar r = (Tvar)sess.ProcessInput("{3,{Dawn: 1, 2014-01-01: 5}} |> SetSum2");
+			Assert.AreEqual("{Dawn: 4, 2014-01-01: 8}", r.Out);                
 		}
 
 		[Test]

@@ -289,7 +289,7 @@ namespace Akkadian
 			}
 
 			// Empty Tsets have to be instantiated as EmptyTset()
-			return AddToSubExprListAndParse(s, newStrToParse, nTvar(Tvar.EmptyTset()), subExprs, argNames);
+			return AddToSubExprListAndParse(s, newStrToParse, nTvar(Tvar.MakeTset()), subExprs, argNames);
 		}
 
 		/// <summary>

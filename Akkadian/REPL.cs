@@ -25,6 +25,16 @@ namespace REPL
 			Tvar r = (Tvar)sess.ProcessInput("{2,3,5,7,9} |> SetSum2");
 			Console.WriteLine(r.ToString());
 
+//			Tvar t1 = new Tvar(3);
+//			Tvar t2 = new Tvar(1);
+//			t2.AddState(DateTime.Now, 5);
+//
+//			Tvar[] array = {t1,t2};
+//
+//			Tvar aTset = Tvar.MakeTset(array);
+//
+//			Console.WriteLine(aTset.ToString());
+
 			// Loop
 			while (true)
 			{

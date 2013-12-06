@@ -106,6 +106,7 @@
     <Compile Include="Kernel\2 - Core library\Basic\Comparison.cs" />
     <Compile Include="REPL.cs" />
     <Compile Include="Kernel\3 - Interpreter\Session\Standard library.cs" />
+    <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Eval - Misc.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

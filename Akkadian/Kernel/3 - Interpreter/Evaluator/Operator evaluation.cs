@@ -224,12 +224,7 @@ namespace Akkadian
 
 			if (op == Op.Max) 			{ return nTvar(Tvar.Max(list)); }
 			if (op == Op.Min) 			{ return nTvar(Tvar.Min(list)); }
-
-			if (op == Op.MakeTset) 		
-			{ 
-
-				return nTvar(Tvar.MakeTset(list)); 
-			}
+			if (op == Op.MakeTset) 		{ return nTvar(Tvar.MakeTset(list)); }
 
 			return n(Typ.Null,null);
 		}

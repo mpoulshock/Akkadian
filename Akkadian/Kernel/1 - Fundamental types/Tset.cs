@@ -44,6 +44,16 @@ namespace Akkadian
 		/// <summary>
 		/// Constructs a Tvar consisting eternally of a list of members. 
 		/// </summary>
+		public static Tvar MakeTset(List<object> list)
+		{
+			Tvar t = new Tvar();
+			t.SetEternally(new Hval(list));
+			return t;
+		}
+
+		/// <summary>
+		/// Constructs a Tvar consisting eternally of a list of members. 
+		/// </summary>
 		public static Tvar MakeTset(params object[] list)
 		{
 			Tvar t = new Tvar();
@@ -51,56 +61,6 @@ namespace Akkadian
 			return t;
 		}
 
-		/// <summary>
-		/// Constructs a Tvar consisting eternally of a list of members. 
-		/// </summary>
-		public static Tvar MakeTset(List<object> list)
-		{
-			Tvar t = new Tvar();
-			t.SetEternally(new Hval(list));
-			return t;
-		}
-  
-		/// <summary>
-		/// Constructs an eternally empty Tset. 
-		/// </summary>
-		public static Tvar EmptyTset()
-		{
-			return MakeTset(new List<object>());
-		}
-
-        /// <summary>
-        /// Constructs a Tvar from an existing Tvar. 
-        /// </summary>
-        public Tvar(Tvar s)
-        {
-            for (int i=0; i<s.TimeLine.Count; i++)
-            {
-                this.AddState(s.TimeLine.Keys[i], s.TimeLine.Values[i]);
-            }
-        }
-        
-        /// <summary>
-        /// Adds a time interval and list of set members to the timeline. 
-        /// </summary>
-        public void AddState(DateTime dt, params object[] list)
-        {
-            List<object> entities = new List<object>();
-            
-            foreach (object le in list)
-                entities.Add(le);
-
-            TimeLine.Add(dt, new Hval(entities));    
-        }
-        
-        /// <summary>
-        /// Sets the Tvar to eternally have a given member. 
-        /// </summary>
-        public void SetEternally(object val)
-        {
-            TimeLine.Add(Time.DawnOf, new Hval(val));    
-        }
-        
         /// <summary>
         /// Sets the Tvar to eternally have a list of members. 
         /// </summary>
@@ -109,6 +69,30 @@ namespace Akkadian
 			AddState(Time.DawnOf,list);
         }
         
+		/// <summary>
+		/// Adds a time interval and list of set members to the timeline. 
+		/// </summary>
+		public void AddState(DateTime dt, params object[] list)
+		{
+			List<object> entities = new List<object>();
+
+			foreach (object le in list)
+				entities.Add(le);
+
+			TimeLine.Add(dt, new Hval(entities));    
+		}
+
+		/// <summary>
+		/// Constructs a Tvar from an existing Tvar. 
+		/// </summary>
+		public Tvar(Tvar s)
+		{
+			for (int i=0; i<s.TimeLine.Count; i++)
+			{
+				this.AddState(s.TimeLine.Keys[i], s.TimeLine.Values[i]);
+			}
+		}
+
         /// <summary>
         /// Determines whether two lists of legal entities are equivalent (ignoring order)
         /// </summary>
