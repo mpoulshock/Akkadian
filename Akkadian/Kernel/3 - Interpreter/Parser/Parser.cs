@@ -135,7 +135,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}_ " + delimiter + "\"" + @"]*\]").Match(s);
+			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}:_ " + delimiter + "\"" + @"]*\]").Match(s);
 			if (m1.Success)
 			{
 				return ParseFunctionCalls(m1, s, subExprs, argNames);
@@ -252,7 +252,7 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Parses set literals, such as {1,2}
+		/// Parses set literals, such as {1,2,Abs[-9]}
 		/// </summary>
 		private static Node ParseSetLiterals(string innerSet, string s, List<Node> subExprs, string[] argNames)
 		{
@@ -260,30 +260,20 @@ namespace Akkadian
 			string index = Convert.ToString(subExprs.Count);
 			string newStrToParse = s.Replace(innerSet, delimiter + index + delimiter); 
 
-			// TODO: Handle nested Tsets
 			string innards = Util.RemoveParens(innerSet);
 			if (innards.Trim().Length > 0)
 			{
 				string[] members = innards.Split(',');
 
-//				List<object> mems = new List<object>();
-//				foreach (string mem in members) mems.Add(mem.Trim());
-//				Node newStr = nTvar(Tvar.MakeTset(mems)); // construct the set at runtime?
-
+				// Parse each item in the set so it can be evaluated at runtime
 				List<Node> mems = new List<Node>();
 				mems.Add(n(Typ.Op,Op.MakeTset));
-
 				foreach (string mem in members)
 				{
 					mems.Add(ParseFcn(mem, subExprs, argNames)); 
 				}
 
 				Node newStr = n(Typ.Expr,new Expr(mems));
-
-
-
-
-//				Console.WriteLine(newStr.ToString());
 
 				return AddToSubExprListAndParse(s, newStrToParse, newStr, subExprs, argNames);
 			}

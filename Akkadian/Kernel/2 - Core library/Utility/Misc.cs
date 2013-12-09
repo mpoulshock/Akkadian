@@ -97,28 +97,12 @@ namespace Akkadian
         /// <summary>
         /// Creates a string of N blank spaces.
         /// </summary>
-        public static string PadNSpaces(int count)
-        {
-            string result = "";
-            for (int i=0; i<count; i++)
-                result += " ";
-            return result;
-        }
-
-        /// <summary>
-        /// Adds a Thing to the session.
-        /// </summary>
-//        public static Thing AddThing(string thingID)
+//        public static string PadNSpaces(int count)
 //        {
-//            return Facts.AddThing(thingID);
-//        }
-//
-//        /// <summary>
-//        /// Returns the set of all Things in the session.
-//        /// </summary>
-//        public static Tvar people()
-//        {
-//            return Facts.AllKnownPeople();
+//            string result = "";
+//            for (int i=0; i<count; i++)
+//                result += " ";
+//            return result;
 //        }
     }
 }

@@ -290,7 +290,24 @@ namespace Akkadian
 		}
 		private static Hval CoreTvarSumItems(Hval h)
 		{
-			return ((List<object>)h.Val).Sum(item => Convert.ToDecimal(item));
+			return new Hval(SumTvarList((List<object>)h.Val));
+//			return ((List<object>)h.Val).Sum(item => Convert.ToDecimal(item));
+		}
+		private static Tvar SumTvarList(List<object> list)
+		{
+			Tvar tot = new Tvar(0);
+			foreach (object ob in list)
+			{
+				if (ob.GetType() == (new Tvar()).GetType())
+				{
+					tot = tot + (Tvar)ob;
+				}
+				else 
+				{
+					tot = tot + new Tvar(Convert.ToDecimal(ob)); 
+				}
+			}
+			return tot;
 		}
 
 		/// <summary>

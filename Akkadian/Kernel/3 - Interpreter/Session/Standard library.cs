@@ -36,13 +36,16 @@ namespace Akkadian
 
 //			ProcessInput("BoolCount[set] = set |> Map[(_ == True -> 1, 0)] |> SetSum;");
 
-			// Set
+			// Set - basic
 			ProcessInput("IsEmpty2[set] = (set |> Count) == 0;");
+
+			// Set aggregations
+//			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, Count[set] == 1 -> First[set], First[set] + SetSum2[Rest[set]];");
+			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, First[set] + SetSum2[Rest[set]];");
 
 			// Higher-order set
 			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");
 			ProcessInput("ForAll[fcn,set] = (Filter[~fcn,set] |> Count) == (set |> Count);");
-			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, Count[set] == 1 -> First[set], First[set] + SetSum2[Rest[set]];");
 		}
 	}
 }

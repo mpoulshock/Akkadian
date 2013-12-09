@@ -116,5 +116,11 @@ namespace Akkadian.UnitTests
 		{
 			Assert.AreEqual("\"Yet More Stuff!\"", Util.FirstStringLiteral("h = #0# and \"Yet More Stuff!\""));                
 		}
+
+		[Test]
+		public void TimeSeriesLiteral_1 ()
+		{
+			Assert.AreEqual(true, IsExactMatch("{Dawn: 4, 2014-02-02: 5}",timeSeriesLiteral));                
+		}
 	}
 }

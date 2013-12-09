@@ -103,9 +103,28 @@ namespace Akkadian
 					}
 				}
 
-				return result;
+				// EXPERIMENTAL
+//				return result;
+				return result.DeVerticalize;
 			}
 		}  
+
+		/// <summary>
+		/// If Tvar is an eternal value where that value is itself a Tvar, return that value.
+		/// Otherwise, return the whole Tvar.
+		/// </summary>
+		private Tvar DeVerticalize
+		{
+			get
+			{
+				if (this.IsEternal && this.FirstValue.Val.GetType() == (new Tvar().GetType()))
+				{
+					return (Tvar)this.FirstValue.Val;
+				}
+
+				return this;
+			}
+		}
 
         /// <summary>
         /// Sets a Tvar to an "eternal" value (the same at all points in time). 
