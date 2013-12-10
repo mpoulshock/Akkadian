@@ -458,7 +458,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("var1 = {Dawn: 4, 2015-01-01: 9}");
 			sess.ProcessInput("var2 = {777,var1}");
-			Tvar r = (Tvar)sess.ProcessInput("var2 |> SetSum2");
+			Tvar r = (Tvar)sess.ProcessInput("var2 |> SetSum");
 			Assert.AreEqual("{Dawn: 781, 2015-01-01: 786}", r.ToString());                
 		}
 
@@ -466,7 +466,7 @@ namespace Akkadian.UnitTests
 		public void Misc_54 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4,5} |> SetSum2");
+			Tvar r = (Tvar)sess.ProcessInput("{1,2,3,4,5} |> SetSum");
 			Assert.AreEqual(15, r.Out);          
 		}
 
@@ -474,7 +474,7 @@ namespace Akkadian.UnitTests
 		public void Misc_55 ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("Seq[1,5] |> SetSum2");
+			Tvar r = (Tvar)sess.ProcessInput("Seq[1,5] |> SetSum");
 			Assert.AreEqual(15, r.Out);                
 		}
 		
@@ -484,7 +484,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("f = {Dawn: 1, 2014-01-01: 5}");
 			sess.ProcessInput("s = {3,f}");
-			Tvar r = (Tvar)sess.ProcessInput("s |> SetSum2");
+			Tvar r = (Tvar)sess.ProcessInput("s |> SetSum");
 			Assert.AreEqual("{Dawn: 4, 2014-01-01: 8}", r.Out);                
 		}
 
@@ -492,7 +492,7 @@ namespace Akkadian.UnitTests
 		public void Misc_57_Parser_error ()
 		{
 			Session sess = new Session();
-			Tvar r = (Tvar)sess.ProcessInput("{3,{Dawn: 1, 2014-01-01: 5}} |> SetSum2");  // Parser error
+			Tvar r = (Tvar)sess.ProcessInput("{3,{Dawn: 1, 2014-01-01: 5}} |> SetSum");  // Parser error
 			Assert.AreEqual("{Dawn: 4, 2014-01-01: 8}", r.Out);                
 		}
 

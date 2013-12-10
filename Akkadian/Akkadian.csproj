@@ -83,7 +83,6 @@
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - facts - symmetrical.cs" />
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - short-circuit evaluation.cs" />
     <Compile Include="Kernel\5 - Unit tests\Factbase\Test - unknown.cs" />
-    <Compile Include="Kernel\5 - Unit tests\Core library\Basic\Test - set - higher order.cs" />
     <Compile Include="Kernel\3 - Interpreter\Evaluator\Eval.cs" />
     <Compile Include="Kernel\1 - Fundamental types\Expr.cs" />
     <Compile Include="Kernel\5 - Unit tests\Interpreter\Test - Eval.cs" />

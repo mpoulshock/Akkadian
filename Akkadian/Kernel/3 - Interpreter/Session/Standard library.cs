@@ -40,8 +40,7 @@ namespace Akkadian
 			ProcessInput("IsEmpty2[set] = (set |> Count) == 0;");
 
 			// Set aggregations
-//			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, Count[set] == 1 -> First[set], First[set] + SetSum2[Rest[set]];");
-			ProcessInput("SetSum2[set] = Count[set] == 0 -> 0, First[set] + SetSum2[Rest[set]];");
+			// ProcessInput("SetSum[set] = Count[set] == 0 -> 0, First[set] + SetSum[Rest[set]];");    // C# implementation is faster
 
 			// Higher-order set
 			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");

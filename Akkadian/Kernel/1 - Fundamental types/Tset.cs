@@ -285,14 +285,22 @@ namespace Akkadian
 		{
 			get
 			{
-				return ApplyFcnToTimeline(x => CoreTvarSumItems(x), this);
+				return ApplyFcnToTimeline(x => CoreTvarSumItems(x), this).DeVerticalize;
 			}
 		}
 		private static Hval CoreTvarSumItems(Hval h)
 		{
 			return new Hval(SumTvarList((List<object>)h.Val));
+
 //			return ((List<object>)h.Val).Sum(item => Convert.ToDecimal(item));
 		}
+
+		/// <summary>
+		/// Sums a list of Tvars (converting non-Tvars to Tvars as necessary)
+		/// </summary>
+		/// <remarks>
+		/// This is necessary to aggregate Tsets that are lists of Tvar (as opposed to static) values.
+		/// </remarks>
 		private static Tvar SumTvarList(List<object> list)
 		{
 			Tvar tot = new Tvar(0);
@@ -317,12 +325,35 @@ namespace Akkadian
 		{
 			get
 			{
-				return ApplyFcnToTimeline(x => CoreTvarMaxItem(x), this);
+				return ApplyFcnToTimeline(x => CoreTvarMaxItem(x), this).DeVerticalize;
 			}
 		}
 		private static Hval CoreTvarMaxItem(Hval h)
 		{
-			return ((List<object>)h.Val).Max(item => Convert.ToDecimal(item));
+			return new Hval(MaxTvarList((List<object>)h.Val));
+		}
+
+		/// <summary>
+		/// Finds the maximum in a list of Tvars (converting non-Tvars to Tvars as necessary)
+		/// </summary>
+		/// <remarks>
+		/// This is necessary to aggregate Tsets that are lists of Tvar (as opposed to static) values.
+		/// </remarks>
+		private static Tvar MaxTvarList(List<object> list)
+		{
+			Tvar max = new Tvar(decimal.MinValue);
+			foreach (object ob in list)
+			{
+				if (ob.GetType() == (new Tvar()).GetType())
+				{
+					max = Max(max, (Tvar)ob);
+				}
+				else 
+				{
+					max = Max(max, new Tvar(Convert.ToDecimal(ob))); 
+				}
+			}
+			return max;
 		}
 
 		/// <summary>
@@ -332,12 +363,35 @@ namespace Akkadian
 		{
 			get
 			{
-				return ApplyFcnToTimeline(x => CoreTvarMinItem(x), this);
+				return ApplyFcnToTimeline(x => CoreTvarMinItem(x), this).DeVerticalize;
 			}
 		}
 		private static Hval CoreTvarMinItem(Hval h)
 		{
-			return ((List<object>)h.Val).Min(item => Convert.ToDecimal(item));
+			return new Hval(MinTvarList((List<object>)h.Val));
+		}
+
+		/// <summary>
+		/// Finds the minimum in a list of Tvars (converting non-Tvars to Tvars as necessary)
+		/// </summary>
+		/// <remarks>
+		/// This is necessary to aggregate Tsets that are lists of Tvar (as opposed to static) values.
+		/// </remarks>
+		private static Tvar MinTvarList(List<object> list)
+		{
+			Tvar min = new Tvar(decimal.MaxValue);
+			foreach (object ob in list)
+			{
+				if (ob.GetType() == (new Tvar()).GetType())
+				{
+					min = Min(min, (Tvar)ob);
+				}
+				else 
+				{
+					min = Min(min, new Tvar(Convert.ToDecimal(ob))); 
+				}
+			}
+			return min;
 		}
 
 		/// <summary>

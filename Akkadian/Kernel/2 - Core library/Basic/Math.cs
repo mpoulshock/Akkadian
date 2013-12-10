@@ -32,21 +32,12 @@ namespace Akkadian
         /// </summary>
         public static Tvar operator + (Tvar tn1, Tvar tn2)    
         {
-			return ApplyFcnToTimeline(x => CoreSum(x), tn1, tn2);  //.DeVerticalize;
+			return ApplyFcnToTimeline(x => CoreSum(x), tn1, tn2);
         }
-//		private static Hval CoreSum(List<Hval> list)
-//		{
-//			return Convert.ToDecimal(list[0].Val) + Convert.ToDecimal(list[1].Val);
-//		}
-        private static Hval CoreSum(List<Hval> list)
-        {
-			if (list[0].Val.GetType() == (new Tvar()).GetType() || list[1].Val.GetType() == (new Tvar()).GetType())
-			{
-				return new Hval( (Tvar)list[0].Val + (Tvar)list[1].Val);
-			}
-
+		private static Hval CoreSum(List<Hval> list)
+		{
 			return Convert.ToDecimal(list[0].Val) + Convert.ToDecimal(list[1].Val);
-        }
+		}
 
         /// <summary>
         /// Subtracts one Tvar from another.

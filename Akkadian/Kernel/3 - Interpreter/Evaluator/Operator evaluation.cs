@@ -162,6 +162,12 @@ namespace Akkadian
 			if (op == Op.DaysToMonths)   	{ return nTvar(((Tvar)ob1).DaysToMonths); }
 			if (op == Op.DaysToWeeks)   	{ return nTvar(((Tvar)ob1).DaysToWeeks); }
 
+			if (op == Op.YearsSince)	   	{ return nTvar( Time.YearsSince((Tvar)ob1) ); }
+			if (op == Op.QuartersSince)	   	{ return nTvar( Time.QuartersSince((Tvar)ob1) ); }
+			if (op == Op.MonthsSince)	   	{ return nTvar( Time.MonthsSince((Tvar)ob1) ); }
+			if (op == Op.WeeksSince)	   	{ return nTvar( Time.WeeksSince((Tvar)ob1) ); }
+			if (op == Op.DaysSince)	   		{ return nTvar( Time.DaysSince((Tvar)ob1) ); }
+
 			if (op == Op.Abs)   			{ return nTvar(Tvar.Abs((Tvar)ob1)); }
 			if (op == Op.Sqrt)  			{ return nTvar(Tvar.Sqrt((Tvar)ob1)); }
 			if (op == Op.Nlog)   			{ return nTvar(Tvar.Log((Tvar)ob1)); }

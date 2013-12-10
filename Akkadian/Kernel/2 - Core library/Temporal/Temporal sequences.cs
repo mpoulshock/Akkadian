@@ -45,7 +45,53 @@ namespace Akkadian
 
         public const double DaysPerMonth = DaysPerYear / 12;
 
+
+		//*********************************************************************
+		// TEMPORAL NUMBER LINES
+		//*********************************************************************
         
+		/// <summary>
+		/// Generates a number line with the origin centered on a specified Date, and counting
+		/// off intervals of a given type.
+		/// </summary>
+		public static Tvar NumberLine(DateTime origin, Time.IntervalType interval)
+		{
+			Tvar t1 = Time.IntervalsSince(origin, Time.EndOf, interval, 0);
+			Tvar t2 = Time.IntervalsUntil(Time.DawnOf.AddYears(1), origin, interval, 1) * -1;
+			return t1 + t2;
+		}
+
+		public static Tvar YearsSince(Tvar date)
+		{
+			// TODO: Handle unknowns
+			return NumberLine(Convert.ToDateTime(date.FirstValue.Val), Time.IntervalType.Year);
+		}
+
+		public static Tvar QuartersSince(Tvar date)
+		{
+			// TODO: Handle unknowns
+			return NumberLine(Convert.ToDateTime(date.FirstValue.Val), Time.IntervalType.Quarter);
+		}
+
+		public static Tvar MonthsSince(Tvar date)
+		{
+			// TODO: Handle unknowns
+			return NumberLine(Convert.ToDateTime(date.FirstValue.Val), Time.IntervalType.Month);
+		}
+
+		public static Tvar WeeksSince(Tvar date)
+		{
+			// TODO: Handle unknowns
+			return NumberLine(Convert.ToDateTime(date.FirstValue.Val), Time.IntervalType.Week);
+		}
+
+		public static Tvar DaysSince(Tvar date)
+		{
+			// TODO: Handle unknowns
+			return NumberLine(Convert.ToDateTime(date.FirstValue.Val), Time.IntervalType.Day);
+		}
+
+
         //*********************************************************************
         // TEMPORAL "STEP" FUNCTIONS
         //*********************************************************************
@@ -116,7 +162,7 @@ namespace Akkadian
             {
                 if (indexNumber != startAt-1)
                 {
-                    result.AddState(indexDate,Convert.ToString(indexNumber));
+					result.AddState(indexDate,Convert.ToDecimal(indexNumber));
                 }
                 indexNumber++;
                 indexDate = indexDate.SubtractInterval(interval);

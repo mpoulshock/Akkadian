@@ -64,17 +64,6 @@ namespace Akkadian
 		}
 
         /// <summary>
-        /// Indicates whether a (non-unknown) value has been determined for the Tvar 
-        /// </summary>
-        public bool IsKnown
-        {
-            get
-            {
-                return false;  // TODO: Deal with this (relates to facts.either)
-            }
-        }
-
-        /// <summary>
         /// Adds an time-value state to the TimeLine. 
         /// </summary>
         public void AddState(DateTime dt, Hval hval)
@@ -103,14 +92,12 @@ namespace Akkadian
 					}
 				}
 
-				// EXPERIMENTAL
-//				return result;
-				return result.DeVerticalize;
+				return result;
 			}
 		}  
 
 		/// <summary>
-		/// If Tvar is an eternal value where that value is itself a Tvar, return that value.
+		/// If Tvar is an eternal value that is itself a Tvar, return that value.
 		/// Otherwise, return the whole Tvar.
 		/// </summary>
 		private Tvar DeVerticalize
@@ -201,20 +188,16 @@ namespace Akkadian
 					return v.ToString;
 				}
 			}
-			else
+
+			string result = "{";
+
+			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
 			{
-				string result = "{";
-
-				foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
-				{
-					string date = Util.FormatDate(de.Key);
-					string val = de.Value.ToString.Replace("True","true").Replace("False","false");
-					result += date + ": " + val + ", ";
-				}
-				return result.TrimEnd(' ', ',') + "}";
+				string date = Util.FormatDate(de.Key);
+				string val = de.Value.ToString.Replace("True","true").Replace("False","false");
+				result += date + ": " + val + ", ";
 			}
-
-			return this.Out.ToString();
+			return result.TrimEnd(' ', ',') + "}";
 		}
 
         /// <summary>
@@ -347,7 +330,6 @@ namespace Akkadian
         /// <summary>
         /// Returns true whenever the Tvar has a value of "unstated."
         /// </summary>
-        //  TODO: Why does this exist?
         public Tvar IsUnstated
         {
             get

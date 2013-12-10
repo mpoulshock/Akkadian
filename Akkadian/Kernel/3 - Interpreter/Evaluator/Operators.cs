@@ -131,6 +131,13 @@ namespace Akkadian
 		Trim = 131,
 		First = 132,
 		Rest = 133,
+		Order = 134,
+		OrderBy = 135,
+		YearsSince = 136,
+		QuartersSince = 137,
+		MonthsSince = 138,
+		WeeksSince = 139,
+		DaysSince = 140,
 
 		// Three arguments
 		Shift = 200,
@@ -285,6 +292,12 @@ namespace Akkadian
 			OperatorRegistry.Add("Trim",Op.Trim);
 			OperatorRegistry.Add("First",Op.First);
 			OperatorRegistry.Add("Rest",Op.Rest);
+			OperatorRegistry.Add("Order",Op.Order);
+			OperatorRegistry.Add("YearsSince",Op.YearsSince);
+			OperatorRegistry.Add("QuartersSince",Op.QuartersSince);
+			OperatorRegistry.Add("MonthsSince",Op.MonthsSince);
+			OperatorRegistry.Add("WeeksSince",Op.WeeksSince);
+			OperatorRegistry.Add("DaysSince",Op.DaysSince);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);
@@ -306,6 +319,7 @@ namespace Akkadian
 			OperatorRegistry.Add("Map",Op.Map);
 			OperatorRegistry.Add("Filter",Op.Filter);
 			OperatorRegistry.Add("MakeTset",Op.MakeTset);
+			OperatorRegistry.Add("OrderBy",Op.OrderBy);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);
