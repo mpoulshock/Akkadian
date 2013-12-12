@@ -24,6 +24,26 @@ namespace Akkadian
 {
     public partial class H
     {
+		/// <summary>
+		/// Creates a time series where the value at each date is the date itself.
+		/// </summary>
+		public static Tvar TheDate
+		{
+			get
+			{
+				DateTime index = Time.DawnOf;
+				Tvar d = new Tvar(index);
+
+				while (index < Time.EndOf) 
+				{
+					index = index.AddDays(1);
+					d.AddState(index,index);
+				}
+
+				return d;
+			}
+		}
+
         /// <summary>
         /// Returns a Tvar representing the calendar year, spanning all of time.
         /// </summary>

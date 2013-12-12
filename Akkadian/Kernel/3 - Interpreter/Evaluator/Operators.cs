@@ -184,6 +184,7 @@ namespace Akkadian
 		Now = 434,
 		True = 435,
 		False = 436,
+		TheDate = 437,
 
 		// Meaningless
 		Null = 999
@@ -345,6 +346,7 @@ namespace Akkadian
 			OperatorRegistry.Add("False",Op.False);
 			OperatorRegistry.Add("true",Op.True);
 			OperatorRegistry.Add("false",Op.False);
+			OperatorRegistry.Add("TheDate",Op.TheDate);
 		}
 	}
 }

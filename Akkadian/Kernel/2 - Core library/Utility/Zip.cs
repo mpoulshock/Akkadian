@@ -163,6 +163,8 @@ namespace Akkadian
 				}
 				else
 				{
+					// TODO: Consider only adding states different from the prior one,
+					// for performance reasons
 					result.AddState(slice.Key, fcn(slice.Value));
 				}
 			}

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Akkadian
 {    
@@ -169,19 +170,7 @@ namespace Akkadian
 				Hval v = this.FirstValue;
 				if (v.IsKnown)
 				{
-					if (v.IsSet())   return v.ToSerializedSet();
-
-					string d = Convert.ToString(v.Val);
-
-					// Numbers
-					Decimal temp2;
-					if (decimal.TryParse(d, out temp2)) return temp2.ToString("G29");  // Removes trailing zeros from decimal
-
-					// Dates
-					DateTime temp;
-					if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
-
-					return v.Obj.ToString();
+					return FormatTSValue(v);
 				}
 				else
 				{
@@ -189,15 +178,38 @@ namespace Akkadian
 				}
 			}
 
-			string result = "{";
+			StringBuilder sb = new StringBuilder();
+			sb.Append("{");
 
 			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
 			{
 				string date = Util.FormatDate(de.Key);
-				string val = de.Value.ToString.Replace("True","true").Replace("False","false");
-				result += date + ": " + val + ", ";
+				string val = FormatTSValue(de.Value);
+				sb.Append(date + ": " + val + ", ");
 			}
+
+			string result = Convert.ToString(sb);
 			return result.TrimEnd(' ', ',') + "}";
+		}
+
+		/// <summary>
+		/// Formats the value component of the date-value pair in each time series interval.
+		/// </summary>
+		private static string FormatTSValue(Hval v)
+		{
+			if (v.IsSet())   return v.ToSerializedSet();
+
+			string d = Convert.ToString(v.Val);
+
+			// Numbers
+			Decimal temp2;
+			if (decimal.TryParse(d, out temp2)) return temp2.ToString("G29");  // Removes trailing zeros from decimal
+
+			// Dates
+			DateTime temp;
+			if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
+
+			return v.Obj.ToString().Replace("True","true").Replace("False","false");
 		}
 
         /// <summary>

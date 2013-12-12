@@ -249,6 +249,7 @@ namespace Akkadian
 			if (op == Op.EndOfTime) 		{ return nTvar(Time.EndOf); }
 			if (op == Op.End) 				{ return nTvar(Time.EndOf); }
 			if (op == Op.Now) 				{ return nTvar(new Tvar(DateTime.Now)); }
+			if (op == Op.TheDate)			{ return nTvar(Time.TheDate); }
 
 			if (op == Op.TheYear) 			{ return nTvar(H.TheYear); }
 			if (op == Op.TheQuarter) 		{ return nTvar(H.TheQuarter); }
