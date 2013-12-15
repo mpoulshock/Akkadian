@@ -138,14 +138,15 @@ namespace Akkadian
 		MonthsSince = 138,
 		WeeksSince = 139,
 		DaysSince = 140,
+		Ever = 141,
+		Always = 142,
 
 		// Three arguments
 		Shift = 200,
 		ComposeDate = 201,
 		SlidingElapsedIntervals = 202,
 		SlidingSummedIntervals = 203,
-		IsAlwaysTrue = 204,
-		IsEverTrue = 205,
+		Window = 206,
 
 		// Four arguments
 		TotalSummedIntervals = 250,
@@ -299,14 +300,15 @@ namespace Akkadian
 			OperatorRegistry.Add("MonthsSince",Op.MonthsSince);
 			OperatorRegistry.Add("WeeksSince",Op.WeeksSince);
 			OperatorRegistry.Add("DaysSince",Op.DaysSince);
+			OperatorRegistry.Add("Ever",Op.Ever);
+			OperatorRegistry.Add("Always",Op.Always);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);
 			OperatorRegistry.Add("Date",Op.ComposeDate);
 			OperatorRegistry.Add("SlidingElapsedIntervals",Op.SlidingElapsedIntervals);
 			OperatorRegistry.Add("SlidingSummedIntervals",Op.SlidingSummedIntervals);
-			OperatorRegistry.Add("IsAlwaysTrue",Op.IsAlwaysTrue);
-			OperatorRegistry.Add("IsEverTrue",Op.IsEverTrue);
+			OperatorRegistry.Add("Window",Op.Window);
 
 			// Four arguments
 			OperatorRegistry.Add("TotalSummedIntervals",Op.TotalSummedIntervals);

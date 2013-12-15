@@ -348,7 +348,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("FedMinWage > 7");
-			Assert.AreEqual("{Dawn: false, 2009-07-24: true}", r.ToString());                
+			Assert.AreEqual("{Dawn: False, 2009-07-24: True}", r.ToString());                
 		}
 
 		[Test]
@@ -356,8 +356,8 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
-			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-07-24: true} |> EverPer[TheYear]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+			Tvar r = (Tvar)sess.ProcessInput("{Dawn: False, 2009-07-24: True} |> EverPer[TheYear]");
+			Assert.AreEqual("{Dawn: False, 2009-01-01: True}", r.ToString());                
 		}
 
 		[Test]
@@ -366,7 +366,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, FedMinWage > 7]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+			Assert.AreEqual("{Dawn: False, 2009-01-01: True}", r.ToString());                
 		}
 
 		[Test]
@@ -375,7 +375,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("FedMinWage = {1800-01-01: $0, 2008-07-24: $6.55, 2009-07-24: $7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("EverPer[TheYear, (FedMinWage > 7)]");
-			Assert.AreEqual("{Dawn: false, 2009-01-01: true}", r.ToString());                
+			Assert.AreEqual("{Dawn: False, 2009-01-01: True}", r.ToString());                
 		}
 
 		[Test]
@@ -384,7 +384,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
 			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek]");
-			Assert.AreEqual("{Dawn: false, 2014-03-15: true, 2014-05-17: false, 2014-06-28: true}", r.ToString());                
+			Assert.AreEqual("{Dawn: False, 2014-03-15: True, 2014-05-17: False, 2014-06-28: True}", r.ToString());                
 		}
 
 		[Test]

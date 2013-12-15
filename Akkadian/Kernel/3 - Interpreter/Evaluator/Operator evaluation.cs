@@ -161,6 +161,8 @@ namespace Akkadian
 			if (op == Op.DaysToYears)   	{ return nTvar(((Tvar)ob1).DaysToYears); }
 			if (op == Op.DaysToMonths)   	{ return nTvar(((Tvar)ob1).DaysToMonths); }
 			if (op == Op.DaysToWeeks)   	{ return nTvar(((Tvar)ob1).DaysToWeeks); }
+			if (op == Op.Ever) 			  	{ return nTvar(((Tvar)ob1).IsEverTrue()); }
+			if (op == Op.Always)		   	{ return nTvar(((Tvar)ob1).IsAlwaysTrue()); }
 
 			if (op == Op.YearsSince)	   	{ return nTvar( Time.YearsSince((Tvar)ob1) ); }
 			if (op == Op.QuartersSince)	   	{ return nTvar( Time.QuartersSince((Tvar)ob1) ); }
@@ -194,8 +196,7 @@ namespace Akkadian
 			if (op == Op.ComposeDate) 				{ return nTvar( Tvar.ComposeDate((Tvar)ob1,(Tvar)ob2,(Tvar)ob3) ); }
 			if (op == Op.SlidingElapsedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingElapsedIntervals((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.SlidingSummedIntervals) 	{ return nTvar(((Tvar)ob3).SlidingSummedIntervals((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.IsAlwaysTrue) 				{ return nTvar(((Tvar)ob3).IsAlwaysTrue((Tvar)ob1,(Tvar)ob2)); }
-			if (op == Op.IsEverTrue) 				{ return nTvar(((Tvar)ob3).IsEverTrue((Tvar)ob1,(Tvar)ob2)); }
+			if (op == Op.Window) 					{ return nTvar(((Tvar)ob3).Window((Tvar)ob1,(Tvar)ob2)); }
 
 			return n(Typ.Null,null);
 		}

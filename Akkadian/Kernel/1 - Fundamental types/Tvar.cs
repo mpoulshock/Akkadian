@@ -181,15 +181,21 @@ namespace Akkadian
 			StringBuilder sb = new StringBuilder();
 			sb.Append("{");
 
+			bool addLineBreaks = this.TimeLine.Count > 5;
+
 			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
 			{
 				string date = Util.FormatDate(de.Key);
 				string val = FormatTSValue(de.Value);
 				sb.Append(date + ": " + val + ", ");
+
+				if (addLineBreaks) sb.Append("\r\n   ");
 			}
 
 			string result = Convert.ToString(sb);
-			return result.TrimEnd(' ', ',') + "}";
+			result = result.TrimEnd(' ', ',') + "}";
+			if (addLineBreaks) result = result.Replace(", \r\n}","}");
+			return result;
 		}
 
 		/// <summary>
@@ -209,7 +215,7 @@ namespace Akkadian
 			DateTime temp;
 			if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
 
-			return v.Obj.ToString().Replace("True","true").Replace("False","false");
+			return v.Obj.ToString().Replace("true","True").Replace("false","False");
 		}
 
         /// <summary>
@@ -330,6 +336,35 @@ namespace Akkadian
 
             return TimeLine.Values[TimeLine.Count-1];
         }
+
+		/// <summary>
+		/// Extracts a window from the time series between two given dates.
+		/// </summary>
+		public Tvar Window(Tvar start, Tvar end)
+		{
+			Hstate top = H.PrecedingState(start.FirstValue, end.FirstValue);
+			if (top != Hstate.Known)
+			{
+				return new Tvar(new Hval(null, top));
+			}
+
+			DateTime startDT = Convert.ToDateTime(start.FirstValue.Val);
+
+			Tvar result = new Tvar();
+			result.AddState(startDT,this.ObjectAsOf(startDT));
+
+			// Add the states within the time window
+			for (int i = 0; i < this.TimeLine.Count-1; i++ ) 
+			{
+				// If value is between two adjacent points on the timeline...
+				if (TimeLine.Keys[i] > start && TimeLine.Keys[i] <= end)
+				{
+					result.AddState(TimeLine.Keys[i], TimeLine.Values[i]);
+				}
+			}
+
+			return result;
+		}
 
         /// <summary>
         /// Gets all points in time at which value of the Tvar changes.

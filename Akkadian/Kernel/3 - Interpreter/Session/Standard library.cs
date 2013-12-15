@@ -45,6 +45,10 @@ namespace Akkadian
 			// Higher-order set
 			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");
 			ProcessInput("ForAll[fcn,set] = (Filter[~fcn,set] |> Count) == (set |> Count);");
+
+			// Time
+			ProcessInput("DayOfWeek = Mod[DaysSince[1800-01-05],7] + 1");
+
 		}
 	}
 }
