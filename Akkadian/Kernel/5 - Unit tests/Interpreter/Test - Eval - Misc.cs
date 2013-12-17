@@ -405,7 +405,7 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
-		public void Misc_47_Contains_nums ()
+		public void Misc_47 ()
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{2,3,4} |> Contains[2]");
@@ -503,6 +503,16 @@ namespace Akkadian.UnitTests
 			sess.ProcessInput("Sq[x] = x*x");
 			Tvar r = (Tvar)sess.ProcessInput("Sq[{Dawn: 4, 2014-02-02: 5}]");
 			Assert.AreEqual("{Dawn: 16, 2014-02-02: 25}", r.Out);                
+		}
+
+		[Test]
+		public void Misc_59_paren_isue ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x*x");
+			sess.ProcessInput("SubmissionRequired[corp] = (Sq[corp] >= 250 |> EverPer[TheYear]);");  // Parsing Sq[corp] as -42
+			Tvar r = (Tvar)sess.ProcessInput("SubmissionRequired[6]");
+			Assert.AreEqual(false, r.Out);                
 		}
 	}
 }

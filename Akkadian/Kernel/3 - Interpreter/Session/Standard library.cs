@@ -34,10 +34,9 @@ namespace Akkadian
 			ProcessInput("BoolToBinary[b] = b == True -> 1, 0;");
 			ProcessInput("BoolCount[set] = set |> Map[BoolToBinary[_]] |> SetSum;");
 
-//			ProcessInput("BoolCount[set] = set |> Map[(_ == True -> 1, 0)] |> SetSum;");
-
 			// Set - basic
 			ProcessInput("IsEmpty2[set] = (set |> Count) == 0;");
+			ProcessInput("Contains[thing,set] = (set |> Filter[_ == thing] |> Count) > 0;");
 
 			// Set aggregations
 			// ProcessInput("SetSum[set] = Count[set] == 0 -> 0, First[set] + SetSum[Rest[set]];");    // C# implementation is faster

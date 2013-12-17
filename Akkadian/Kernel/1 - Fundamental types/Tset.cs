@@ -122,17 +122,6 @@ namespace Akkadian
         {
             return ((List<object>)h.Val).Count;
         }
-
-        /// <summary>
-        /// Returns true when the set has no members.
-        /// </summary>
-        public Tvar IsEmpty
-        {
-            get
-            {
-                return this.Count == 0;
-            }
-        }    
         
         /// <summary>
         /// Returns true when one Tvar is a subset of another. 
@@ -146,14 +135,6 @@ namespace Akkadian
             List<object> s1 = (List<object>)list[0].Val;
             List<object> s2 = (List<object>)list[1].Val;
             return new Hval(!s1.Except(s2).Any());
-        }
-
-        /// <summary>
-        /// Returns true when the Tvar contains a given legal entity. 
-        /// </summary>
-        public Tvar Contains(object e)
-        {
-			return ApplyFcnToTimeline(x => CoreSubset(x), MakeTset(e), this);
         }
 
         /// <summary>

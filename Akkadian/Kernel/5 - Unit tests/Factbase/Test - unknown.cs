@@ -298,12 +298,12 @@ namespace Akkadian.UnitTests
         
         // Set.Contains
         
-        [Test]
-        public void Unknown_SetContains_1 ()
-        {
-            Thing P1 = new Thing("P1");
-            Assert.AreEqual(eternallyUnstated, theSet.Contains(P1).Out);        
-        }
+//        [Test]
+//        public void Unknown_SetContains_1 ()
+//        {
+//            Thing P1 = new Thing("P1");
+//            Assert.AreEqual(eternallyUnstated, theSet.Contains(P1).Out);        
+//        }
         
         // Set equality
         

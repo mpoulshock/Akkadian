@@ -34,7 +34,7 @@ namespace Akkadian
             return rei.AsOf(end) - rei.AsOf(start);
         }
 
-        /// <summary>
+		/// <summary>
         /// Provides a running count of the number of whole intervals 
         /// that a Tvar has been true.
         /// </summary>

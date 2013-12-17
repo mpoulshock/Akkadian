@@ -108,7 +108,6 @@ namespace Akkadian
 
 			// Set operators
 			if (op == Op.Subset) 	{ return nTvar(((Tvar)ob2).IsSubsetOf((Tvar)ob1)); }
-			if (op == Op.Contains) 	{ return n(Typ.Tvar, ((Tvar)ob2).Contains(Tvar.MakeTset(ob1))); }
 			if (op == Op.Union) 	{ return nTvar(Tvar.Union((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Intersect) { return nTvar(Tvar.Intersection((Tvar)ob1,(Tvar)ob2)); }
 			if (op == Op.Remove) 	{ return nTvar((Tvar.RelativeComplement((Tvar)ob2,(Tvar)ob1))); }
@@ -139,7 +138,6 @@ namespace Akkadian
 			if (op == Op.Trim)				{ return nTvar(((Tvar)ob1).Lean); }
 
 			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
-			if (op == Op.IsEmpty)   		{ return nTvar(((Tvar)ob1).IsEmpty); }
 			if (op == Op.Reverse)   		{ return nTvar(((Tvar)ob1).Reverse); }
 			if (op == Op.SetSum)   			{ return nTvar(((Tvar)ob1).SumItems); }
 			if (op == Op.SetMax)   			{ return nTvar(((Tvar)ob1).MaxItem); }

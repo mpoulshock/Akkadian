@@ -71,7 +71,6 @@ namespace Akkadian
 		RoundNearDown = 25,
 		Concat = 26,
 		Subset = 27, 
-		Contains = 28, 
 		Union = 29, 
 		Intersect = 30, 
 		Remove = 31,
@@ -109,7 +108,6 @@ namespace Akkadian
 		Acos = 109,
 		Atan = 110,
 		Count = 111,
-		IsEmpty = 112,
 		Reverse = 113,
 		ToThing = 114,
 		Day = 115,
@@ -232,7 +230,6 @@ namespace Akkadian
 			OperatorRegistry.Add("RoundNearDown",Op.RoundNearDown);
 			OperatorRegistry.Add("Concat",Op.Concat);
 			OperatorRegistry.Add("IsSubsetOf",Op.Subset);
-			OperatorRegistry.Add("Contains",Op.Contains);
 			OperatorRegistry.Add("Union",Op.Union);
 			OperatorRegistry.Add("Intersection",Op.Intersect);
 			OperatorRegistry.Add("Remove",Op.Remove);
@@ -270,7 +267,6 @@ namespace Akkadian
 			OperatorRegistry.Add("Acos",Op.Acos);
 			OperatorRegistry.Add("Atan",Op.Atan);
 			OperatorRegistry.Add("Count",Op.Count);
-			OperatorRegistry.Add("IsEmpty",Op.IsEmpty);
 			OperatorRegistry.Add("Reverse",Op.Reverse);
 			OperatorRegistry.Add("ToThing",Op.ToThing);
 			OperatorRegistry.Add("Day",Op.Day);

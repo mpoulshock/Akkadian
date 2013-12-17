@@ -45,7 +45,7 @@ namespace Akkadian
 
 		// Function parts
 		protected const string fcnVariable = letter + "[a-zA-Z0-9_]*";
-		protected const string fcnNameRegex = letter + "[a-zA-Z0-9_]*";
+		protected const string fcnNameRegex = letter + @"[a-zA-Z0-9\._]*";
 		protected const string bracketInnards = "[a-zA-Z0-9_, ]*";
 		protected const string fcnBrackets = @"\["+ white + "(" + bracketInnards + ")" + white + @"\]";
 		protected const string fcnSignature = "(" + fcnNameRegex + ")" + white + "(" + fcnBrackets + ")?"; 

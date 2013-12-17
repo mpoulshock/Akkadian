@@ -124,29 +124,6 @@ namespace Akkadian.UnitTests
             Assert.AreEqual("Stub", s1.Count.Out);        
         }
 
-        // .IsEmpty
-        
-        [Test]
-        public void IsEmpty1 ()
-        {
-			Assert.AreEqual(false, MakeTset(P1,P2).IsEmpty.Out);        
-        }
-        
-        [Test]
-        public void IsEmpty2 ()
-        {
-            Tvar s1 = new Tvar();
-            s1.SetEternally();
-            Assert.AreEqual(true, s1.IsEmpty.Out);        
-        }
-
-        [Test]
-        public void IsEmpty3 ()
-        {
-            Tvar s1 = new Tvar(Hstate.Uncertain);
-            Assert.AreEqual("Uncertain", s1.IsEmpty.Out);        
-        }
-
         // .IsSubsetOf
         
         [Test]
@@ -205,28 +182,6 @@ namespace Akkadian.UnitTests
             s1.SetEternally();
 			Tvar s2 = MakeTset(P1,P2);
             Assert.AreEqual(false, s2.IsSubsetOf(s1).Out);        
-        }
-        
-        // .Contains
-        
-        [Test]
-        public void Test20 ()
-        {
-			Assert.AreEqual(true, MakeTset(P1,P2).Contains(P1).Out);        
-        }
-        
-        [Test]
-        public void Test21 ()
-        {
-			Assert.AreEqual(false, MakeTset(P1,P2).Contains(P3).Out);        
-        }
-        
-        [Test]
-        public void Test22 ()
-        {
-            Tvar s1 = new Tvar();
-            s1.SetEternally();
-            Assert.AreEqual(false, s1.Contains(P3).Out);        
         }
         
         // Union
