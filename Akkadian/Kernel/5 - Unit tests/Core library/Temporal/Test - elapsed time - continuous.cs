@@ -58,7 +58,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,1), Hstate.Unstated);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tvar r = tb.ContinuousElapsedIntervals(TheDay);
+			Tvar r = tb.ContinuousElapsedIntervals(TheDate);
 
             Assert.AreEqual("Unstated", r.Out);    
         }
@@ -70,7 +70,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,1), Hstate.Stub);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tvar r = tb.ContinuousElapsedIntervals(TheDay);
+			Tvar r = tb.ContinuousElapsedIntervals(TheDate);
 
             Assert.AreEqual("Stub", r.Out);    
         }

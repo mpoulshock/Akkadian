@@ -149,9 +149,9 @@ namespace Akkadian
                     
                     foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
                     {
-						string date = de.Key.ToString("yyyy-MM-dd").Replace("1800-01-01", "Dawn");
+						string date = de.Key.ToString("yyyy-MM-dd").Replace("1900-01-01", "Dawn");
                         date = date.Replace(" 12:00:00 AM", "");
-                        string val = de.Value.ToString.Replace("True","true").Replace("False","false");
+						string val = de.Value.ToString.Replace("true","True").Replace("false","False");
 						result += date + ": " + val + ", ";
                     }
 					return result.TrimEnd(' ', ',') + "}";
@@ -181,7 +181,7 @@ namespace Akkadian
 			StringBuilder sb = new StringBuilder();
 			sb.Append("{");
 
-			bool addLineBreaks = this.TimeLine.Count > 5;
+			bool addLineBreaks = this.TimeLine.Count > 3;
 
 			foreach(KeyValuePair<DateTime,Hval> de in this.TimeLine)
 			{

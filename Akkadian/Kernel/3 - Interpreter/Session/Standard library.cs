@@ -35,19 +35,22 @@ namespace Akkadian
 			ProcessInput("BoolCount[set] = set |> Map[BoolToBinary[_]] |> SetSum;");
 
 			// Set - basic
-			ProcessInput("IsEmpty2[set] = (set |> Count) == 0;");
+			ProcessInput("IsEmpty[set] = (set |> Count) == 0;");
 			ProcessInput("Contains[thing,set] = (set |> Filter[_ == thing] |> Count) > 0;");
-
-			// Set aggregations
-			// ProcessInput("SetSum[set] = Count[set] == 0 -> 0, First[set] + SetSum[Rest[set]];");    // C# implementation is faster
 
 			// Higher-order set
 			ProcessInput("Exists[fcn,set] = (Filter[~fcn,set] |> Count) > 0;");
 			ProcessInput("ForAll[fcn,set] = (Filter[~fcn,set] |> Count) == (set |> Count);");
 
 			// Time
-			ProcessInput("DayOfWeek = Mod[DaysSince[1800-01-05],7] + 1");
-
+			ProcessInput("TheWeek = WeeksSince[AddDays[6,Dawn]];");   // Starts on a Sunday (see en.wikipedia.org/wiki/Seven-day_week#Week_numbering)
+			ProcessInput("DayOfWeek = Mod[DaysSince[1800-01-05],7] + 1;");
+			ProcessInput("DaysInMonth = TheMonth ==  2 & IsLeapYear -> 29, TheMonth ==  2 -> 28, " +
+				"TheMonth ==  4 -> 30, TheMonth ==  6 -> 30, TheMonth ==  9 -> 30, TheMonth == 11 -> 30, 31;");
+			ProcessInput("IsLeapYear = TheYear == 2100 -> false, Mod[TheYear,4] == 0 -> true, false;");
+			ProcessInput("DaysInYear = IsLeapYear -> 366, 365;");
+			ProcessInput("DaysInQuarter = TheQuarter == 1 & IsLeapYear -> 91, TheQuarter == 1 -> 90, TheQuarter == 2 -> 91, " +
+				"TheQuarter == 3 -> 92, TheQuarter == 4 -> 92, Stub;");
 		}
 	}
 }

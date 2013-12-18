@@ -249,17 +249,9 @@ namespace Akkadian
 			if (op == Op.End) 				{ return nTvar(Time.EndOf); }
 			if (op == Op.Now) 				{ return nTvar(new Tvar(DateTime.Now)); }
 			if (op == Op.TheDate)			{ return nTvar(Time.TheDate); }
-
 			if (op == Op.TheYear) 			{ return nTvar(H.TheYear); }
-			if (op == Op.TheQuarter) 		{ return nTvar(H.TheQuarter); }
 			if (op == Op.TheMonth) 			{ return nTvar(H.TheMonth); }
-			if (op == Op.TheWeek) 			{ return nTvar(H.TheCalendarWeek); }
-			if (op == Op.TheDay) 			{ return nTvar(H.TheDay); }
-
-			if (op == Op.DaysInYear) 		{ return nTvar(Time.DaysInYear()); }
-			if (op == Op.DaysInQuarter) 	{ return nTvar(Time.DaysInQuarter()); }
-			if (op == Op.DaysInMonth) 		{ return nTvar(Time.DaysInMonth()); }
-			if (op == Op.IsLeapYear) 		{ return nTvar(Time.IsLeapYear()); }
+			if (op == Op.TheQuarter) 		{ return nTvar(H.TheQuarter); }
 
 			if (op == Op.ConstPi) 			{ return nTvar(Tvar.ConstPi); }
 			if (op == Op.ConstE) 			{ return nTvar(Tvar.ConstE); }
@@ -294,9 +286,24 @@ namespace Akkadian
 				// Pose the leaf node as a question - temporary
 				if (AskQuestions)
 				{
-					Console.Write("  - " + fcnName + "[" + argString.TrimEnd(',') + "]? ");
-					string s = Console.ReadLine();
-					return nTvar(s);
+					string fcnKey = fcnName + "[" + argString.TrimEnd(',') + "]";
+
+					// Look for cached version
+					if (ContainsFact(fcnKey))
+					{
+						return nTvar(GetFact(fcnKey));
+					}
+					else
+					{
+						// Ask the question
+						Console.Write("  - " + fcnKey + "? ");
+						string s = Console.ReadLine();
+
+						// Cache the answer
+						AddFact(fcnKey, new Tvar(s));
+
+						return nTvar(s);
+					}
 				}
 				return nTvar(new Tvar(Hstate.Unstated));
 			}

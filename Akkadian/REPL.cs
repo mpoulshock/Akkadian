@@ -12,6 +12,7 @@ namespace REPL
 		public static void Main (string[] args)
 		{
 			Console.Title = "Akkadian REPL";
+			string filePath = "";
 
 			Session sess = new Session();
 			sess.AskQuestions = true;
@@ -30,56 +31,67 @@ namespace REPL
 					if (userInput.ToLower() == "clear rules")
 					{
 						sess.ClearFunctions();
-						Console.WriteLine("  All rules deleted.");
-						Console.WriteLine();
-						continue;
+						result = "All rules deleted.";
 					}
 
 					// Compile all .akk files in a specified folder
-					if (userInput.ToLower().StartsWith("compile "))
+					else if (userInput.StartsWith("compile "))
 					{
-						sess.ClearFunctions();
-						sess.LoadStandardLibrary();
+						filePath = userInput.Replace("compile ","");
+						if (!filePath.EndsWith(@"\")) filePath = filePath + @"\"; 
 
-						string loc = userInput.Replace("compile ","");
-						if (!loc.EndsWith(@"\")) loc = loc + @"\"; 
-
-						string[] akkFiles = Directory.GetFiles(loc, "*.akk", SearchOption.AllDirectories);
-						Parallel.ForEach(akkFiles, f => 
-						{
-							Interpreter.ImportRuleFile(sess, f);
-						} );
-
-						Console.WriteLine("  Compilation complete.");
-						Console.WriteLine();
-						continue;
+						CompileAkkFiles(sess, filePath);
+						result = "Compilation complete.";
 					}
 
-					// Eval
-					Interpreter.ParserResponse pr = Interpreter.ParseInputLine(userInput);
-					
-					if (pr.IsNewFunction)
+					// Recompile the loaded project
+					else if (userInput.ToLower() == "r")
 					{
-						string name = pr.FunctionName;
-						
-						Expr e = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
+						CompileAkkFiles(sess, filePath);
+						result = "Recompilation complete.";
+					}
 
-						if (sess.ContainsFunction(name))
+					// Retract all facts
+					else if (userInput.ToLower() == "retract all")
+					{
+						sess.ClearFacts();
+						result = "All facts retracted.";
+					}
+
+					// Display session stats
+					else if (userInput.ToLower() == "stats")
+					{
+						result = "Session contains " + Convert.ToString(sess.CountFunctions()) + " functions.";
+					}
+
+					else
+					{
+						// Eval
+						Interpreter.ParserResponse pr = Interpreter.ParseInputLine(userInput);
+						
+						if (pr.IsNewFunction)
 						{
-							sess.UpdateFunction(name, e);
-							result = "Rule updated.";
+							string name = pr.FunctionName;
+							
+							Expr e = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
+
+							if (sess.ContainsFunction(name))
+							{
+								sess.UpdateFunction(name, e);
+								result = "Rule updated.";
+							}
+							else
+							{
+								sess.AddFunction(name, e);
+								result = "Rule added.";
+							}
 						}
 						else
 						{
-							sess.AddFunction(name, e);
-							result = "Rule added.";
+							Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
+							object o = sess.eval(exp).obj;
+							if (o.GetType() == typeof(Tvar)) 	{ result = ((Tvar)o).ToString(); }
 						}
-					}
-					else
-					{
-						Expr exp = new Expr(new List<Node>(){pr.ThatWhichHasBeenParsed});
-						object o = sess.eval(exp).obj;
-						if (o.GetType() == typeof(Tvar)) 	{ result = ((Tvar)o).ToString(); }
 					}
 
 					// Print
@@ -92,6 +104,21 @@ namespace REPL
 					Console.WriteLine();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Compiles all .akk files in a given directory.
+		/// </summary>
+		public static void CompileAkkFiles(Session sess, string path)
+		{
+			sess.ClearFunctions();
+			sess.LoadStandardLibrary();
+
+			string[] akkFiles = Directory.GetFiles(path, "*.akk", SearchOption.AllDirectories);
+			Parallel.ForEach(akkFiles, f => 
+			{
+				Interpreter.ImportRuleFile(sess, f);
+			} );
 		}
 	}
 }

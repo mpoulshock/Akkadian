@@ -70,26 +70,6 @@ namespace Akkadian
 			return new Node(Typ.Tvar,t);
 		}
 
-//		protected static Node nTvar(Tvar t)
-//		{
-//			return new Node(Typ.Tvar,t);
-//		}
-//
-//		protected static Node nTvar(Tvar t)
-//		{
-//			return new Node(Typ.Tvar,t);
-//		}
-//
-//		protected static Node nTvar(Tvar t)
-//		{
-//			return new Node(Typ.Tvar,t);
-//		}
-//
-//		protected static Node nTvar(Tvar t)
-//		{
-//			return new Node(Typ.Tvar,t);
-//		}
-
 		/// <summary>
 		/// Simple way to instantiate a new Node.
 		/// </summary>

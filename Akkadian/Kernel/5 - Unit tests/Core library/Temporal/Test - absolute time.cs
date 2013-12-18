@@ -86,7 +86,7 @@ namespace Akkadian.UnitTests
 		public void IsBetween0 ()
 		{
 			Tvar isDuringTheBushYears = Time.IsBetween(Date(2001,1,20), Date(2009,1,20));	
-			Assert.AreEqual("{Dawn: false, 2001-01-20: true, 2009-01-20: false}", isDuringTheBushYears.Out);		
+			Assert.AreEqual("{Dawn: False, 2001-01-20: True, 2009-01-20: False}", isDuringTheBushYears.Out);		
 		}
 		
 		[Test]
@@ -129,19 +129,11 @@ namespace Akkadian.UnitTests
         {
             Tvar d = new Tvar(Hstate.Uncertain);
             Tvar isDuringTheBushYears = Time.IsBetween(d, Date(2009,1,20));   
-			Assert.AreEqual("{Dawn: Uncertain, 2009-01-20: false}", isDuringTheBushYears.Out);           
+			Assert.AreEqual("{Dawn: Uncertain, 2009-01-20: False}", isDuringTheBushYears.Out);           
         }
 
 		// TheYear
-		
-		[Test]
-		public void TheYear1 ()
-		{	
-			// This test will break every new calendar year (b/c the time frame of TheYear is determined by the system clock)
-			// Last updated: 4/28/12
-			Assert.AreEqual("{Dawn: 0, 2011-01-01: 2011, 2012-01-01: 2012, 2013-01-01: 2013, 2014-01-01: 2014, 2015-01-01: 0}", Time.Year(2).Out);		
-		}
-		
+
 		[Test]
 		public void TheYear2 ()
 		{
@@ -267,80 +259,6 @@ namespace Akkadian.UnitTests
 		public void Min2 ()
 		{
 			Assert.AreEqual(0, TheMonth.Min().Out);		
-		}
-
-		// DaysInQuarter
-
-		[Test]
-		public void Test_DaysInQtr1()
-		{
-			Assert.AreEqual(90, DaysInQuarter().AsOf(Date(2014,02,03)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInQtr2()
-		{
-			Assert.AreEqual(91, DaysInQuarter().AsOf(Date(2016,02,03)).Out);
-		}
-
-		// DaysInMonth
-
-		[Test]
-		public void Test_DaysInMonth1()
-		{
-			Assert.AreEqual(28, DaysInMonth().AsOf(Date(2014,02,03)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInMonth2()
-		{
-			Assert.AreEqual(29, DaysInMonth().AsOf(Date(2016,02,03)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInMonth3()
-		{
-			Assert.AreEqual(31, DaysInMonth().AsOf(Date(2014,12,03)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInMonth4()
-		{
-			Assert.AreEqual(30, DaysInMonth().AsOf(Date(2014,04,03)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInMonth5()
-		{
-			Assert.AreEqual("Stub", DaysInMonth().AsOf(Date(1803,04,03)).Out);
-		}
-
-		// DaysInYear
-
-		[Test]
-		public void Test_DaysInYear1()
-		{
-			Assert.AreEqual(366, DaysInYear().AsOf(Date(2016,04,05)).Out);
-		}
-
-		[Test]
-		public void Test_DaysInYear2()
-		{
-			Assert.AreEqual(365, DaysInYear().AsOf(Date(2019,04,05)).Out);
-		}
-
-		// IsLeapYear
-
-		[Test]
-		public void Test_LeapYear1()
-		{
-			Assert.AreEqual(true, IsLeapYear().AsOf(Date(2016,04,05)).Out);
-		}
-
-		[Test]
-		public void Test_LeapYear2()
-		{
-			Assert.AreEqual(false, IsLeapYear().AsOf(Date(2019,04,05)).Out);
 		}
 	}
 }

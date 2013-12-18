@@ -493,6 +493,38 @@ namespace Akkadian.UnitTests
 		}
 
 		[Test]
+		public void FT_AlwaysPerInterval_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2012-11-08: true} |> AlwaysPer[TheYear]");
+			Assert.AreEqual("{Dawn: False, 2013-01-01: True}", r.Out);                
+		}
+
+		[Test]
+		public void FT_AlwaysPerInterval_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Stub |> AlwaysPer[TheYear]");
+			Assert.AreEqual("Stub", r.Out);                
+		}
+
+		[Test]
+		public void FT_EverPerInterval_1 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2012-11-08: true} |> EverPer[TheYear]");
+			Assert.AreEqual("{Dawn: False, 2012-01-01: True}", r.Out);                
+		}
+
+		[Test]
+		public void FT_EverPerInterval_2 ()
+		{
+			Session sess = new Session();
+			Tvar r = (Tvar)sess.ProcessInput("Unstated |> EverPer[TheYear]");
+			Assert.AreEqual("Unstated", r.Out);                
+		}
+
+		[Test]
 		public void Map_1 ()
 		{
 			Session sess = new Session();
@@ -874,7 +906,7 @@ namespace Akkadian.UnitTests
 		public void TimeSeries_2 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("FedMinWage = {1800-01-01: $1.95,2009-07-24: $7.25}");
+			sess.ProcessInput("FedMinWage = {Dawn: $1.95,2009-07-24: $7.25}");
 			Tvar r = (Tvar)sess.ProcessInput("FedMinWage");
 			Assert.AreEqual("{Dawn: 1.95, 2009-07-24: 7.25}", r.Out);                
 		}
@@ -885,7 +917,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("hh = {Dawn: {\"a\"}, 2009-07-24:{\"a\",\"b\"}}");
 			Tvar r = (Tvar)sess.ProcessInput("hh");
-			Assert.AreEqual("{Dawn: {\"a\"}, 2009-07-24: {\"a\",\"b\"}}", r.Out);                
+			Assert.AreEqual("{Dawn: {a}, 2009-07-24: {a,b}}", r.Out);                
 		}
 
 		[Test]
@@ -932,7 +964,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("hh = {Dawn: (9*7), 2009-07-24: false|true}");
 			Tvar r = (Tvar)sess.ProcessInput("hh");
-			Assert.AreEqual("{Dawn: 63, 2009-07-24: true}", r.Out);                
+			Assert.AreEqual("{Dawn: 63, 2009-07-24: True}", r.Out);                
 		}
 
 		[Test]

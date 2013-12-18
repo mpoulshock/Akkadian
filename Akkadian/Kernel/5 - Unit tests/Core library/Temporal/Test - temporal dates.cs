@@ -68,7 +68,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Date(2000,1,1), Date(2010,5,13));
 
             Tvar result = td1 == td2;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true}", result.Out);        
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True}", result.Out);        
         }
         
         [Test]
@@ -79,7 +79,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Time.DawnOf, Date(2011,01,01));
             td2.AddState(Date(2000,1,1), Date(2010,5,13));
             Tvar result = td1 != td2;
-			Assert.AreEqual("{Dawn: true, 2000-01-01: false}", result.Out);        
+			Assert.AreEqual("{Dawn: True, 2000-01-01: False}", result.Out);        
         }
         
         // IsBefore / IsAfter
@@ -92,7 +92,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2011,1,1));
             Tvar result = td1 > td2;
-			Assert.AreEqual("{Dawn: true, 2000-01-01: false}", result.Out);        
+			Assert.AreEqual("{Dawn: True, 2000-01-01: False}", result.Out);        
         }
         
         [Test]
@@ -103,7 +103,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2011,1,1));
             Tvar result = td1 < td2;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true}", result.Out);        
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True}", result.Out);        
         }
         
         [Test]
@@ -114,7 +114,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Time.DawnOf, Date(2009,1,1));
             td2.AddState(Date(2000,1,1), Date(2008,1,1));
             Tvar result = td1 >= td2;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true}", result.Out);        
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True}", result.Out);        
         }
         
         [Test]
@@ -126,7 +126,7 @@ namespace Akkadian.UnitTests
             td2.AddState(Date(2000,1,1), Date(2000,1,1));
             td2.AddState(Date(2001,1,1), Date(2008,1,1));
             Tvar result = td2 <= td1;
-			Assert.AreEqual("{Dawn: true, 2001-01-01: false}", result.Out);        
+			Assert.AreEqual("{Dawn: True, 2001-01-01: False}", result.Out);        
         }
         
         // .AddDays

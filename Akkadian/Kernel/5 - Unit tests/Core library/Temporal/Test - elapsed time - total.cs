@@ -35,7 +35,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,1),true);
             tb.AddState(new DateTime(2015,1,3),false);
 
-            Tvar r = tb.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar r = tb.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual(2, r.Out);    
         }
 
@@ -43,7 +43,7 @@ namespace Akkadian.UnitTests
         public void TotalElapsedIntervals2 ()
         {
             Tvar tb = new Tvar(false);
-            Tvar r = tb.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar r = tb.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual(0, r.Out);    
         }
 
@@ -54,7 +54,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,1), Hstate.Unstated);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tvar r = tb.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar r = tb.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual("Unstated", r.Out);    
         }
 
@@ -65,7 +65,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,1), Hstate.Stub);
             tb.AddState(new DateTime(2015,3,1), false);
 
-            Tvar r = tb.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar r = tb.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual("Stub", r.Out);    
         }
 
@@ -78,7 +78,7 @@ namespace Akkadian.UnitTests
             tb.AddState(new DateTime(2015,1,10),true);
             tb.AddState(new DateTime(2015,1,18),false);
 
-            Tvar r = tb.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar r = tb.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual(10, r.Out);    
         }
 
@@ -87,16 +87,16 @@ namespace Akkadian.UnitTests
         {
             Tvar t = new Tvar(true);
             t.AddState(Date(2012,1,1), false);
-            Tvar actual = t.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
-            Assert.AreEqual(40908, actual.Out);
+			Tvar actual = t.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
+			Assert.AreEqual(40907, actual.Out);
         }
 
         [Test]
         public void TotalElapsedIntervals7 ()
         {
             Tvar t = new Tvar(true);
-            Tvar actual = t.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
-            Assert.AreEqual(73050, actual.Out);      
+			Tvar actual = t.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
+			Assert.AreEqual(73413, actual.Out);      
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2000,1,2), false);
             t.AddState(Date(2000,1,3), true);
             t.AddState(Date(2000,1,4), false);      
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(1999,1,1), Date(2000,1,6));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(1999,1,1), Date(2000,1,6));
             Assert.AreEqual(2, result.Out);
         }
 
@@ -119,7 +119,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2000,1,2), false);
             t.AddState(Date(2000,1,3), true);
             t.AddState(Date(2000,1,4), false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,2), Date(2000,1,6));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,2), Date(2000,1,6));
             Assert.AreEqual(1, result.Out);      
         }
 
@@ -131,7 +131,7 @@ namespace Akkadian.UnitTests
             t.AddState(Date(2000,1,2), false);
             t.AddState(Date(2000,1,3), true);
             t.AddState(Date(2000,1,4), false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2010,1,2), Date(2010,1,6));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2010,1,2), Date(2010,1,6));
             Assert.AreEqual(0, result.Out);      
         }
 
@@ -141,7 +141,7 @@ namespace Akkadian.UnitTests
             Tvar t = new Tvar(false);
             t.AddState(Date(2000,1,1), true);
             t.AddState(Date(2000,1,2), false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(1999,1,2), Date(1999,1,6));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(1999,1,2), Date(1999,1,6));
             Assert.AreEqual(0, result.Out);
         }
 
@@ -151,7 +151,7 @@ namespace Akkadian.UnitTests
             Tvar t = new Tvar(false);
             t.AddState(Date(2000,1,1), true);
             t.AddState(Date(2000,2,1), false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,15), Date(2000,1,20));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,15), Date(2000,1,20));
             Assert.AreEqual(5, result.Out);
         }
 
@@ -159,7 +159,7 @@ namespace Akkadian.UnitTests
         public void TotalElapsedIntervals13 ()
         {
             Tvar t = new Tvar(true);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,15), Date(2000,1,20));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,15), Date(2000,1,20));
             Assert.AreEqual(5, result.Out);
         }
 
@@ -167,7 +167,7 @@ namespace Akkadian.UnitTests
         public void TotalElapsedIntervals14 ()
         {
             Tvar t = new Tvar(true);
-            Tvar result = (!t).TotalElapsedIntervals(TheDay, Date(2000,1,15), Date(2000,1,20));
+			Tvar result = (!t).TotalElapsedIntervals(TheDate, Date(2000,1,15), Date(2000,1,20));
             Assert.AreEqual(0, result.Out);
         }
 
@@ -176,7 +176,7 @@ namespace Akkadian.UnitTests
         {
             Tvar t = new Tvar(false);
             t.AddState(Date(2000,1,1), true);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,15), Date(2000,1,20));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,15), Date(2000,1,20));
             Assert.AreEqual(5, result.Out);
         }
 
@@ -186,7 +186,7 @@ namespace Akkadian.UnitTests
             Tvar t = new Tvar(false);
             t.AddState(Date(2000,1,1), true);
             t.AddState(Date(2000,1,5), false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,2), Date(2000,1,6));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,2), Date(2000,1,6));
             Assert.AreEqual(3, result.Out);
         }
 
@@ -194,7 +194,7 @@ namespace Akkadian.UnitTests
         public void TotalElapsedIntervals17 ()
         {
             Tvar t = new Tvar(false);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Date(2000,1,1), Date(2010,1,1));
+			Tvar result = t.TotalElapsedIntervals(TheDate, Date(2000,1,1), Date(2010,1,1));
             Assert.AreEqual(0, result.Out);
         }
 
@@ -202,7 +202,7 @@ namespace Akkadian.UnitTests
         public void TotalElapsedIntervals18 ()
         {
             Tvar t = new Tvar(Hstate.Uncertain);
-            Tvar result = t.TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar result = t.TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             Assert.AreEqual("Uncertain", result.Out);
         }
     }

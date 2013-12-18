@@ -425,65 +425,6 @@ namespace Akkadian.UnitTests
             Assert.AreEqual(null, t.ToBool);        
         }
         
-        // .EverPerInterval
-        
-        [Test]
-        public void FT_EverPerInterval_1 ()
-        {
-            // This will break annually b/c Year is determined by the system clock
-            Tvar theYear = Time.Year(5);
-            
-            Tvar t = new Tvar();
-            t.AddState(Time.DawnOf, false);
-            t.AddState(Date(2012,11,8), true);
-            
-            Tvar result = t.EverPer(theYear);
-			Assert.AreEqual("{Dawn: false, 2012-01-01: true}", result.Out);        
-        }
-        
-        [Test]
-        public void FT_EverPerInterval_2 ()
-        {
-            Tvar theYear = Time.Year(5);
-            Tvar t = new Tvar(Hstate.Unstated);
-            Tvar result = t.EverPer(theYear);
-            Assert.AreEqual("Unstated", result.Lean.Out);        
-        }
-
-        [Test]
-        public void FT_EverPerInterval_3 ()
-        {
-            Tvar theYear = new Tvar(Hstate.Stub);
-            Tvar t = new Tvar(Hstate.Unstated);
-            Tvar result = t.EverPer(theYear);
-            Assert.AreEqual("Stub", result.Lean.Out);        
-        }
-
-        
-        // .AlwaysPerInterval
-        
-        [Test]
-        public void FT_AlwaysPerInterval_1 ()
-        {
-            // This will break annually b/c Year is determined by the system clock
-            Tvar theYear = Time.Year(5);
-            
-            Tvar t = new Tvar();
-            t.AddState(Time.DawnOf, false);
-            t.AddState(Date(2012,11,8), true);
-            
-            Tvar result = t.AlwaysPer(theYear);
-			Assert.AreEqual("{Dawn: false, 2013-01-01: true}", result.Out);        
-        }
-        
-        [Test]
-        public void FT_AlwaysPerInterval_2 ()
-        {
-            Tvar theYear = Time.Year(5);
-            Tvar result = new Tvar(Hstate.Stub).AlwaysPer(theYear);
-            Assert.AreEqual("Stub", result.Lean.Out);        
-        }
-        
         // .ToInt
         
         [Test]
@@ -826,7 +767,7 @@ namespace Akkadian.UnitTests
             tb1.AddState(Date(2000,1,1), unst);
             tb1.AddState(Date(2001,1,1), true);
 
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true, 2001-01-01: false}", tb1.IsUnstated.Out);        
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True, 2001-01-01: False}", tb1.IsUnstated.Out);        
         }
 
         // .Shift

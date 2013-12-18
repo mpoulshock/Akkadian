@@ -168,12 +168,7 @@ namespace Akkadian
 		TheYear = 403,
 		TheQuarter = 404,
 		TheMonth = 405,
-		TheWeek = 406,
 		TheDay = 407,
-		DaysInYear = 408,
-		DaysInQuarter = 409,
-		DaysInMonth = 410,
-		IsLeapYear = 411,
 		ConstPi = 420,
 		ConstE = 421,
 		DawnOfTime = 430,
@@ -325,14 +320,9 @@ namespace Akkadian
 			OperatorRegistry.Add("Uncertain",Op.Uncertain);
 			OperatorRegistry.Add("Stub",Op.Stub);
 			OperatorRegistry.Add("TheYear",Op.TheYear);
-			OperatorRegistry.Add("TheQuarter",Op.TheQuarter);
 			OperatorRegistry.Add("TheMonth",Op.TheMonth);
-			OperatorRegistry.Add("TheWeek",Op.TheWeek);
+			OperatorRegistry.Add("TheQuarter",Op.TheQuarter);
 			OperatorRegistry.Add("TheDay",Op.TheDay);
-			OperatorRegistry.Add("DaysInYear",Op.DaysInYear);
-			OperatorRegistry.Add("DaysInQuarter",Op.DaysInQuarter);
-			OperatorRegistry.Add("DaysInMonth",Op.DaysInMonth);
-			OperatorRegistry.Add("IsLeapYear",Op.IsLeapYear);
 			OperatorRegistry.Add("ConstPi",Op.ConstPi);
 			OperatorRegistry.Add("ConstE",Op.ConstE);
 			OperatorRegistry.Add("DawnOfTime",Op.DawnOfTime);

@@ -122,7 +122,7 @@ namespace Akkadian
 		/// </summary>
 		public static string FormatDate(DateTime d)
 		{
-			string date = d.ToString("yyyy-MM-dd").Replace("1800-01-01", "Dawn");
+			string date = d.ToString("yyyy-MM-dd").Replace("1900-01-01", "Dawn");
 			return date.Replace(" 12:00:00 AM", "");
 		}
     }

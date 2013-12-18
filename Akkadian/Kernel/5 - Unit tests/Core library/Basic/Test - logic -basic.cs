@@ -173,14 +173,14 @@ namespace Akkadian.UnitTests
         public void LogicAndTime1 ()
         {
             Tvar t1 = tbv & unstat;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: False, 2000-01-01: Unstated}", t1.Out);            
         }
         
         [Test]
         public void LogicAndTime2 ()
         {
             Tvar t1 = tbv & tbt;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace Akkadian.UnitTests
         public void LogicAndTime4 ()
         {
             Tvar t1 = tbv & uncert;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: False, 2000-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
         }
         
         // OR
@@ -294,7 +294,7 @@ namespace Akkadian.UnitTests
         public void LogicOrTime1 ()
         {
             Tvar t1 = tbv | unstat;
-			Assert.AreEqual("{Dawn: Unstated, 2000-01-01: true, 2001-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: Unstated, 2000-01-01: True, 2001-01-01: Unstated}", t1.Out);            
         }
         
         [Test]
@@ -308,14 +308,14 @@ namespace Akkadian.UnitTests
         public void LogicOrTime3 ()
         {
             Tvar t1 = tbv | tbf;
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
         }
         
         [Test]
         public void LogicOrTime4 ()
         {
             Tvar t1 = tbv | uncert;
-			Assert.AreEqual("{Dawn: Uncertain, 2000-01-01: true, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
+			Assert.AreEqual("{Dawn: Uncertain, 2000-01-01: True, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);            
         }
         
         // NOT
@@ -352,13 +352,13 @@ namespace Akkadian.UnitTests
         public void LogicNot5 () 
         {
             Tvar t1 = !tbv;
-			Assert.AreEqual("{Dawn: true, 2000-01-01: false, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);        
+			Assert.AreEqual("{Dawn: True, 2000-01-01: False, 2001-01-01: Uncertain, 2002-01-01: Unstated}", t1.Out);        
         }
 
         [Test]
         public void LogicNot5a ()
         {
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true, 2001-01-01: Uncertain, 2002-01-01: Unstated}", tbv.Out);        
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True, 2001-01-01: Uncertain, 2002-01-01: Unstated}", tbv.Out);        
         }
 
         // Basic logic - nested and/or

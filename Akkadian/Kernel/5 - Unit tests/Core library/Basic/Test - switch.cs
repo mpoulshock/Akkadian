@@ -164,7 +164,7 @@ namespace Akkadian.UnitTests
             tb1.AddState(Date(2000,1,1), false);
 
             Tvar tb2 = new Tvar(false);
-            tb2.AddState(Date(1900,1,1),true);  // true but irrelevant b/c interval subsubmed by tb1
+			tb2.AddState(Date(1901,1,1),true);  // true but irrelevant b/c interval subsubmed by tb1
             tb2.AddState(Date(1912,1,1),false);
 
             Tvar result = Switch(()=> tb1, ()=> new Tvar(41),

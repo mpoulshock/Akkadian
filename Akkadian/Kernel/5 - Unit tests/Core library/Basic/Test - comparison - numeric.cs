@@ -335,7 +335,7 @@ namespace Akkadian.UnitTests
         {
             Tvar x = new Tvar(10);
             x.AddState(Date(2000,1,1), 1);
-			Assert.AreEqual("{Dawn: false, 2000-01-01: true}", (x <= 1).Out );    
+			Assert.AreEqual("{Dawn: False, 2000-01-01: True}", (x <= 1).Out );    
         }
     }
 }

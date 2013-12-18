@@ -67,7 +67,7 @@ namespace Akkadian.UnitTests
         public void Performance_RunningElapsedIntervals ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tb1().RunningElapsedIntervals(TheDay);
+			Tvar t = Tb1().RunningElapsedIntervals(TheDate);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 60);    
         }
@@ -76,7 +76,7 @@ namespace Akkadian.UnitTests
         public void Performance_ContinuousElapsedIntervals ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tb1().ContinuousElapsedIntervals(TheDay);
+			Tvar t = Tb1().ContinuousElapsedIntervals(TheDate);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 70);    
         }
@@ -85,7 +85,7 @@ namespace Akkadian.UnitTests
         public void Performance_SlidingElapsedIntervals1 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tb1().SlidingElapsedIntervals(TheDay, 10);
+			Tvar t = Tb1().SlidingElapsedIntervals(TheDate, 10);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 135);    
         }
@@ -94,7 +94,7 @@ namespace Akkadian.UnitTests
         public void Performance_SlidingElapsedIntervals2 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = (new Tvar(true)).SlidingElapsedIntervals(TheDay, 10);
+			Tvar t = (new Tvar(true)).SlidingElapsedIntervals(TheDate, 10);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 105);    
         }
@@ -103,7 +103,7 @@ namespace Akkadian.UnitTests
         public void Performance_TotalElapsedIntervals ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tb1().TotalElapsedIntervals(TheDay, Time.DawnOf, Time.EndOf);
+			Tvar t = Tb1().TotalElapsedIntervals(TheDate, Time.DawnOf, Time.EndOf);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 70);    
         }
@@ -112,7 +112,7 @@ namespace Akkadian.UnitTests
         public void Performance_Shift ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tb1().Shift(10, TheDay);
+			Tvar t = Tb1().Shift(10, TheDate);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 70);    
         }
@@ -121,7 +121,7 @@ namespace Akkadian.UnitTests
         public void Performance_RunningSummedIntervals_1 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = new Tvar(9.99).RunningSummedIntervals(TheDay);
+			Tvar t = new Tvar(9.99).RunningSummedIntervals(TheDate);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 100);    
         }
@@ -130,7 +130,7 @@ namespace Akkadian.UnitTests
         public void Performance_RunningSummedIntervals_2 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tn1().RunningSummedIntervals(TheDay);
+			Tvar t = Tn1().RunningSummedIntervals(TheDate);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 100);    
         }
@@ -139,7 +139,7 @@ namespace Akkadian.UnitTests
         public void Performance_SlidingSummedIntervals_1 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = new Tvar(9.99).SlidingSummedIntervals(TheDay, 90);
+			Tvar t = new Tvar(9.99).SlidingSummedIntervals(TheDate, 90);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 70);     
         }
@@ -148,7 +148,7 @@ namespace Akkadian.UnitTests
         public void Performance_SlidingSummedIntervals_2 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tn1().SlidingSummedIntervals(TheDay, 90);
+			Tvar t = Tn1().SlidingSummedIntervals(TheDate, 90);
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 100); 
         }
@@ -157,7 +157,7 @@ namespace Akkadian.UnitTests
         public void Performance_TotalSummedIntervals_2 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Tn1().TotalSummedIntervals(TheDay, Date(2012,1,1), Date(2016,1,1));
+			Tvar t = Tn1().TotalSummedIntervals(TheDate, Date(2012,1,1), Date(2016,1,1));
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 80);   
         }
@@ -176,7 +176,7 @@ namespace Akkadian.UnitTests
         public void Performance_Zip_3 ()
         {
             DateTime startTime = DateTime.Now;
-            Tvar t = Time.TheDay > 12;
+			Tvar t = Time.TheDate > DateTime.Now;
             int ResponseTimeInMs = Convert.ToInt32((DateTime.Now - startTime).TotalMilliseconds);
             Assert.IsTrue(ResponseTimeInMs < 200); 
         }
