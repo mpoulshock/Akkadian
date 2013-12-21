@@ -280,17 +280,6 @@ namespace Akkadian
         }
 
         /// <summary>
-        /// Returns true if the Tvar is ever unstated; otherwise false.
-        /// </summary>
-        public bool IsEverUnstated
-        {
-            get
-            {
-                return this.IsUnstated.IsEverTrue().ToBool == true ? true : false;
-            }
-        }
-
-        /// <summary>
         /// Returns the value of a Tvar at a specified point in time. 
         /// </summary>
         /// <remarks>
@@ -377,43 +366,50 @@ namespace Akkadian
             return (IList<DateTime>)TimeLine.Keys;
         }
 
-        /// <summary>
-        /// Returns true whenever the Tvar has a value of "unstated."
-        /// </summary>
-        public Tvar IsUnstated
-        {
-            get
-            {
-                Tvar result = new Tvar();
+		/// <summary>
+		/// Returns true whenever the Tvar has a value of Stub.
+		/// </summary>
+		public Tvar IsStub()
+		{
+			Tvar result = new Tvar();
 
-                for (int i = 0; i < TimeLine.Count; i++ ) 
-                {
-                    if (TimeLine.Values[i].IsUnstated)
-                    {
-                        result.AddState(TimeLine.Keys[i],true);
-                    }
-                    else
-                    {
-                        result.AddState(TimeLine.Keys[i],false);
-                    }
-                }
-    
-                return result.Lean;
-            }
-        }
+			for (int i = 0; i < TimeLine.Count; i++ ) 
+			{
+				result.AddState(TimeLine.Keys[i], TimeLine.Values[i].IsStub);
+			}
 
-        /// <summary>
-        /// Indicates whether the value of a Tvar has been determined.
-        /// </summary>
-        public bool HasBeenDetermined
-        {
-            get
-            {
-                bool? everUnstated = this.IsUnstated.IsEverTrue().ToBool;
+			return result.Lean;
+		}
 
-                return Convert.ToBoolean(!everUnstated);
-            }
-        }
+		/// <summary>
+		/// Returns true whenever the Tvar has a value of Uncertain.
+		/// </summary>
+		public Tvar IsUncertain()
+		{
+			Tvar result = new Tvar();
+
+			for (int i = 0; i < TimeLine.Count; i++ ) 
+			{
+				result.AddState(TimeLine.Keys[i], TimeLine.Values[i].IsUncertain);
+			}
+
+			return result.Lean;
+		}
+
+		/// <summary>
+		/// Returns true whenever the Tvar has a value of Unstated.
+		/// </summary>
+		public Tvar IsUnstated()
+		{
+			Tvar result = new Tvar();
+
+			for (int i = 0; i < TimeLine.Count; i++ ) 
+			{
+				result.AddState(TimeLine.Keys[i], TimeLine.Values[i].IsUnstated);
+			}
+
+			return result.Lean;
+		}
 
         /// <summary>
         /// Hstate precedences for missing time periods.

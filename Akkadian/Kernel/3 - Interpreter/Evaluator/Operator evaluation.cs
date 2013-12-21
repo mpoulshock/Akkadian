@@ -136,6 +136,9 @@ namespace Akkadian
 			if (op == Op.Not)    			{ return nTvar(!(Tvar)ob1); }
 			if (op == Op.ToUSD)   			{ return nTvar(((Tvar)ob1).ToUSD); }
 			if (op == Op.Trim)				{ return nTvar(((Tvar)ob1).Lean); }
+			if (op == Op.IsStub)			{ return nTvar(((Tvar)ob1).IsStub()); }
+			if (op == Op.IsUncertain)		{ return nTvar(((Tvar)ob1).IsUncertain()); }
+			if (op == Op.IsUnstated)		{ return nTvar(((Tvar)ob1).IsUnstated()); }
 
 			if (op == Op.Count)   			{ return nTvar(((Tvar)ob1).Count); }
 			if (op == Op.Reverse)   		{ return nTvar(((Tvar)ob1).Reverse); }

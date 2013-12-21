@@ -138,6 +138,9 @@ namespace Akkadian
 		DaysSince = 140,
 		Ever = 141,
 		Always = 142,
+		IsStub = 143,
+		IsUncertain = 144,
+		IsUnstated = 145,
 
 		// Three arguments
 		Shift = 200,
@@ -293,6 +296,9 @@ namespace Akkadian
 			OperatorRegistry.Add("DaysSince",Op.DaysSince);
 			OperatorRegistry.Add("Ever",Op.Ever);
 			OperatorRegistry.Add("Always",Op.Always);
+			OperatorRegistry.Add("IsStub",Op.IsStub);
+			OperatorRegistry.Add("IsUncertain",Op.IsUncertain);
+			OperatorRegistry.Add("IsUnstated",Op.IsUnstated);
 
 			// Three arguments
 			OperatorRegistry.Add("Shift",Op.Shift);

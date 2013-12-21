@@ -756,20 +756,6 @@ namespace Akkadian.UnitTests
             Assert.AreEqual(4, t.Out);        
         }
 
-        // .IsUnstated
-
-        [Test]
-        public void IsUnstated1 ()
-        {
-            Hval unst = new Hval(null,Hstate.Unstated);
-
-            Tvar tb1 = new Tvar(false);
-            tb1.AddState(Date(2000,1,1), unst);
-            tb1.AddState(Date(2001,1,1), true);
-
-			Assert.AreEqual("{Dawn: False, 2000-01-01: True, 2001-01-01: False}", tb1.IsUnstated.Out);        
-        }
-
         // .Shift
 
         [Test]
