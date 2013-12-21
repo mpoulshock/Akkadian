@@ -151,7 +151,7 @@ namespace Akkadian
 		TotalElapsedIntervals = 251,
 
 		// Special
-		Switch = 300,
+		If = 300,
 		Max = 301,
 		Min = 302,
 		Pipe = 304,		// Pipeline |>
@@ -307,7 +307,7 @@ namespace Akkadian
 
 			// Special
 			OperatorRegistry.Add(@"\|>",Op.Pipe);
-			OperatorRegistry.Add("Switch",Op.Switch);
+			OperatorRegistry.Add("If",Op.If);
 			OperatorRegistry.Add("Max",Op.Max);
 			OperatorRegistry.Add("Min",Op.Min);
 			OperatorRegistry.Add("Map",Op.Map);

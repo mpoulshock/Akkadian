@@ -128,7 +128,7 @@ namespace Akkadian
 			}
 
 			// Function calls (innermost functions first)
-			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}:_ " + delimiter + "\"" + @"]*\]").Match(s);
+			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[-a-zA-Z0-9,\(\)\+\*/>=&|!\.'~{}:_ " + delimiter + "\"" + @"]*\]").Match(s);
 			if (m1.Success)
 			{
 				return ParseFunctionCalls(m1, s, subExprs, argNames);
@@ -139,13 +139,6 @@ namespace Akkadian
 			{
 				return ParseTimeSeriesLiterals(s, subExprs, argNames);
 			}
-
-			// Switch
-//			var switchMatch = new Regex(switchStatement).Match(s);
-//			if (switchMatch.Success)
-//			{
-//				return ParseSwitchCalls(switchMatch, s, subExprs, argNames);
-//			}
 
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
@@ -314,7 +307,7 @@ namespace Akkadian
 		private static Node ParseTimeSeriesLiterals(string s, List<Node> subExprs, string[] argNames)
 		{
 			string[] members = Util.RemoveParens(s).Split(',');
-			List<Node> switchParts = new List<Node>(){n(Typ.Op,Op.Switch)};
+			List<Node> switchParts = new List<Node>(){n(Typ.Op,Op.If)};
 			for (int i=members.Length-1; i>=0; i--)
 			{
 				// Parse the date-value pair, e.g. 2009-07-24: $7.25
@@ -336,26 +329,6 @@ namespace Akkadian
 			Expr tsExpr = new Expr(switchParts);
 			return n(Typ.Expr,tsExpr);
 		}
-
-//		/// <summary>
-//		/// Parses switch statements
-//		/// </summary>
-//		private static Node ParseSwitchCalls(Match switchMatch, string s, List<Node> subExprs, string[] argNames)
-//		{
-//			string switchParts = switchMatch.Value.Replace("->",",");
-//			string[] switchArgs = switchParts.Split(',');
-//
-//			List<Node> switchNodes = new List<Node>();
-//			switchNodes.Add(n(Typ.Op,Op.Switch));
-//
-//			foreach (string arg in switchArgs)
-//			{
-//				switchNodes.Add( ParseFcn(arg, subExprs, argNames) );
-//			}
-//
-//			Expr switcExpr = new Expr(switchNodes);
-//			return n(Typ.Expr,switcExpr);
-//		}
 
 		/// <summary>
 		/// Parses expressions with infix operators, such as x + 2

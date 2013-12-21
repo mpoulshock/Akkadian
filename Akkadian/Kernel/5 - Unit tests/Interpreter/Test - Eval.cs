@@ -546,7 +546,7 @@ namespace Akkadian.UnitTests
 		public void Map_3 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 1, 0]");
+			sess.ProcessInput("F[x] = If[x, 1, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("{True,False,True,True,True} |> Map[F[_]]");
 			Assert.AreEqual("{1,0,1,1,1}", r.Out);                
 		}
@@ -726,7 +726,7 @@ namespace Akkadian.UnitTests
 		public void Recursion_1 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x==0, 0, F[x-1]+3]");
+			sess.ProcessInput("F[x] = If[x==0, 0, F[x-1]+3]");
 			Tvar r = (Tvar)sess.ProcessInput("F[0]");
 			Assert.AreEqual(0, r.Out);               
 		}
@@ -735,7 +735,7 @@ namespace Akkadian.UnitTests
 		public void Recursion_2 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x==0, 0, F[x-1]+3]");
+			sess.ProcessInput("F[x] = If[x==0, 0, F[x-1]+3]");
 			Tvar r = (Tvar)sess.ProcessInput("F[1]");
 			Assert.AreEqual(3, r.Out);                 
 		}
@@ -744,7 +744,7 @@ namespace Akkadian.UnitTests
 		public void Recursion_3 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x==0, 0, F[x-1]+3]");
+			sess.ProcessInput("F[x] = If[x==0, 0, F[x-1]+3]");
 			Tvar r = (Tvar)sess.ProcessInput("F[2]");
 			Assert.AreEqual(6, r.Out);               
 		}
@@ -753,7 +753,7 @@ namespace Akkadian.UnitTests
 		public void Recursion_4 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x==0, 0, F[x-1]+3]");
+			sess.ProcessInput("F[x] = If[x==0, 0, F[x-1]+3]");
 			Tvar r = (Tvar)sess.ProcessInput("F[350]");  // 415
 			Assert.AreEqual(1050, r.Out);                 
 		}
@@ -789,7 +789,7 @@ namespace Akkadian.UnitTests
 		public void Switch_1a ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 41]");
+			sess.ProcessInput("F[x] = If[x, 42, 41]");
 			Tvar r = (Tvar)sess.ProcessInput("F[true]");
 			Assert.AreEqual(42, r.Out);                
 		}
@@ -798,7 +798,7 @@ namespace Akkadian.UnitTests
 		public void Switch_1b ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 41]");
+			sess.ProcessInput("F[x] = If[x, 42, 41]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false]");
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -807,7 +807,7 @@ namespace Akkadian.UnitTests
 		public void Switch_2 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 41]");
+			sess.ProcessInput("F[x] = If[x, 42, 41]");
 			Tvar r = (Tvar)sess.ProcessInput("F[true]");
 			Assert.AreEqual(42, r.Out);                
 		}
@@ -816,7 +816,7 @@ namespace Akkadian.UnitTests
 		public void Switch_3 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 41]");
+			sess.ProcessInput("F[x] = If[x, 42, 41]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false]");
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -825,7 +825,7 @@ namespace Akkadian.UnitTests
 		public void Switch_4 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 0]");
+			sess.ProcessInput("F[x] = If[x, 42, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[True]");
 			Assert.AreEqual(42, r.Out);              
 		}
@@ -834,7 +834,7 @@ namespace Akkadian.UnitTests
 		public void Switch_5 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, 42, 0]");
+			sess.ProcessInput("F[x] = If[x, 42, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false]");
 			Assert.AreEqual(0, r.Out);                
 		}
@@ -843,7 +843,7 @@ namespace Akkadian.UnitTests
 		public void Switch_6 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Switch[x, 42, y, 41, 0]");
+			sess.ProcessInput("F[x,y] = If[x, 42, y, 41, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[true,false]");
 			Assert.AreEqual(42, r.Out);                
 		}
@@ -852,7 +852,7 @@ namespace Akkadian.UnitTests
 		public void Switch_7 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Switch[x, 42, y, 41, 0]");
+			sess.ProcessInput("F[x,y] = If[x, 42, y, 41, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,true]");
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -861,7 +861,7 @@ namespace Akkadian.UnitTests
 		public void Switch_8 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Switch[x, 42, y, 41, 0]");
+			sess.ProcessInput("F[x,y] = If[x, 42, y, 41, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,false]");
 			Assert.AreEqual(0, r.Out);                
 		}
@@ -870,7 +870,7 @@ namespace Akkadian.UnitTests
 		public void Switch_9 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = (Switch[x, 42, y, 41, 0]) * 3");
+			sess.ProcessInput("F[x,y] = (If[x, 42, y, 41, 0]) * 3");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,true]");
 			Assert.AreEqual(123, r.Out);                
 		}
@@ -879,7 +879,7 @@ namespace Akkadian.UnitTests
 		public void Switch_10 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Switch[x, 42, y, 41*3, 0]");
+			sess.ProcessInput("F[x,y] = If[x, 42, y, 41*3, 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,true]");
 			Assert.AreEqual(123, r.Out);                
 		}
@@ -888,7 +888,7 @@ namespace Akkadian.UnitTests
 		public void Switch_11 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Switch[x, 42, y, Abs[-9], 0]");
+			sess.ProcessInput("F[x,y] = If[x, 42, y, Abs[-9], 0]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,true]");
 			Assert.AreEqual(9, r.Out);                
 		}
@@ -897,7 +897,7 @@ namespace Akkadian.UnitTests
 		public void Switch_12 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x,y] = Abs[Switch[x, -42, y, -41, 0]]");
+			sess.ProcessInput("F[x,y] = Abs[If[x, -42, y, -41, 0]]");
 			Tvar r = (Tvar)sess.ProcessInput("F[false,true]");
 			Assert.AreEqual(41, r.Out);                
 		}
@@ -906,7 +906,7 @@ namespace Akkadian.UnitTests
 		public void Switch_13 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F[x] = Switch[x, false, true]");
+			sess.ProcessInput("F[x] = If[x, false, true]");
 			Tvar r = (Tvar)sess.ProcessInput("F[true]");
 			Assert.AreEqual(false, r.Out);                
 		}
@@ -915,8 +915,44 @@ namespace Akkadian.UnitTests
 		public void Switch_14 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("F = Switch[true & true, 1, 0]");
+			sess.ProcessInput("F = If[true & true, 1, 0]"); 
 			Tvar r = (Tvar)sess.ProcessInput("F");
+			Assert.AreEqual(1, r.Out);                
+		}
+
+		[Test]
+		public void Switch_15 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = If[x > 0, 1, 0]"); 
+			Tvar r = (Tvar)sess.ProcessInput("F[3]");
+			Assert.AreEqual(1, r.Out);                
+		}
+
+		[Test]
+		public void Switch_16 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x] = If[x > 0, 1, 0]"); 
+			Tvar r = (Tvar)sess.ProcessInput("F[-3]");
+			Assert.AreEqual(0, r.Out);                
+		}
+
+		[Test]
+		public void Switch_17 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = If[x > 0 & y > 0, 1, 0]");  
+			Tvar r = (Tvar)sess.ProcessInput("F[3,3]");
+			Assert.AreEqual(1, r.Out);                
+		}
+
+		[Test]
+		public void Switch_18 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("F[x,y] = If[x > 0 | y > 0, 1, 0]");  
+			Tvar r = (Tvar)sess.ProcessInput("F[3,-3]");
 			Assert.AreEqual(1, r.Out);                
 		}
 

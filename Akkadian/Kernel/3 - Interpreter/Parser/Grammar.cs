@@ -50,9 +50,6 @@ namespace Akkadian
 		protected const string fcnBrackets = @"\["+ white + "(" + bracketInnards + ")" + white + @"\]";
 		protected const string fcnSignature = "(" + fcnNameRegex + ")" + white + "(" + fcnBrackets + ")?"; 
 
-		// Switch
-		protected const string switchStatement = wildcard + "->" + wildcard + "," + wildcard;
-
 		/// <summary>
 		/// Determines if the input string matches the regex exactly.
 		/// </summary>

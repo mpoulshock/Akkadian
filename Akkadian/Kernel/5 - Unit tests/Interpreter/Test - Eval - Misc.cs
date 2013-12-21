@@ -170,7 +170,7 @@ namespace Akkadian.UnitTests
 		public void Misc_18 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("Factorial[n] = Switch[n == 1, 1, n * Factorial[n-1]]");
+			sess.ProcessInput("Factorial[n] = If[n == 1, 1, n * Factorial[n-1]]");
 			Tvar r = (Tvar)sess.ProcessInput("Factorial[4]");
 			Assert.AreEqual(24, r.Out);                
 		}

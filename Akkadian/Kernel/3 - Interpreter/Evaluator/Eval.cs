@@ -66,7 +66,7 @@ namespace Akkadian
 				else if (opID >= 400) 		{ return ConstantEval(opType); }
 				else if (opType == Op.Pipe) { return EvaluatePipelinedExpression(exp, args); }
 
-				else if (opType == Op.Switch)
+				else if (opType == Op.If)   // opID == 300
 				{
 					// Get arguments to the switch function
 					List<Node> newArgList = new List<Node>();
