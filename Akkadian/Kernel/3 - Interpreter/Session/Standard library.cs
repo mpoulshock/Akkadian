@@ -31,7 +31,7 @@ namespace Akkadian
 		{
 			// Logic
 			ProcessInput("IfThen[a,b] = !a | b;");
-			ProcessInput("BoolToBinary[b] = b == True -> 1, 0;");
+			ProcessInput("BoolToBinary[b] = Switch[b == True, 1, 0];");
 			ProcessInput("BoolCount[set] = set |> Map[BoolToBinary[_]] |> SetSum;");
 
 			// Set - basic
@@ -44,13 +44,13 @@ namespace Akkadian
 
 			// Time
 			ProcessInput("TheWeek = WeeksSince[AddDays[6,Dawn]];");   // Starts on a Sunday (see en.wikipedia.org/wiki/Seven-day_week#Week_numbering)
-			ProcessInput("DayOfWeek = Mod[DaysSince[1800-01-05],7] + 1;");
-			ProcessInput("DaysInMonth = TheMonth ==  2 & IsLeapYear -> 29, TheMonth ==  2 -> 28, " +
-				"TheMonth ==  4 -> 30, TheMonth ==  6 -> 30, TheMonth ==  9 -> 30, TheMonth == 11 -> 30, 31;");
-			ProcessInput("IsLeapYear = TheYear == 2100 -> false, Mod[TheYear,4] == 0 -> true, false;");
-			ProcessInput("DaysInYear = IsLeapYear -> 366, 365;");
-			ProcessInput("DaysInQuarter = TheQuarter == 1 & IsLeapYear -> 91, TheQuarter == 1 -> 90, TheQuarter == 2 -> 91, " +
-				"TheQuarter == 3 -> 92, TheQuarter == 4 -> 92, Stub;");
+			ProcessInput("DayOfWeek = Mod[DaysSince[1900-01-07],7] + 1;");
+			ProcessInput("DaysInMonth = Switch[TheMonth ==  2 & IsLeapYear, 29, TheMonth ==  2, 28, " +
+				"TheMonth ==  4, 30, TheMonth ==  6, 30, TheMonth ==  9, 30, TheMonth == 11, 30, 31];");
+			ProcessInput("IsLeapYear = Switch[TheYear == 2100, false, Mod[TheYear,4] == 0, true, false];");
+			ProcessInput("DaysInYear = Switch[IsLeapYear, 366, 365];");
+			ProcessInput("DaysInQuarter = Switch[TheQuarter == 1 & IsLeapYear, 91, TheQuarter == 1, 90, TheQuarter == 2, 91, " +
+				"TheQuarter == 3, 92, TheQuarter == 4, 92, 0];");
 		}
 	}
 }

@@ -127,13 +127,6 @@ namespace Akkadian
 				return ParseSetLiterals(innerSet, s, subExprs, argNames);
 			}
 
-			// Pipelined functions |>
-			var pipeMatch = new Regex(parens(wildcard) + white + @"\|>" + white + parens(@"EverPer\[" + wildcard + @"\]")).Match(s);
-			if (pipeMatch.Success)
-			{
-				return ParsePipelinedFunctions(pipeMatch, s, subExprs, argNames);
-			}
-
 			// Function calls (innermost functions first)
 			var m1 = new Regex(@"(" + fcnNameRegex + @")\[[a-zA-Z0-9,\(\)\+\-\*/>=\.'~{}:_ " + delimiter + "\"" + @"]*\]").Match(s);
 			if (m1.Success)
@@ -148,11 +141,11 @@ namespace Akkadian
 			}
 
 			// Switch
-			var switchMatch = new Regex(switchStatement).Match(s);
-			if (switchMatch.Success)
-			{
-				return ParseSwitchCalls(switchMatch, s, subExprs, argNames);
-			}
+//			var switchMatch = new Regex(switchStatement).Match(s);
+//			if (switchMatch.Success)
+//			{
+//				return ParseSwitchCalls(switchMatch, s, subExprs, argNames);
+//			}
 
 			// Date literals - must be parsed before subtraction
 			if (IsExactMatch(s,dateLiteral))
@@ -283,22 +276,6 @@ namespace Akkadian
 		}
 
 		/// <summary>
-		/// Parses pipelined functions, such as -9.1 |> Abs
-		/// </summary>
-		private static Node ParsePipelinedFunctions(Match pipeMatch, string s, List<Node> subExprs, string[] argNames)
-		{
-			Node lhs = ParseFcn(pipeMatch.Groups[1].Value, subExprs, argNames);
-			Node rhs = ParseFcn(pipeMatch.Groups[2].Value, subExprs, argNames);
-
-			List<Node> pipeNodes = new List<Node>();
-			pipeNodes.Add(n(Typ.Op,Op.Pipe));
-			pipeNodes.Add(lhs);
-			pipeNodes.Add(rhs);
-			Expr pipeExpr = new Expr(pipeNodes);
-			return n(Typ.Expr,pipeExpr);
-		}
-
-		/// <summary>
 		/// Parses function calls, such as Sq[x]
 		/// </summary>
 		private static Node ParseFunctionCalls(Match m1, string s, List<Node> subExprs, string[] argNames)
@@ -360,25 +337,25 @@ namespace Akkadian
 			return n(Typ.Expr,tsExpr);
 		}
 
-		/// <summary>
-		/// Parses switch statements
-		/// </summary>
-		private static Node ParseSwitchCalls(Match switchMatch, string s, List<Node> subExprs, string[] argNames)
-		{
-			string switchParts = switchMatch.Value.Replace("->",",");
-			string[] switchArgs = switchParts.Split(',');
-
-			List<Node> switchNodes = new List<Node>();
-			switchNodes.Add(n(Typ.Op,Op.Switch));
-
-			foreach (string arg in switchArgs)
-			{
-				switchNodes.Add( ParseFcn(arg, subExprs, argNames) );
-			}
-
-			Expr switcExpr = new Expr(switchNodes);
-			return n(Typ.Expr,switcExpr);
-		}
+//		/// <summary>
+//		/// Parses switch statements
+//		/// </summary>
+//		private static Node ParseSwitchCalls(Match switchMatch, string s, List<Node> subExprs, string[] argNames)
+//		{
+//			string switchParts = switchMatch.Value.Replace("->",",");
+//			string[] switchArgs = switchParts.Split(',');
+//
+//			List<Node> switchNodes = new List<Node>();
+//			switchNodes.Add(n(Typ.Op,Op.Switch));
+//
+//			foreach (string arg in switchArgs)
+//			{
+//				switchNodes.Add( ParseFcn(arg, subExprs, argNames) );
+//			}
+//
+//			Expr switcExpr = new Expr(switchNodes);
+//			return n(Typ.Expr,switcExpr);
+//		}
 
 		/// <summary>
 		/// Parses expressions with infix operators, such as x + 2

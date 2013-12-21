@@ -174,7 +174,7 @@ namespace Akkadian
         /// </summary>
         public bool IsSet()
         {
-			return  this.Obj.GetType() == (new List<object>()).GetType();
+			return this.State == Hstate.Known && this.Obj.GetType() == (new List<object>()).GetType();
         }
 
         /// <summary>

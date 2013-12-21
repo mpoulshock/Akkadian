@@ -170,7 +170,7 @@ namespace Akkadian.UnitTests
 		public void Misc_18 ()
 		{
 			Session sess = new Session();
-			sess.ProcessInput("Factorial[n] = n == 1 -> 1, n * Factorial[n-1]");
+			sess.ProcessInput("Factorial[n] = Switch[n == 1, 1, n * Factorial[n-1]]");
 			Tvar r = (Tvar)sess.ProcessInput("Factorial[4]");
 			Assert.AreEqual(24, r.Out);                
 		}
@@ -329,7 +329,7 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{Dawn: Stub, 2000-01-01: true, 2010-12-31: false} & {Dawn: false, 1985-12-16: true, 2018-06-14: false}");
-			Assert.AreEqual("{Dawn: false, 1985-12-16: Stub, 2000-01-01: true, 2010-12-31: false}", r.ToString());                
+			Assert.AreEqual("{Dawn: False, 1985-12-16: Stub, 2000-01-01: True, 2010-12-31: False}", r.Out);                
 		}
 
 		[Test]
@@ -393,7 +393,7 @@ namespace Akkadian.UnitTests
 			Session sess = new Session();
 			sess.ProcessInput("MeetsTest = {Dawn: False, 2014-03-15: True, 2014-05-12: False, 2014-07-03: True}");
 			Tvar r = (Tvar)sess.ProcessInput("MeetsTest |> EverPer[TheWeek] |> Regularize[TheWeek] |> CountPer[TheYear]");
-			Assert.AreEqual("{ }", r.ToString());                
+			Assert.AreEqual("{ }", r.Out);                
 		}
 
 		[Test]
@@ -401,7 +401,7 @@ namespace Akkadian.UnitTests
 		{
 			Session sess = new Session();
 			Tvar r = (Tvar)sess.ProcessInput("{Dawn: false, 2009-01-01: true, 2015-12-31: false} |> Regularize[TheWeek] |> CountPer[TheYear]");
-			Assert.AreEqual("{Dawn: 0, 2009-01-01: 51, 2010-01-01: 52, 2012-01-01: 51, 2016-01-01: 0}", r.ToString());                
+			Assert.AreEqual("{Dawn: 0, 2009-01-01: 51, 2011-01-01: 52, 2013-01-01: 51, 2016-01-01: 0}", r.Out);                
 		}
 
 		[Test]
@@ -513,6 +513,35 @@ namespace Akkadian.UnitTests
 			sess.ProcessInput("SubmissionRequired[corp] = (Sq[corp] >= 250 |> EverPer[TheYear]);");  // Parsing Sq[corp] as -42
 			Tvar r = (Tvar)sess.ProcessInput("SubmissionRequired[6]");
 			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Misc_59_b ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("Sq[x] = x*x");
+			sess.ProcessInput("SubmissionRequired[corp] = Sq[corp] >= 250 |> EverPer[TheYear];");  
+			Tvar r = (Tvar)sess.ProcessInput("SubmissionRequired[3]");
+			Assert.AreEqual(false, r.Out);                
+		}
+
+		[Test]
+		public void Misc_59_c ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("PriorAFDCMonths[fam] = ReceivingAFDC[fam] |> EverPer[TheMonth];"); 
+			sess.ProcessInput("ReceivingAFDC[fam] = {Dawn: false, 2013-12-12: true}");
+			Tvar r = (Tvar)sess.ProcessInput("PriorAFDCMonths[8]");
+			Assert.AreEqual("{Dawn: False, 2013-12-01: True}", r.Out);                
+		}
+
+		[Test]
+		public void Misc_60 ()
+		{
+			Session sess = new Session();
+			sess.ProcessInput("t = {Dawn: Stub, 2013-12-12: 9}"); 
+			Tvar r = (Tvar)sess.ProcessInput("t");
+			Assert.AreEqual("{Dawn: Stub, 2013-12-12: 9}", r.ToString());                
 		}
 	}
 }

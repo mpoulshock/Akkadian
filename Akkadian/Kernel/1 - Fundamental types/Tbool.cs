@@ -73,11 +73,9 @@ namespace Akkadian
         /// </summary>
         public Tvar IsAlwaysTrue(Tvar start, Tvar end)
         {
-            Tvar equalsVal = this == true; 
-
             Tvar isDuringInterval = Time.IsBetween(start, end);
-            
-            Tvar isOverlap = equalsVal & isDuringInterval;
+
+			Tvar isOverlap = this & isDuringInterval;
 
             Tvar overlapAndIntervalAreCoterminous = isOverlap == isDuringInterval;
 
@@ -89,12 +87,8 @@ namespace Akkadian
         /// </summary>
         public Tvar IsEverTrue(Tvar start, Tvar end)
         {
-            Tvar equalsVal = this == true; 
-            
-            Tvar isDuringInterval = Time.IsBetween(start, end);
-            
-            Tvar isOverlap = equalsVal & isDuringInterval;
-            
+			Tvar isOverlap = this & Time.IsBetween(start, end);
+           
             return isOverlap.IsEverTrue();
         }
         

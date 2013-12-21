@@ -299,10 +299,13 @@ namespace Akkadian
 						Console.Write("  - " + fcnKey + "? ");
 						string s = Console.ReadLine();
 
-						// Cache the answer
-						AddFact(fcnKey, new Tvar(s));
+						// Evaluate the answer
+						Tvar r = (Tvar)ProcessInput(s);
 
-						return nTvar(s);
+						// Cache the answer
+						AddFact(fcnKey, r);
+
+						return nTvar(r);
 					}
 				}
 				return nTvar(new Tvar(Hstate.Unstated));

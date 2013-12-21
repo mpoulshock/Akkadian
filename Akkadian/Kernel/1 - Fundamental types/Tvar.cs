@@ -215,6 +215,9 @@ namespace Akkadian
 			DateTime temp;
 			if (DateTime.TryParse(d, out temp)) return Util.FormatDate(Convert.ToDateTime(d));
 
+			// Uncertain states
+			if (v.State != Hstate.Known) return v.ToString;
+
 			return v.Obj.ToString().Replace("true","True").Replace("false","False");
 		}
 
