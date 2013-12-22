@@ -20,8 +20,8 @@ namespace REPL
 			// Loop
 			while (true)
 			{
-				try
-				{
+//				try
+//				{
 					// Read
 					Console.Write("> ");
 					string userInput = Console.ReadLine().TrimEnd(';');
@@ -97,12 +97,12 @@ namespace REPL
 					// Print
 					Console.WriteLine("  " + result);
 					Console.WriteLine();
-				}
-				catch
-				{
-					Console.WriteLine("  Syntax error.");
-					Console.WriteLine();
-				}
+//				}
+//				catch
+//				{
+//					Console.WriteLine("  Syntax error.");
+//					Console.WriteLine();
+//				}
 			}
 		}
 

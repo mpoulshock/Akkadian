@@ -159,15 +159,15 @@ namespace Akkadian
         /// 2. The ^ operator does not short-circuit like && and ||.  So in the
         ///    interview, this asks B when A is known
         /// </remarks>
-        public static Tvar operator ^ (Tvar tb1, Tvar tb2)
-        {
-            if (!tb1.IsEternallyUnstated)
-            {
-                return tb1;
-            }
-            
-            return tb2;
-        }
+//        public static Tvar operator ^ (Tvar tb1, Tvar tb2)
+//        {
+//            if (!tb1.IsEternallyUnstated)
+//            {
+//                return tb1;
+//            }
+//            
+//            return tb2;
+//        }
     }
     
     #pragma warning restore 660, 661

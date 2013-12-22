@@ -51,6 +51,9 @@ namespace Akkadian
 			ProcessInput("DaysInYear = If[IsLeapYear, 366, 365];");
 			ProcessInput("DaysInQuarter = If[TheQuarter == 1 & IsLeapYear, 91, TheQuarter == 1, 90, TheQuarter == 2, 91, " +
 				"TheQuarter == 3, 92, TheQuarter == 4, 92, 0];");
+
+			// Uncertainty
+			ProcessInput("Open[t] = If[!t, Uncertain, t];");
 		}
 	}
 }
