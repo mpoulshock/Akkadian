@@ -147,27 +147,6 @@ namespace Akkadian
         {
             return !Convert.ToBoolean(h.Val);
         }
-        
-        /// <summary>
-        /// "Either" operator (|~ in Akkadian) - Returns either of the two Tvars.
-        /// </summary>
-        /// <remarks>
-        /// 1. This function is needed because if either A or B is false, the
-        ///    funtion should return false.  If, instead, A || B were used to
-        ///    analyze input facts, and if A were false and B were unstated, the 
-        ///    function would erroneously return unstated.
-        /// 2. The ^ operator does not short-circuit like && and ||.  So in the
-        ///    interview, this asks B when A is known
-        /// </remarks>
-//        public static Tvar operator ^ (Tvar tb1, Tvar tb2)
-//        {
-//            if (!tb1.IsEternallyUnstated)
-//            {
-//                return tb1;
-//            }
-//            
-//            return tb2;
-//        }
     }
     
     #pragma warning restore 660, 661

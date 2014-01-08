@@ -53,7 +53,7 @@ namespace Akkadian
 				"TheQuarter == 3, 92, TheQuarter == 4, 92, 0];");
 
 			// Uncertainty
-			ProcessInput("Open[t] = If[!t, Uncertain, t];");
+//			ProcessInput("Open[t] = If[!t, Uncertain, t];");
 		}
 	}
 }

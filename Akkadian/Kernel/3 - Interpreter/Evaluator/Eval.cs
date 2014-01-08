@@ -94,6 +94,11 @@ namespace Akkadian
 				{
 					return EvaluateUnquoteOperator(exp, args);
 				}
+				else if (opType == Op.Ask)
+				{
+					string fcnName = Convert.ToString(ob);
+					return Ask(exp, args, fcnName);
+				}
 			}
 			else if (typ == Typ.Fcn)
 			{

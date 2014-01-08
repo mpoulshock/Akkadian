@@ -263,6 +263,53 @@ namespace Akkadian
 		}
 
 		/// <summary>
+		/// Ask the function as a question
+		/// </summary>
+		private Node Ask(Expr exp, Expr args, string fcnName)
+		{
+			// Pose the leaf node as a question - temporary
+			if (AskQuestions)
+			{
+				string fcnKey = FunctionKey(exp,args,fcnName);
+
+				// Look for cached version
+				if (ContainsFact(fcnKey))
+				{
+					return nTvar(GetFact(fcnKey));
+				}
+				else
+				{
+					Tvar q = (Tvar)eval(exp.nodes[1], args).obj;
+					string qText = q.ToString();
+
+					// Substitute the arguments into the question text
+					for (int i=0; i < exp.nodes.Count; i++)
+					{
+						if (i>1) 
+						{
+							Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
+							qText = qText.Replace("{" + Convert.ToString(i-1) + "}", argTv.ToString());
+						}
+					}
+
+					// Ask the question
+					Console.Write("  - " + qText + " ");
+					string s = Console.ReadLine();
+
+					// Evaluate the answer
+					Tvar r = (Tvar)ProcessInput(s);
+
+					// Cache the answer
+					AddFact(fcnKey, r);
+
+					return nTvar(r);
+				}
+			}
+
+			return nTvar(new Tvar(Hstate.Unstated));
+		}
+
+		/// <summary>
 		/// Evaluates the unquote operator (~).
 		/// </summary>
 		private Node EvaluateFunction(Expr exp, Expr args, string fcnName)
@@ -275,21 +322,10 @@ namespace Akkadian
 			}
 			else
 			{
-				// Make a list of the arguments
-				string argString = "";
-				for (int i=0; i < exp.nodes.Count; i++)
-				{
-					if (i>0) 
-					{
-						Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
-						argString += argTv.ToString() + ",";
-					}
-				}
-
 				// Pose the leaf node as a question - temporary
 				if (AskQuestions)
 				{
-					string fcnKey = fcnName + "[" + argString.TrimEnd(',') + "]";
+					string fcnKey = FunctionKey(exp,args,fcnName);
 
 					// Look for cached version
 					if (ContainsFact(fcnKey))
@@ -413,6 +449,32 @@ namespace Akkadian
 			}
 			resultNodes.Add(newNode);
 			return new Expr(resultNodes);
+		}
+
+		/// <summary>
+		/// Converts the node into a string, like "AreMarried[Rosie,Ted]," which is used as an index in the cache.
+		/// </summary>
+		private string FunctionKey(Expr exp, Expr args, string fcnName)
+		{
+			string fcnKey = fcnName;
+
+			if (exp.nodes.Count > 1)
+			{
+				fcnKey += "[";
+
+				for (int i=0; i < exp.nodes.Count; i++)
+				{
+					if (i>0) 
+					{
+						Tvar argTv = (Tvar)eval(exp.nodes[i], args).obj;
+						fcnKey += argTv.ToString() + ",";
+					}
+				}
+
+				fcnKey += fcnKey.TrimEnd(',') + "]";
+			}
+
+			return fcnKey;
 		}
 	}
 }

@@ -163,6 +163,7 @@ namespace Akkadian
 		Quote = 307,
 		Unquote = 308,
 		MakeTset = 309,
+		Ask = 310,
 
 		// Constants
 		Unstated = 400,
@@ -320,6 +321,7 @@ namespace Akkadian
 			OperatorRegistry.Add("Filter",Op.Filter);
 			OperatorRegistry.Add("MakeTset",Op.MakeTset);
 			OperatorRegistry.Add("OrderBy",Op.OrderBy);
+			OperatorRegistry.Add("Ask",Op.Ask);
 
 			// Constants
 			OperatorRegistry.Add("Unstated",Op.Unstated);
